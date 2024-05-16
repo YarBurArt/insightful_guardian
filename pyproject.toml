@@ -1,15 +1,14 @@
 [tool.poetry]
 name = "insightful-guardian"
 version = "0.1.0"
-description = "Web-blog: a content sharing platform where users can publish articles without registration. All publications are subject to automated AI checks before publication."
-authors = ["Your Name <you@example.com>"]
-license = "MIT license"
+description = ""
+authors = ["YarBurArt <81087967+YarBurArt@users.noreply.github.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.10"
 fastapi = "^0.111.0"
-uvicorn = "^0.29.0"
+motor = "^3.4.0"
 
 
 [build-system]
