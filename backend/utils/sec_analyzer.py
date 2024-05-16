@@ -1,0 +1,1 @@
+""" module with only analyzer by ai """
