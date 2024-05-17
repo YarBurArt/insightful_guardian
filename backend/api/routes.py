@@ -1,5 +1,6 @@
 from services import (moderation_service, post_service)
-from fastapi import APIRouter, FastAPI, Request
+from fastapi import (
+    APIRouter, FastAPI, Request, HTTPException)
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
@@ -23,14 +24,16 @@ example_posts = {"1":example_post,
 @blog_router.post("/posts")
 async def create_post(request: Request, post: Post):
     new_post = post.dict()
-    # TODO: add post to repository
+    # TODO: add post to repository by service
     return JSONResponse(example_post, status_code=201)
 
 
 @blog_router.get("/posts")
 async def get_all_posts():
-    # TODO: get all posts from repository
-    return JSONResponse(example_posts, status_code=200)
+    res = await post_service.get_posts_without_format()
+    if res is None:
+        raise HTTPException(status_code=422, detail="Posts not found in DB, try add posts")
+    return JSONResponse(res, status_code=200)
 
 
 @blog_router.get("/posts/{post_id}")
