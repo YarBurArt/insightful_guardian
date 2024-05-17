@@ -4,10 +4,11 @@ from fastapi import (
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-# template to formate posts
+# template to formate posts, TODO: id format
 class Post(BaseModel):
     title: str
     content: str
+    category: str
 
 # for safe mount to main
 blog_router = APIRouter()
@@ -24,15 +25,19 @@ example_posts = {"1":example_post,
 @blog_router.post("/posts")
 async def create_post(request: Request, post: Post):
     new_post = post.dict()
-    # TODO: add post to repository by service
-    return JSONResponse(example_post, status_code=201)
+    res = await post_service.new_post_with_any_structure(new_post)
+    if res is None:
+        raise HTTPException(status_code=422, 
+            detail="Post not created, clean error :)")
+    return JSONResponse(res, status_code=201)
 
 
 @blog_router.get("/posts")
 async def get_all_posts():
     res = await post_service.get_posts_without_format()
     if res is None:
-        raise HTTPException(status_code=422, detail="Posts not found in DB, try add posts")
+        raise HTTPException(status_code=422, 
+            detail="Posts not found in DB, try add posts")
     return JSONResponse(res, status_code=200)
 
 

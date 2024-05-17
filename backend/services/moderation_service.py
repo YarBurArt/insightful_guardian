@@ -6,3 +6,6 @@ def clean_posts(posts: List[dict]) -> List[dict]:
     # TODO: cleans posts by signatures 
     return posts
 
+def clean_post(post: dict) -> dict:
+    # TODO: cleans post by signatures and AI
+    return post
