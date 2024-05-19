@@ -88,3 +88,63 @@ html {
   font-weight: 500;
   color: #888;
 }
+.PostForm {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background-color: #f8f8f8;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.PostForm h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 1.2rem;
+  text-align: center;
+  color: #333;
+}
+
+.PostForm label {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #555;
+  margin-bottom: 0.4rem;
+}
+
+.PostForm input,
+.PostForm textarea {
+  width: 95%;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.95rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.PostForm input:focus,
+.PostForm textarea:focus {
+  outline: none;
+  border-color: #4a90e2;
+}
+
+.PostForm button {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 0.6rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #fff;
+  background-color: #4a90e2;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.PostForm button:hover {
+  background-color: #c1c1c1;
+}

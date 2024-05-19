@@ -16,6 +16,7 @@ const PostForm = () => {
   };
 
   return (
+  <div className='PostForm'>
     <form onSubmit={handleSubmit}>
       <div>
         <label htmlFor="title">Title:</label>
@@ -46,7 +47,7 @@ const PostForm = () => {
         />
       </div>
       <button type="submit">Public </button>
-    </form>
+    </form></div>
   );
 };
 
