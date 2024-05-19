@@ -8,7 +8,7 @@ const PostForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // TODO: send form to serv
-    console.log('Отправляем форму:', { title, content, category });
+    console.log('Send data to srv:', { title, content, category });
     // clean all
     setTitle('');
     setContent('');
