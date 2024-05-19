@@ -27,12 +27,64 @@
 .App-link {
   color: #61dafb;
 }
+html {
+  background-color: #bbbdc1;
+}
+.IndexAllPosts {
+  background-color: #bbbdc1;
+  margin: 25px;
+}
+.IndexAllPosts {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.IndexAllPosts h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: #333;
+}
+
+.IndexAllPosts ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.IndexAllPosts li {
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1rem;
+  transition: transform 0.3s ease-in-out;
+}
+
+.IndexAllPosts li:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.IndexAllPosts li h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.IndexAllPosts li p {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.IndexAllPosts li .category {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #888;
 }

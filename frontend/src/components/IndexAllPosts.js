@@ -18,11 +18,13 @@ const IndexAllPosts = () => {
     }, []);
 
     return (
-        <div>
-            <h1>Posts</h1>
+        <div className="IndexAllPosts">
+            <h1>Posts.</h1>
             <ul>
                 {posts.map((post) => (
-                    <li key={post.id}>{post.title}</li>
+                    <li key={post._id}>{post.title} <br/>
+                    | {post.content} <br/># {post.category}
+                    </li>
                 ))}
             </ul>
         </div>
