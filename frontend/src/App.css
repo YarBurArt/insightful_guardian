@@ -148,3 +148,24 @@ html {
 .PostForm button:hover {
   background-color: #c1c1c1;
 }
+.link {
+  display: inline-block;
+  margin: 0.5rem 0.5rem;
+  padding: 0.6rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #dedede;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.link:hover {
+  background-color: #91918b;
+  color: #fff;
+}
+
+.link.active {
+  background-color: #4a90e2;
+  color: #fff;
+}
