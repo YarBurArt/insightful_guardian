@@ -7,7 +7,7 @@ const PostForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: send form to serv
+    // TODO: gen uuid for post id and send form to serv 
     console.log('Send data to srv:', { title, content, category });
     // clean all
     setTitle('');
