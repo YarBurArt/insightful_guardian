@@ -31,7 +31,7 @@ async def none_check_with_msg(value, msg: str) -> None:
 
 @blog_router.post("/posts")
 async def create_post(request: Request, post: Post):
-    new_post = post.dict()
+    new_post = post.dict() # to simple format
     res = await post_service.new_post_with_any_structure(new_post)
     await none_check_with_msg(res, "Post not created, clean error :)")
     return JSONResponse(res, status_code=201)
