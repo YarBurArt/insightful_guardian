@@ -1,0 +1,25 @@
+.App-link {
+    color: #61dafb;
+}
+
+.link {
+    border-radius: 4px;
+    color: #dedede;
+    display: inline-block;
+    font-size: .95rem;
+    font-weight: 500;
+    margin: .5rem;
+    padding: .6rem 1rem;
+    text-decoration: none;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+
+    &.active {
+        background-color: #4a90e2;
+        color: white;
+    }
+
+    &:hover {
+        background-color: #91918b;
+        color: white;
+    }
+}

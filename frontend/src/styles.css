@@ -1,0 +1,150 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+html {
+  background-color: #bbbdc1;
+}
+
+.App-header {
+  align-items: center;
+  background-color: #282c34;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  font-size: calc(10px + 2vmin);
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.link {
+  border-radius: 4px;
+  color: #dedede;
+  display: inline-block;
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin: 0.5rem;
+  padding: 0.6rem 1rem;
+  text-decoration: none;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+.link.active {
+  background-color: #4a90e2;
+  color: white;
+}
+.link:hover {
+  background-color: #91918b;
+  color: white;
+}
+
+.IndexAllPosts {
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1019607843);
+  margin: 0 auto;
+  max-width: 800px;
+  padding: 2rem;
+}
+.IndexAllPosts h1 {
+  color: #333;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+.IndexAllPosts li {
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.0509803922);
+  margin-bottom: 1rem;
+  padding: 1.5rem;
+  transition: transform 0.3s ease-in-out;
+}
+.IndexAllPosts li .category {
+  color: #888;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.IndexAllPosts li h2 {
+  color: #333;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.IndexAllPosts li p {
+  color: #666;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+.IndexAllPosts li:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1019607843);
+  transform: translateY(-5px);
+}
+.IndexAllPosts ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.PostForm {
+  background-color: #f8f8f8;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1019607843);
+  margin: 2rem auto;
+  max-width: 500px;
+  padding: 1.5rem;
+}
+.PostForm button {
+  background-color: #4a90e2;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-top: 10px;
+  padding: 0.6rem 1rem;
+  transition: background-color 0.2s ease-in-out;
+  width: 100%;
+}
+.PostForm button:hover {
+  background-color: #c1c1c1;
+}
+.PostForm h2 {
+  color: #333;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 1.2rem;
+  text-align: center;
+}
+.PostForm input, .PostForm textarea {
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  padding: 0.6rem 0.8rem;
+  transition: border-color 0.2s ease-in-out;
+  width: 95%;
+}
+.PostForm input:focus, .PostForm textarea:focus {
+  border-color: #4a90e2;
+  outline: none;
+}
+.PostForm label {
+  color: #555;
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-bottom: 0.4rem;
+}
+
+/*# sourceMappingURL=styles.css.map */

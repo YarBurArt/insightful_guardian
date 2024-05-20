@@ -1,4 +1,4 @@
-import './App.css';
+import './styles.css';
 import PostForm from './components/PostForm';
 import IndexAllPosts from './components/IndexAllPosts';
 import { BrowserRouter as Router, 
