@@ -1,6 +1,7 @@
 import './styles.css';
 import PostForm from './components/PostForm';
 import IndexAllPosts from './components/IndexAllPosts';
+import Footer from './components/Footer'; 
 import { BrowserRouter as Router, 
   Route, Routes, 
   Link} from 'react-router-dom';
@@ -18,6 +19,7 @@ function App() {
       </Route>
       {/* TODO: add routes react ... */}
     </Routes>
+    <Footer />
   </Router>
   );
 }

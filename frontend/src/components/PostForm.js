@@ -17,6 +17,8 @@ const PostForm = () => {
 
   return (
   <div className='PostForm'>
+    <h1>Create Post</h1>
+    <h3>Remember that your post will be public only after moderation by AI and signatures.</h3>
     <form onSubmit={handleSubmit}>
       <div>
         <label htmlFor="title">Title:</label>
