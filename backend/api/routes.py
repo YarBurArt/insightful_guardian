@@ -44,7 +44,7 @@ async def get_all_posts():
     return JSONResponse({"posts": res, "total": total}, status_code=200)
 
 
-@blog_router.get("/posts/{page}/{page_size}")
+@blog_router.get("/posts/{page}/{page_size}")  # page_size is count that need front
 async def get_posts_by_pagination(page: int = 1, page_size: int = 10):
     res, total = await post_service.get_posts_with_page(page, page_size)
     await none_check_with_msg(res, "Posts not found in DB, try add posts or another page")

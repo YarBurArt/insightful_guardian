@@ -8,7 +8,7 @@ const IndexAllPosts = () => {
         const fetchPosts = async () => {
             try { // TODO: remove hard url 
                 const response = await axios.get("http://127.0.0.1:8000/api/blog/posts");
-                setPosts(response.data);
+                setPosts(response.data.posts);
             } catch (error) {
                 console.error("Error fetching posts:", error);
             }
