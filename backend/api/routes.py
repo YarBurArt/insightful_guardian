@@ -39,10 +39,16 @@ async def create_post(request: Request, post: Post):
 
 @blog_router.get("/posts")
 async def get_all_posts():
-    res = await post_service.get_posts_without_format()
-    # TODO: add pagination
+    res, total = await post_service.get_posts_with_page()
     await none_check_with_msg(res, "Posts not found in DB, try add posts")
-    return JSONResponse(res, status_code=200)
+    return JSONResponse({"posts": res, "total": total}, status_code=200)
+
+
+@blog_router.get("/posts/{page}/{page_size}")
+async def get_posts_by_pagination(page: int = 1, page_size: int = 10):
+    res, total = await post_service.get_posts_with_page(page, page_size)
+    await none_check_with_msg(res, "Posts not found in DB, try add posts or another page")
+    return JSONResponse({"posts": res, "total": total}, status_code=200)
 
 
 @blog_router.get("/posts/{post_id}")

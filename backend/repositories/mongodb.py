@@ -2,7 +2,7 @@
 import motor.motor_asyncio
 from pymongo.errors import DuplicateKeyError
 from bson.objectid import ObjectId
-from typing import List, Optional
+from typing import List, Optional, Tuple
 import asyncio
 
 
@@ -23,12 +23,16 @@ class MongoDBRepository:
         except DuplicateKeyError:
             raise Exception("Post with duplicate key")
 
-    async def get_all_posts(self) -> List[dict]:
-        """ gets possibly various json posts from the DB """
+    async def get_posts_by_pagination(self, 
+        page: int = 1, page_size: int = 10) -> Tuple[List[dict], int]:
+        """ gets possibly various json posts from the DB with pagination """
+        skip = (page - 1) * page_size
         posts = []
-        async for document in self.collection.find():
-            posts.append(document)
-        return posts
+        async for document in self.collection.find(  # for doc in page
+            ).skip(skip).limit(page_size):  # get docs from skip to limit
+            posts.append(document)  # add to res list
+        total_posts = await self.collection.count_documents({}) # for last page
+        return posts, total_posts
 
     async def get_post_by_id(self, post_id: int) -> Optional[dict]:
         """ gets json posts by post_id from the DB """
@@ -79,7 +83,7 @@ async def test_main():  # TODO: rewrite tests to unit by unit
     except Exception as e:
         print(f"Error at {e}")
 
-    all_posts = await repository.get_all_posts()
+    all_posts, t = await repository.get_all_posts()
     print(f"All posts: {all_posts}")
 
     post = await repository.get_post_by_id(1)

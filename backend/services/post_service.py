@@ -1,5 +1,5 @@
 """ module for posts service and operations with it """
-from typing import List, Optional
+from typing import List, Optional, Tuple
 from repositories import mongodb
 from . import moderation_service
 from pydantic import BaseModel
@@ -12,16 +12,17 @@ class Post(BaseModel):
     title: str
     content: str
 
-async def get_posts_without_format() -> List[dict] | None:
+async def get_posts_with_page(
+    page: int = 1, page_size: int = 10) -> List[dict] | None:
     """ gets, cleans and lite formats all posts from the DB """
-    posts_unclean: List[dict] = await repository.get_all_posts()
+    posts_unclean, total = await repository.get_posts_by_pagination(page, page_size)
     if posts_unclean is None:
         return posts_unclean
     posts_clean: List[dict] = moderation_service.clean_posts(posts_unclean)
     # format ObjectId to str to serialization
     for post in posts_clean:
         post['_id'] = str(post['_id'])
-    return posts_clean
+    return posts_clean, total
 
 async def new_post_with_any_structure(post: dict) -> Optional[dict]:
     """ create new post with AI analyzer """

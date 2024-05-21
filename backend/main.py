@@ -24,5 +24,8 @@ async def root_route():
 
 if __name__ == "__main__":
      # 127.0.0.1 on local and 0.0.0.0 on remote
-    import uvicorn
-    uvicorn.run("main:app", host="127.0.0.1", port=8000)
+    try:  # now to view exit log just run python with -v
+        import uvicorn
+        uvicorn.run("main:app", host="127.0.0.1", port=8000)
+    except KeyboardInterrupt:
+        print("\033[92mINFO\033[0m: Exiting by CNTRL+C . . . ")
