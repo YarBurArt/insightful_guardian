@@ -17,7 +17,6 @@ function App() {
       <Route path="/create_post" 
         element={<PostForm />}>
       </Route>
-      {/* TODO: add routes react ... */}
     </Routes>
     <Footer />
   </Router>
