@@ -14,13 +14,14 @@ const IndexAllPosts = () => {
                     `http://127.0.0.1:8000/api/blog/posts/${currentPage}/10`);
                 setPosts(response.data.posts);
                 setTotalPages(Math.ceil(response.data.total / 10)); // 10 per page
+                document.scrollingElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
             } catch (error) {
                 console.error("Error fetching posts:", error);
             }
         };
 
         fetchPosts();
-    }, []);
+    }, [currentPage]); // [] listen for changes in currentPage
     const handlePageChange = (page) => {
         setCurrentPage(page);
       };

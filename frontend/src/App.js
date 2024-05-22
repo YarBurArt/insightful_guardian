@@ -11,12 +11,14 @@ function App() {
     <Router>
       <Link className='link' to="/create_post">Create Post</Link>
       <Link className='link' to="/">Index All Posts</Link>
+      <Link className='link' to="/sq">Search Post</Link>
     <Routes>
       <Route path="/"
         element={<IndexAllPosts />}/> 
       <Route path="/create_post" 
-        element={<PostForm />}>
-      </Route>
+        element={<PostForm />}/>
+      <Route path="/sq" 
+        element={<IndexAllPosts />}/>
     </Routes>
     <Footer />
   </Router>
