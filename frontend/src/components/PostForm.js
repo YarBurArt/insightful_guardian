@@ -7,12 +7,14 @@ const PostForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: gen uuid for post id and send form to serv 
+    // TODO: gen uuid for post id 
+    // TODO: send form to serv 
     console.log('Send data to srv:', { title, content, category });
     // clean all
     setTitle('');
     setContent('');
     setCategory('');
+    // TODO: redirect to index or post
   };
 
   return (

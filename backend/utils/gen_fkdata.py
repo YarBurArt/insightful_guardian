@@ -8,9 +8,9 @@ fake = Faker()
 
 async def main():
     repository = MongoDBRepository("blog", "posts")
-    for _ in range(10):
+    for _ in range(30):
         new_post = {
-            "post_id": fake.uuid4(),
+            "post_id": fake.uuid4(),  # TODO: add sence to uuid
             "title": fake.sentence(),
             "content": fake.text(),
             "category": fake.word()

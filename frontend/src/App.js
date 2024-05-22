@@ -19,6 +19,7 @@ function App() {
         element={<PostForm />}/>
       <Route path="/sq" 
         element={<IndexAllPosts />}/>
+        {/* TODO: view post by name */}
     </Routes>
     <Footer />
   </Router>

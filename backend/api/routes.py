@@ -29,7 +29,7 @@ async def none_check_with_msg(value, msg: str) -> None:
         raise HTTPException(status_code=422, detail=msg)
 
 
-@blog_router.post("/posts")
+@blog_router.post("/posts")  # TODO: add docs
 async def create_post(request: Request, post: Post):
     new_post = post.dict() # to simple format
     res = await post_service.new_post_with_any_structure(new_post)

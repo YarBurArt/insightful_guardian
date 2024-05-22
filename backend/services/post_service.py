@@ -16,7 +16,7 @@ async def get_posts_with_page(
     page: int = 1, page_size: int = 10) -> List[dict] | None:
     """ gets, cleans and lite formats all posts from the DB """
     posts_unclean, total = await repository.get_posts_by_pagination(page, page_size)
-    if posts_unclean is None:
+    if posts_unclean is None:  # TODO: rewrite error handling
         return posts_unclean
     posts_clean: List[dict] = moderation_service.clean_posts(posts_unclean)
     # format ObjectId to str to serialization
