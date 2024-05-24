@@ -40,7 +40,13 @@ def clean_posts(posts: list) -> list:
     return cleaned_posts
 
 def clean_post(post: dict) -> dict:
-    # TODO: cleans post by signatures and AI
+    # TODO: cleans post AI
+    cleaned_content = process_message(  # path on run main is from project root
+        post['content'], './backend/services/profanity_en.csv') 
+    if cleaned_content is not None:
+        post['content'] = cleaned_content
+    else:
+        post = None
     return post
 
 def clean_ct(category: str) -> str:
