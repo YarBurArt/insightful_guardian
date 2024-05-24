@@ -45,7 +45,7 @@ async def get_post_by_id_without_auth(post_id: str) -> Optional[dict]:
 
 async def get_posts_by_category_with_val(category: str) -> Optional[dict]:
     """ check category, gets posts by category, clean them """
-    category_c = moderation_service.ct(category)
+    category_c = moderation_service.clean_ct(category)
     posts = await repository.get_posts_by_category(category_c)
     if posts is None:  # throw the errors to the top
         return posts

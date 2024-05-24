@@ -12,6 +12,8 @@ fastapi = "^0.111.0"
 motor = "^3.4.0"
 faker = "^25.2.0"
 fastapi-cors = "^0.0.6"
+nltk = "^3.8.1"
+pandas = "^2.2.2"
 
 
 [build-system]
