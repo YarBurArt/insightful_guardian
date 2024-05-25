@@ -18,7 +18,10 @@ async def get_posts_with_page(
     posts_unclean, total = await repository.get_posts_by_pagination(page, page_size)
     if posts_unclean is None:  # TODO: rewrite error handling
         return posts_unclean
-    posts_clean: List[dict] = moderation_service.clean_posts(posts_unclean)
+    try:
+        posts_clean: List[dict] = moderation_service.clean_posts(posts_unclean)
+    except FileNotFoundError:
+        return None, None
     # format ObjectId to str to serialization
     for post in posts_clean:
         post['_id'] = str(post['_id'])
@@ -26,7 +29,10 @@ async def get_posts_with_page(
 
 async def new_post_with_any_structure(post: dict) -> Optional[dict]:
     """ create new post with AI analyzer """
-    post_clean = moderation_service.clean_post(post)
+    try:  # TODO: rewrite error handling
+        post_clean = moderation_service.clean_post(post)
+    except FileNotFoundError:
+        return None
     if post_clean is None: 
         return post_clean
     post_res = await repository.create_post(post_clean)
@@ -49,7 +55,10 @@ async def get_posts_by_category_with_val(category: str) -> Optional[dict]:
     posts = await repository.get_posts_by_category(category_c)
     if posts is None:  # throw the errors to the top
         return posts
-    posts_c = moderation_service.clean_posts(posts)
+    try:
+        posts_c = moderation_service.clean_posts(posts)
+    except FileNotFoundError:
+        return None
     for post in posts_c:
         post['_id'] = str(post['_id'])
     return posts_c
@@ -61,7 +70,10 @@ async def get_posts_by_text_with_val(query: str) -> Optional[dict]:
     posts += await repository.get_posts_by_text("content", query_c)
     if posts is []:  # throw the errors to the top
         return None
-    posts_c = moderation_service.clean_posts(posts)
+    try:
+        posts_c = moderation_service.clean_posts(posts)
+    except FileNotFoundError: 
+        return None
     for post in posts_c:
         post['_id'] = str(post['_id'])
     return posts_c
