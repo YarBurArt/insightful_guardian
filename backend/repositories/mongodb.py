@@ -1,9 +1,9 @@
 """ module for MongoDB repository and test it """
+import asyncio
+from typing import List, Optional, Tuple
+
 import motor.motor_asyncio
 from pymongo.errors import DuplicateKeyError
-from bson.objectid import ObjectId
-from typing import List, Optional, Tuple
-import asyncio
 
 
 class MongoDBRepository:
@@ -23,8 +23,8 @@ class MongoDBRepository:
         except DuplicateKeyError:
             raise Exception("Post with duplicate key")
 
-    async def get_posts_by_pagination(self, 
-        page: int = 1, page_size: int = 10) -> Tuple[List[dict], int]:
+    async def get_posts_by_pagination(self, page: int = 1, page_size: int = 10
+        ) -> Tuple[List[dict], int]:
         """ gets possibly various json posts from the DB with pagination """
         skip = (page - 1) * page_size
         posts = []
@@ -43,29 +43,24 @@ class MongoDBRepository:
         """ deletes json post by post_id from the DB """
         delete_result = await self.collection.delete_one({"post_id": post_id})
         return delete_result.deleted_count == 1
-    
     # TODO: update by token like in telegra.ph
     async def update_post(self, post_id: int, post_data: dict) -> Optional[dict]:
         """ updates specific json part of post by post_id and new json from the DB """
         document = await self.collection.find_one_and_update(
             {"post_id": post_id}, {"$set": post_data})
         return document if document else None
-        
     async def get_posts_by_text(self, place: str, query: str) -> List[dict]:
         """ gets json posts by text in specific json place from the DB """
         posts = []
-        async for document in self.collection.find({place: 
-                {"$regex": f".*{query}.*"}}):
+        async for document in self.collection.find({place: {"$regex": f".*{query}.*"}}):
             posts.append(document)
         return posts
-    
     async def get_posts_by_category(self, category: str) -> List[dict]:
         """ gets json posts by category from the DB """
         posts = []
         async for document in self.collection.find({"category": category}):
             posts.append(document)
         return posts
-    
     
 async def test_main():  # TODO: rewrite tests to unit by unit 
     """ Test main function to interact with MongoDB repository 
@@ -83,22 +78,18 @@ async def test_main():  # TODO: rewrite tests to unit by unit
     except Exception as e:
         print(f"Error at {e}")
 
-    all_posts, t = await repository.get_all_posts()
+    all_posts, = await repository.get_posts_by_pagination()
     print(f"All posts: {all_posts}")
-
     post = await repository.get_post_by_id(1)
     print(f"Post by ID 1: {post}")
-    
     posts_by_text = await repository.get_posts_by_text("title", "dolor")
     print(f"Posts with 'dolor': {posts_by_text}")
-    
     posts_by_category = await repository.get_posts_by_category("lorem")
     print(f"Posts in category 'lorem': {posts_by_category}")
-    
     updated_post = await repository.update_post(1, {"content": "loren inform si le"})
     print(f"Uptade post: {updated_post}")
     
-    deleted = await repository.delete_post(1)
+    await repository.delete_post(1)
     
     
 if __name__ == "__main__":

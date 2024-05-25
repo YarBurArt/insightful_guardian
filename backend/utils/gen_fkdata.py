@@ -7,6 +7,7 @@ from faker import Faker
 fake = Faker()
 
 async def main():
+    """ function for generating fake data for tests """
     repository = MongoDBRepository("blog", "posts")
     for _ in range(30):
         new_post = {

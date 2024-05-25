@@ -1,5 +1,5 @@
 """ module for posts service and operations with it """
-from typing import List, Optional, Tuple
+from typing import List, Optional
 from repositories import mongodb
 from . import moderation_service
 from pydantic import BaseModel
@@ -34,7 +34,7 @@ async def new_post_with_any_structure(post: dict) -> Optional[dict]:
     except FileNotFoundError:
         return None
     if post_clean is None: 
-        return post_clean
+        return None
     post_res = await repository.create_post(post_clean)
     post_res['_id'] = str(post_res['_id'])
     return post_res
@@ -44,7 +44,7 @@ async def get_post_by_id_without_auth(post_id: str) -> Optional[dict]:
     """ gets post by id from the DB specified by alg """
     post = await repository.get_post_by_id(post_id)
     if post is None:  # throw the errors to the top 
-        return post
+        return None
     post['_id'] = str(post['_id'])
     return post
 
@@ -68,7 +68,7 @@ async def get_posts_by_text_with_val(query: str) -> Optional[dict]:
     query_c = moderation_service.ct(query)
     posts = await repository.get_posts_by_text("title", query_c)
     posts += await repository.get_posts_by_text("content", query_c)
-    if posts is []:  # throw the errors to the top
+    if posts == []:  # throw the errors to the top
         return None
     try:
         posts_c = moderation_service.clean_posts(posts)
@@ -77,4 +77,3 @@ async def get_posts_by_text_with_val(query: str) -> Optional[dict]:
     for post in posts_c:
         post['_id'] = str(post['_id'])
     return posts_c
-

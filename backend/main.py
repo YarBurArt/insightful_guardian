@@ -1,3 +1,4 @@
+""" connects to DB and starts the API with log in console """
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from api.routes import blog_router
@@ -17,7 +18,10 @@ app.include_router(blog_router, prefix="/api/blog")
 
 @app.get("/")
 async def root_route():
-    return {"description": "Web-blog: a content sharing platform where users can publish articles without registration. All publications are subject to automated AI checks before publication.",
+    """ template for documentation """
+    return {"description": "Web-blog: a content sharing platform where "
+            "users can publish articles without registration. All publications "
+            "are subject to automated AI checks before publication.",
             "message": "be truly free, censor only truly dangerous messages"}
 
 # other API routes defined in routes.py
