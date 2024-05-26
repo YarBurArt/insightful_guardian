@@ -16,7 +16,7 @@ function App() {
       <Route path="/"
         element={<IndexAllPosts />}/> 
       <Route path="/create_post" 
-        element={<PostForm />}/>
+        element={<PostForm />}/> {/* TODO: selenium tests */}
       <Route path="/sq" 
         element={<IndexAllPosts />}/>
         {/* TODO: view post by name */}

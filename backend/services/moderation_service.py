@@ -6,7 +6,7 @@ import pandas as pd
 from better_profanity import profanity
 
 from utils import sec_analyzer  # ai here
-
+# TODO: unit tests for this module
 
 def process_message(message, dataset_path, threshold=0.25, min_count=3,  # dev
     match_columns=['text', 'canonical_form_1', 'canonical_form_2', 'canonical_form_3']):

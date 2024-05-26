@@ -3,7 +3,7 @@ from typing import List, Optional
 from repositories import mongodb
 from . import moderation_service
 from pydantic import BaseModel
-
+# TODO: unit tests for this module
 # connect to local DB
 repository = mongodb.MongoDBRepository("blog", "posts")
 
