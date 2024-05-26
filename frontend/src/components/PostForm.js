@@ -1,7 +1,26 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 
-const PostForm = () => {
+async function getIP() {
+  try { // ipify crunch
+    const response = await axios.get('https://api.ipify.org?format=json');
+    return response.data.ip;
+  } catch (error) {
+    console.error('Error getting IP address:', error);
+    return '127.0.0.1'; // default IP 
+  }
+}
+async function generateUniquePostId() {
+  const ip = await getIP();
+  const timestamp = Date.now();
+  const randomValue = Math.random().toString(36).substring(2, 12); // Generate a random value
+
+  const combinedString = `${ip}-${timestamp}-${randomValue}`;
+  return uuidv4(combinedString);
+}                                                  
+
+const PostForm =  () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('');
@@ -9,14 +28,14 @@ const PostForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    //const postId = generateUniquePostId(); // Replace with your chosen library
-    const postId = 1;
+    const post_id = await generateUniquePostId(); 
+    //const postId = 1;
     try {
       const response = await axios.post('http://127.0.0.1:8000/api/blog/posts/', {
+        post_id,
         title,
         content,
-        category,
-        id: postId, 
+        category, 
       });
   
       console.log('Post creation response:', response.data);
@@ -24,10 +43,11 @@ const PostForm = () => {
       setContent('');
       setCategory('');
       // TODO: redirect or success handling logic
+      alert("Post created successfully!");
   
     } catch (error) {
       console.error('Error creating post:', error);
-
+      alert("Error creating post: " + error);
     }
   };
 

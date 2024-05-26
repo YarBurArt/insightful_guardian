@@ -6,8 +6,9 @@ from pydantic import BaseModel
 
 from services import (moderation_service, post_service)
 
-# template to formate posts, TODO: id format
+# template to formate posts
 class Post(BaseModel):
+    post_id: str
     title: str
     content: str
     category: str
