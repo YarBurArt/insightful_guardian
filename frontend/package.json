@@ -7,11 +7,13 @@
     "@testing-library/react": "^15.0.7",
     "@testing-library/user-event": "^14.5.2",
     "axios": "^1.6.8",
+    "ipify": "^6.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.23.1",
     "react-scripts": "^5.0.1",
     "snyk": "^1.1291.0",
+    "uuid": "^9.0.1",
     "web-vitals": "^4.0.0"
   },
   "scripts": {

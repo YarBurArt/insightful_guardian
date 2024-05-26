@@ -1,20 +1,34 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const PostForm = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: gen uuid for post id 
-    // TODO: send form to serv 
-    console.log('Send data to srv:', { title, content, category });
-    // clean all
-    setTitle('');
-    setContent('');
-    setCategory('');
-    // TODO: redirect to index or post
+
+    //const postId = generateUniquePostId(); // Replace with your chosen library
+    const postId = 1;
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/api/blog/posts/', {
+        title,
+        content,
+        category,
+        id: postId, 
+      });
+  
+      console.log('Post creation response:', response.data);
+      setTitle('');
+      setContent('');
+      setCategory('');
+      // TODO: redirect or success handling logic
+  
+    } catch (error) {
+      console.error('Error creating post:', error);
+
+    }
   };
 
   return (
@@ -24,31 +38,21 @@ const PostForm = () => {
     <form onSubmit={handleSubmit}>
       <div>
         <label htmlFor="title">Title:</label>
-        <input
-          type="text"
-          id="title"
-          value={title}
+        <input type="text" id="title" value={title}
           onChange={(e) => setTitle(e.target.value)}
-          required
-        />
+          required />
       </div>
       <div>
         <label htmlFor="content">Content:</label>
-        <textarea
-          id="content"
-          value={content}
+        <textarea id="content" value={content}
           onChange={(e) => setContent(e.target.value)}
-          required></textarea>
+          required />
       </div>
       <div>
         <label htmlFor="category">Category:</label>
-        <input
-          type="text"
-          id="category"
-          value={category}
+        <input type="text" id="category" value={category}
           onChange={(e) => setCategory(e.target.value)}
-          required
-        />
+          required />
       </div>
       <button type="submit">Public </button>
     </form></div>

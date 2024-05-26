@@ -48,7 +48,7 @@ def clean_post(post: dict) -> dict:
     for word in post['title'].split():
         if profanity.contains_profanity(word):
             pr_count += 1
-    if pr_count > 3 or cleaned_content is None:
+    if pr_count > 3:
         post = None
     return post
 
