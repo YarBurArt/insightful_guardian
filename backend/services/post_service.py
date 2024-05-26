@@ -34,7 +34,6 @@ async def new_post_with_any_structure(post: dict) -> Optional[dict]:
     except FileNotFoundError:
         return None
     if post_clean is None: 
-        print(f"Post not created, clean error :)")
         return None
     post_res = await repository.create_post(post_clean)
     post_res['_id'] = str(post_res['_id'])
