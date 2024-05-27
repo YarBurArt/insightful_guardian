@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import Pagination from './Pagination';
 
@@ -19,7 +20,6 @@ const IndexAllPosts = () => {
                 console.error("Error fetching posts:", error);
             }
         };
-
         fetchPosts();
     }, [currentPage]); // [] listen for changes in currentPage
     const handlePageChange = (page) => {
@@ -30,7 +30,10 @@ const IndexAllPosts = () => {
             <h1>Posts.</h1>
             <ul>
                 {posts.map((post) => (
-                    <li key={post._id}>{post.title} <br/>
+                    <li key={post._id}> {/* TODO: link style */}
+                        <Link key={post.post_id} to={`/post/${post.post_id}`} className='link'>
+                            {post.title}
+                        </Link> <br/>
                     | {post.content} <br/># {post.category}
                     </li>
                 ))}

@@ -2,6 +2,7 @@ import './styles.css';
 import PostForm from './components/PostForm';
 import IndexAllPosts from './components/IndexAllPosts';
 import Footer from './components/Footer'; 
+import PostPage from './components/PostPage';
 import { BrowserRouter as Router, 
   Route, Routes, 
   Link} from 'react-router-dom';
@@ -19,7 +20,8 @@ function App() {
         element={<PostForm />}/> {/* TODO: selenium tests */}
       <Route path="/sq" 
         element={<IndexAllPosts />}/>
-        {/* TODO: view post by name */}
+      <Route path="/post/:post_id" 
+        element={<PostPage />} /> {/* TODO: SEO name */}
     </Routes>
     <Footer />
   </Router>
