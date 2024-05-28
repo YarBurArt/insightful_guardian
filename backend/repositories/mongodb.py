@@ -34,7 +34,7 @@ class MongoDBRepository:
         total_posts = await self.collection.count_documents({}) # for last page
         return posts, total_posts
 
-    async def get_post_by_id(self, post_id: int) -> Optional[dict]:
+    async def get_post_by_id(self, post_id: str) -> Optional[dict]:
         """ gets json posts by post_id from the DB """
         document = await self.collection.find_one({"post_id": post_id})
         return document if document else None

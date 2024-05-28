@@ -58,7 +58,7 @@ async def get_posts_by_pagination(page: int = 1, page_size: int = 10):
 
 
 @blog_router.get("/posts/{post_id}")
-async def get_post(post_id: int):
+async def get_post(post_id: str):
     """ gets post by id from the DB specified by alg """
     res = await post_service.get_post_by_id_without_auth(post_id)
     await none_check_with_msg(res, "Posts not found in DB, try add posts")

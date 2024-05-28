@@ -8,7 +8,8 @@ const PostPage = () => {
 
   useEffect(() => {
     const fetchData = async () => { // TODO: add real url 
-      const response = await axios.get(`/api/posts/${post_id}`); // fetch post data by ID
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/blog/posts/${post_id}`); // fetch post data by ID
       const data = response.data;
       setPostData(data);
     };
