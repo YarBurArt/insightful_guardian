@@ -15,11 +15,9 @@ async function generateUniquePostId() {
   const ip = await getIP();
   const timestamp = Date.now();
   const randomValue = Math.random().toString(36).substring(2, 12); // Generate a random value
-
   const combinedString = `${ip}-${timestamp}-${randomValue}`;
   return uuidv4(combinedString);
 }                                                  
-
 const PostForm =  () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -27,17 +25,12 @@ const PostForm =  () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const post_id = await generateUniquePostId(); 
     //const postId = 1;
     try {
       const response = await axios.post('http://127.0.0.1:8000/api/blog/posts/', {
-        post_id,
-        title,
-        content,
-        category, 
+        post_id, title, content, category, 
       });
-  
       console.log('Post creation response:', response.data);
       setTitle('');
       setContent('');

@@ -19,7 +19,7 @@ const PostPage = () => {
   if (!postData) return <div>Loading...</div>;
 
   return (
-    <div>
+    <div className="PostPage">
       <h1>{postData.title}</h1>
       <p>{postData.content}</p>
     </div>

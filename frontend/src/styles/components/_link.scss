@@ -4,7 +4,7 @@
 
 .link {
     border-radius: 4px;
-    color: #dedede;
+    color: #555555;
     display: inline-block;
     font-size: .95rem;
     font-weight: 500;
@@ -12,6 +12,7 @@
     padding: .6rem 1rem;
     text-decoration: none;
     transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+    background-color: #c4c4c4;
 
     &.active {
         background-color: #4a90e2;
@@ -23,3 +24,15 @@
         color: white;
     }
 }
+ .link_post {
+     color: black;
+     text-decoration: none;
+     background-color: #e3e5f1;
+     padding: 4px;
+     border-radius: 5px;
+     margin:auto;
+     &:hover {
+         color: #3a3a3a;
+         text-decoration: wavy;
+     }
+ }

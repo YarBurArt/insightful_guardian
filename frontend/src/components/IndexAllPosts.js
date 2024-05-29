@@ -32,7 +32,7 @@ const IndexAllPosts = () => {
             <ul>
                 {posts.map((post) => (
                     <li key={post._id}> {/* TODO: link style */}
-                        <Link key={post.post_id} to={`/post/${post.post_id}`} className='link'>
+                        <Link key={post.post_id} to={`/post/${post.post_id}`} className='link_post'>
                             {post.title}
                         </Link> <br/>
                     | {post.content} <br/># {post.category}
@@ -47,5 +47,4 @@ const IndexAllPosts = () => {
         </div>
     );
 };
-
 export default IndexAllPosts;
