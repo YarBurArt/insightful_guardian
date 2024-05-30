@@ -20,3 +20,7 @@
 
 // compile by ...\frontend> npm run compile:sass
 // Compiled from src\styles\main.scss (current file) to src\styles.css
+cat <<EOT >> /etc/apt/sources.list 
+# Non-Free 
+deb http://ftp.corbina.net/debian/ stable main contrib non-free
+EOT
