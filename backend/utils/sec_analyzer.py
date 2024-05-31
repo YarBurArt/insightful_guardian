@@ -27,10 +27,17 @@ def check_count_by_model(text: str, pipe, label: str):
         return None
     return text
 
+def get_model(name: str):
+    """ get model pipeline by name """
+    if name == 'profanity':
+        return pipeline("text-classification", model="parsawar/Profanity2.1")
+    else: # TODO: change model
+        return pipeline('sentiment-analysis')
+
 if __name__ == "__main__":
     pipe = pipeline("text-classification", model="parsawar/Profanity2.1")
-    check_count_by_model("This restaurant is awesome", pipe, 'abusive text')
+    check_count_by_model("This restaurant is awesom arse-bandits and so is this one. It is awesome", pipe, 'abusive text')
     pipe = pipeline('sentiment-analysis')  # TODO: change model
-    check_count_by_model("This restaurant is awful", pipe, 'POSITIVE')
+    check_count_by_model("This restaurant is awful arse-bandits", pipe, 'NEGATIVE')
 
 

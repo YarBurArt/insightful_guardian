@@ -42,7 +42,10 @@ def clean_post(post: dict) -> dict:
     # TODO: cleans post AI
     cleaned_content = process_message(post['content'],  # path on run main is from project root
         './backend/services/profanity_en.csv') 
-    if cleaned_content is not None:
+    pipe = sec_analyzer.get_model('profanity')
+    cleaned_ai_content = sec_analyzer.check_count_by_model(
+        cleaned_content, pipe, 'abusive text')
+    if cleaned_ai_content is not None:
         post['content'] = cleaned_content
     pr_count = 0
     for word in post['title'].split():
