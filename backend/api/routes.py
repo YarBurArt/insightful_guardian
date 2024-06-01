@@ -65,4 +65,4 @@ async def get_posts_by_category(category: str):
 async def search_posts(query: str):
     """ chech query, gets posts by query, clean them """
     res = await post_service.get_posts_by_text_with_val(query)
-    return JSONResponse(example_posts, status_code=200)
+    return JSONResponse(res, status_code=200)
