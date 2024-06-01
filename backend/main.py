@@ -7,7 +7,7 @@ from utils.exceptions import BaseHTTPException
 
 app = FastAPI()
 
-origins = ["http://localhost:3000",]  # in dev
+origins = ["http://localhost:3000", "http://localhost:3000/sq", ]  # in dev
 app.add_middleware(  # to allow react requests
     CORSMiddleware,
     allow_origins=origins,
@@ -42,4 +42,6 @@ if __name__ == "__main__":
         import uvicorn
         uvicorn.run("main:app", host="127.0.0.1", port=8000)
     except KeyboardInterrupt:
-        print("\033[92mINFO\033[0m: Exiting by CNTRL+C . . . ")
+        green_st = "\033[92m"
+        green_end = "\033[0m"
+        print(green_st + "INFO"+ green_end +": Exiting by CNTRL+C . . . ")

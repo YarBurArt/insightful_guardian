@@ -3,6 +3,7 @@ import PostForm from './components/PostForm';
 import IndexAllPosts from './components/IndexAllPosts';
 import Footer from './components/Footer'; 
 import PostPage from './components/PostPage';
+import SearchPage from './components/SearchPage';
 import { BrowserRouter as Router, 
   Route, Routes, 
   Link} from 'react-router-dom';
@@ -19,7 +20,7 @@ function App() {
       <Route path="/create_post" 
         element={<PostForm />}/> {/* TODO: selenium tests */}
       <Route path="/sq" 
-        element={<IndexAllPosts />}/> {/* TODO: search page */}
+        element={<SearchPage />}/>
       <Route path="/post/:post_id" 
         element={<PostPage />} /> {/* TODO: SEO name */}
     </Routes>

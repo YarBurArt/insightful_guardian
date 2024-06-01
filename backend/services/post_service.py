@@ -59,7 +59,7 @@ async def get_posts_by_category_with_val(category: str) -> Optional[dict]:
 
 async def get_posts_by_text_with_val(query: str) -> Optional[dict]:
     """ get posts by text in title and body """
-    query_c = moderation_service.ct(query)
+    query_c = moderation_service.clean_ct(query)
     posts = await repository.get_posts_by_text("title", query_c)
     posts += await repository.get_posts_by_text("content", query_c)
     try:

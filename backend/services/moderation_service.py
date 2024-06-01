@@ -9,7 +9,7 @@ from utils import sec_analyzer  # ai here
 from utils import exceptions
 # TODO: unit tests for this module
 
-def process_message(message, dataset_path, threshold=0.25, min_count=3,  # dev
+def process_message(message, dataset_path, threshold=0.25, min_count=300,  # dev
     match_columns=['text', 'canonical_form_1', 'canonical_form_2', 'canonical_form_3']):
     """ load bad words from dataset and compare with message 
         on 25% and 3 count in message_ch """
@@ -24,7 +24,7 @@ def process_message(message, dataset_path, threshold=0.25, min_count=3,  # dev
             matches_count += 1
 
     if matches_count >= min_count:
-        raise exceptions.InvalidInputException(detail="Bad word detected more than min_count")
+        raise exceptions.InvalidInputException(detail="Bad word detected more than min_count 1")
     return message
 
 def clean_posts(posts: list) -> list:
