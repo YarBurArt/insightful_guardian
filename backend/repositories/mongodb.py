@@ -5,6 +5,7 @@ from typing import List, Optional, Tuple
 import motor.motor_asyncio
 from pymongo.errors import DuplicateKeyError
 
+from utils.exceptions import InvalidInputException, PostNotFoundException
 
 class MongoDBRepository:
     """ Repository for MongoDB exactly for blog """
@@ -21,7 +22,7 @@ class MongoDBRepository:
             await self.collection.insert_one(post)
             return post
         except DuplicateKeyError:
-            raise Exception("Post with duplicate key")
+            raise InvalidInputException("Post with duplicate key")
 
     async def get_posts_by_pagination(self, page: int = 1, page_size: int = 10
         ) -> Tuple[List[dict], int]:
@@ -32,12 +33,16 @@ class MongoDBRepository:
             ).skip(skip).limit(page_size):  # get docs from skip to limit
             posts.append(document)  # add to res list
         total_posts = await self.collection.count_documents({}) # for last page
+        if posts == []:
+            raise PostNotFoundException("Posts not found in DB, try add posts or another page")
         return posts, total_posts
 
     async def get_post_by_id(self, post_id: str) -> Optional[dict]:
         """ gets json posts by post_id from the DB """
         document = await self.collection.find_one({"post_id": post_id})
-        return document if document else None
+        if document is None:
+            raise PostNotFoundException("Post not found in DB, try add posts")
+        return document 
 
     async def delete_post(self, post_id: int) -> bool:
         """ deletes json post by post_id from the DB """
@@ -48,18 +53,24 @@ class MongoDBRepository:
         """ updates specific json part of post by post_id and new json from the DB """
         document = await self.collection.find_one_and_update(
             {"post_id": post_id}, {"$set": post_data})
-        return document if document else None
+        if document is None:
+            raise PostNotFoundException("Post not found in DB, try another post")
+        return document 
     async def get_posts_by_text(self, place: str, query: str) -> List[dict]:
         """ gets json posts by text in specific json place from the DB """
         posts = []
         async for document in self.collection.find({place: {"$regex": f".*{query}.*"}}):
             posts.append(document)
+        if posts == []:
+            raise PostNotFoundException("Posts not found in DB, try another query")
         return posts
     async def get_posts_by_category(self, category: str) -> List[dict]:
         """ gets json posts by category from the DB """
         posts = []
         async for document in self.collection.find({"category": category}):
             posts.append(document)
+        if posts == []:
+            raise PostNotFoundException("Posts not found in DB, try another category")
         return posts
     
 async def test_main():  # TODO: rewrite tests to unit by unit 
