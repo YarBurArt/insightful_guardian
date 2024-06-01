@@ -18,27 +18,29 @@ const SearchPage = () => {
   };
 
   return (
-    <div className="IndexAllPosts"> {/* TODO: search style */}
-      <h1>Search</h1>
+    <div>
+    <div className="IndexAllPosts search-container"> 
       <input
+        className="search-input"
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Enter search query"/>
-      <button onClick={handleSearch}>Search</button>
-      
+      <button className='search-button' onClick={handleSearch}>Search</button>
+    </div><div className="IndexAllPosts">
       {posts.length > 0 && (
         <div>
           <h2>Search Results</h2>
           <ul>
-                {posts.map((post) => (
-                    <li key={post._id}> {/* TODO: link style */}
-                        <Link key={post.post_id} to={`/post/${post.post_id}`} className='link_post'>
-                            {post.title}
-                        </Link> <br/>
-                    | {post.content} <br/># {post.category}
-                    </li>
+            {posts.map((post) => (
+                <li key={post._id}> 
+                    <Link key={post.post_id} to={`/post/${post.post_id}`} className='link_post'>
+                        {post.title}
+                    </Link> <br/>
+                | {post.content} <br/># {post.category}
+                </li>
         ))}</ul></div>)}
+    </div>
     </div>
   );
 };

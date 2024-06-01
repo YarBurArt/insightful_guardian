@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import loadingGif from '../ayanami_loading.gif';
 
 const PostPage = () => {
   const { post_id } = useParams(); // get the post ID from the URL
@@ -15,8 +16,12 @@ const PostPage = () => {
     };
     fetchData();
   }, [post_id]);
-  // TODO: loading gif
-  if (!postData) return <div>Loading...</div>;
+  if (!postData) return ( 
+    <div>
+      <img src={loadingGif} alt="Loading..." />
+      <p>Loading...</p>
+    </div> 
+  );
 
   return (
     <div className="PostPage">

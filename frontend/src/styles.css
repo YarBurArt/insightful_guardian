@@ -236,4 +236,37 @@ footer .footer-content a:hover {
   text-align: center;
 }
 
+.search-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.search-container .search-input {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #6c757d;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.search-container .search-input:focus {
+  border-color: #3f95f1;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(63, 149, 241, 0.25);
+}
+.search-container .search-button {
+  margin-left: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #3f95f1;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out;
+}
+.search-container .search-button:hover {
+  background-color: #117bec;
+}
+
 /*# sourceMappingURL=styles.css.map */
