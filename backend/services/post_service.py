@@ -28,7 +28,7 @@ async def get_posts_with_page(
 
 async def new_post_with_any_structure(post: dict) -> Optional[dict]:
     """ create new post with AI analyzer """
-    try:  # TODO: rewrite error handling
+    try: 
         post_clean = moderation_service.clean_post(post)
     except FileNotFoundError:
         raise FileNotFoundException("Post not created, db file error :)")

@@ -31,7 +31,7 @@ def get_model(name: str):
     """ get model pipeline by name """
     if name == 'profanity':
         return pipeline("text-classification", model="parsawar/Profanity2.1")
-    else: # TODO: change model
+    else:
         return pipeline('sentiment-analysis')
 
 if __name__ == "__main__":

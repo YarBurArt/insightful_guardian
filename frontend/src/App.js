@@ -19,7 +19,7 @@ function App() {
       <Route path="/create_post" 
         element={<PostForm />}/> {/* TODO: selenium tests */}
       <Route path="/sq" 
-        element={<IndexAllPosts />}/>
+        element={<IndexAllPosts />}/> {/* TODO: search page */}
       <Route path="/post/:post_id" 
         element={<PostPage />} /> {/* TODO: SEO name */}
     </Routes>

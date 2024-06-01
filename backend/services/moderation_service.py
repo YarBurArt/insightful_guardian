@@ -40,7 +40,6 @@ def clean_posts(posts: list) -> list:
 
 def clean_post(post: dict) -> dict:
     """ cleans post on in dict by static analyzer and AI"""
-    # TODO: cleans post AI
     cleaned_content = process_message(post['content'],  # path on run main is from project root
         './backend/services/profanity_en.csv') 
     pipe = sec_analyzer.get_model('profanity')
