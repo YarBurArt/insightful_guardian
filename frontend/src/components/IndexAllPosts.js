@@ -28,6 +28,7 @@ const IndexAllPosts = () => {
     const handlePageChange = (page) => {
         setCurrentPage(page);
       };
+    // TODO: optimize rendering posts lists on view
     return (
         <div className="IndexAllPosts">
             <h1>Posts.</h1>

@@ -15,13 +15,12 @@ const PostPage = () => {
     };
     fetchData();
   }, [post_id]);
+  // <> </> is React Fragment, for fast rendering page
   if (!postData) return ( 
-    <div>
-      <img src={loadingGif} alt="Loading..." />
-      <p>Loading...</p>
-    </div> 
+    <> <img src={loadingGif} alt="Loading..." />
+       <p>Loading...</p> </> 
   );
-
+  // TODO: markdown support, with custom styles
   return (
     <div className="PostPage">
       <h1>{postData.title}</h1>

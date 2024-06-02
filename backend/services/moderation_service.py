@@ -13,6 +13,7 @@ def process_message(message, dataset_path, threshold=0.25, min_count=300,  # dev
     match_columns=['text', 'canonical_form_1', 'canonical_form_2', 'canonical_form_3']):
     """ load bad words from dataset and compare with message 
         on 25% and 3 count in message_ch """
+    # TODO: optimize message processing, data loading
     data = pd.read_csv(dataset_path)
     bad_words = data[match_columns].values.flatten().tolist()  # Flatten the list of lists
 
@@ -33,9 +34,8 @@ def clean_posts(posts: list) -> list:
     for post in posts:
         cleaned_content = process_message(post['content'],  # path on run main is from project root
         './backend/services/profanity_en.csv') 
-        if cleaned_content is not None:
-            post['content'] = cleaned_content
-            cleaned_posts.append(post)
+        post['content'] = cleaned_content
+        cleaned_posts.append(post)
     return cleaned_posts
 
 def clean_post(post: dict) -> dict:

@@ -17,7 +17,7 @@ const SearchPage = () => {
   };
 
   return (
-    <div>
+    <>
     <div className="IndexAllPosts search-container"> 
       <input
         className="search-input"
@@ -40,7 +40,7 @@ const SearchPage = () => {
                 </li>
         ))}</ul></div>)}
     </div>
-    </div>
+    </>
   );
 };
 

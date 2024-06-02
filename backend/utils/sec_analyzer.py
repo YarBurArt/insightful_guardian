@@ -1,8 +1,8 @@
 """ module with only analyzer by ai """
 # TODO: add api to moderate agressive posts
-#
 from transformers import pipeline
 
+# TODO: optimize model loading
 pipe = pipeline("text-classification", model="parsawar/Profanity2.1")
 # res = pipe(["This restaurant is awesome", "This restaurant is awful"])
 # print (res)

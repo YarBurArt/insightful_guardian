@@ -6,7 +6,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   };
 
   const renderPageNumbers = () => {
-    const pageNumbers = [];
+    const pageNumbers = []; // TODO: useMemo for faster page load
     for (let i = 1; i <= totalPages; i++) {
       pageNumbers.push(
         <button key={i} onClick={() => handlePageChange(i)}

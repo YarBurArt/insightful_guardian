@@ -25,7 +25,7 @@ async def main():
         new_post = {
             "post_id": generate_unique_id(),
             "title": fake.sentence(),
-            "content": fake.text(),
+            "content": fake.text(),  # TODO: markdown fake data
             "category": fake.word()
         }
         try:
