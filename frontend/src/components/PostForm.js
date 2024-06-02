@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import config from '../config';
 import axios from 'axios';
+import { Navigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
 async function getIP() {
@@ -33,11 +34,7 @@ const PostForm =  () => {
         post_id, title, content, category, 
       });
       console.log('Post creation response:', response.data);
-      setTitle('');
-      setContent('');
-      setCategory('');
-      // TODO: redirect or success handling logic
-      alert("Post created successfully!");
+      return <Navigate to={`/post/${post_id}`} />;
   
     } catch (error) {
       console.error('Error creating post:', error);
