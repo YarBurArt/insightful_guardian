@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import config from '../config';
 import Pagination from './Pagination';
 import loadingGif from '../ayanami_loading.gif';
 
@@ -12,9 +12,8 @@ const IndexAllPosts = () => {
 
     useEffect(() => {
         const fetchPosts = async () => {
-            try { // TODO: remove hard url 
-                const response = await axios.get(
-                    `http://127.0.0.1:8000/api/blog/posts/${currentPage}/10`);
+            try { 
+                const response = await config.axios_b.get(`/posts/${currentPage}/10`);
                 setPosts(response.data.posts);
                 setIsLoading(false);
                 setTotalPages(Math.ceil(response.data.total / 10)); // 10 per page

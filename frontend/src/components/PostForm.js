@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import config from '../config';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -28,7 +29,7 @@ const PostForm =  () => {
     const post_id = await generateUniquePostId(); 
     //const postId = 1;
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/blog/posts/', {
+      const response = await config.axios_b.post('/posts/', {
         post_id, title, content, category, 
       });
       console.log('Post creation response:', response.data);

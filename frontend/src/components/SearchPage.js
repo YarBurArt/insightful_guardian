@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from "react-router-dom";
-import axios from 'axios';
+import config from '../config';
 
 const SearchPage = () => {
   const [query, setQuery] = useState('');
@@ -8,8 +8,7 @@ const SearchPage = () => {
 
   const handleSearch = async () => {
     try {
-      const response = await axios.get(
-        `http://127.0.0.1:8000/api/blog/search?query=${query}`);
+      const response = await config.axios_b.get(`/search?query=${query}`);
       setPosts(response.data);
     } catch (error) {
       alert("Posts not found, try another query");
