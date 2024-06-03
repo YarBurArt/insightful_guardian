@@ -9,18 +9,19 @@ from utils import sec_analyzer  # ai here
 from utils import exceptions
 # TODO: unit tests for this module
 
-def process_message(message, dataset_path, threshold=0.25, min_count=300,  # dev
-    match_columns=['text', 'canonical_form_1', 'canonical_form_2', 'canonical_form_3']):
+data = pd.read_csv('./backend/services/profanity_en.csv')  # path on run main is from project root 
+match_columns=['text', 'canonical_form_2', 'canonical_form_3']
+cached_bad_words = data[match_columns].values.flatten().tolist()  # Flatten the list of lists
+cached_bad_words_s = list(map(str, cached_bad_words)) # str to use in SequenceMatcher
+
+def process_message(message, threshold=0.25, min_count=300):  # dev
     """ load bad words from dataset and compare with message 
         on 25% and 3 count in message_ch """
-    # TODO: optimize message processing, data loading
-    data = pd.read_csv(dataset_path)
-    bad_words = data[match_columns].values.flatten().tolist()  # Flatten the list of lists
-
     message_ch = message.lower()
     matches_count = 0
-    for bad_word in bad_words:
-        similarity = SequenceMatcher(None, message_ch, str(bad_word)).ratio()
+    
+    for bad_word in cached_bad_words_s:
+        similarity = SequenceMatcher(None, message_ch, bad_word).ratio()
         if similarity >= threshold:
             matches_count += 1
 
@@ -32,16 +33,14 @@ def clean_posts(posts: list) -> list:
     """ cleans posts on out list by static analyzer """
     cleaned_posts = []
     for post in posts:
-        cleaned_content = process_message(post['content'],  # path on run main is from project root
-        './backend/services/profanity_en.csv') 
+        cleaned_content = process_message(post['content']) 
         post['content'] = cleaned_content
         cleaned_posts.append(post)
     return cleaned_posts
 
 def clean_post(post: dict) -> dict:
     """ cleans post on in dict by static analyzer and AI"""
-    cleaned_content = process_message(post['content'],  # path on run main is from project root
-        './backend/services/profanity_en.csv') 
+    cleaned_content = process_message(post['content'])   
     pipe = sec_analyzer.get_model('profanity')
     cleaned_ai_content = sec_analyzer.check_count_by_model(
         cleaned_content, pipe, 'abusive text')

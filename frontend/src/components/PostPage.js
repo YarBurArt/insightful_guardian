@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
 import config from '../config';
 import loadingGif from '../ayanami_loading.gif';
 
@@ -20,11 +21,11 @@ const PostPage = () => {
     <> <img src={loadingGif} alt="Loading..." />
        <p>Loading...</p> </> 
   );
-  // TODO: markdown support, with custom styles
+  // TODO: markdown with custom styles
   return (
     <div className="PostPage">
       <h1>{postData.title}</h1>
-      <p>{postData.content}</p>
+      <ReactMarkdown>{postData.content}</ReactMarkdown>
     </div>
   );
 };
