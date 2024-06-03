@@ -4,13 +4,13 @@ from repositories.mongodb import MongoDBRepository
 import asyncio
 from faker import Faker
 import uuid
-import random
+from secrets import randbelow as rndi  # secure randint from 0 to N
 import time
 
 def generate_unique_id():
-    ip_address = f"{random.randint(1, 255)}.{random.randint(1, 255)}.{random.randint(1, 255)}.{random.randint(1, 255)}"
+    ip_address = f"{rndi(256)}.{rndi(256)}.{rndi(256)}.{rndi(256)}"    
     timestamp = int(time.time() * 1000)
-    random_number = random.randint(0, 1000000)
+    random_number = rndi(1000000)
     combined_string = f"{ip_address}-{timestamp}-{random_number}"
     unique_id = str(uuid.uuid5(uuid.NAMESPACE_DNS, combined_string))
 

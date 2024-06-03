@@ -20,9 +20,10 @@ function App() {
       <Route path="/create_post" 
         element={<PostForm />}/> {/* TODO: selenium tests */}
       <Route path="/sq" 
-        element={<SearchPage />}/>
+        element={<SearchPage />}/> 
       <Route path="/post/:post_id" 
         element={<PostPage />} /> {/* TODO: SEO name */}
+      {/* TODO: add categories urls */}
     </Routes>
     <Footer />
   </Router>

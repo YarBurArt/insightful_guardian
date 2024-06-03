@@ -14,7 +14,7 @@ match_columns=['text', 'canonical_form_2', 'canonical_form_3']
 cached_bad_words = data[match_columns].values.flatten().tolist()  # Flatten the list of lists
 cached_bad_words_s = list(map(str, cached_bad_words)) # str to use in SequenceMatcher
 
-def process_message(message, threshold=0.25, min_count=300):  # dev
+async def process_message(message: str, threshold: float=0.25, min_count: int=300) -> str:  # dev
     """ load bad words from dataset and compare with message 
         on 25% and 3 count in message_ch """
     message_ch = message.lower()
@@ -29,7 +29,7 @@ def process_message(message, threshold=0.25, min_count=300):  # dev
         raise exceptions.InvalidInputException(detail="Bad word detected more than min_count 1")
     return message
 
-def clean_posts(posts: list) -> list:
+async def clean_posts(posts: list) -> list:
     """ cleans posts on out list by static analyzer """
     cleaned_posts = []
     for post in posts:
@@ -38,7 +38,7 @@ def clean_posts(posts: list) -> list:
         cleaned_posts.append(post)
     return cleaned_posts
 
-def clean_post(post: dict) -> dict:
+async def clean_post(post: dict) -> dict:
     """ cleans post on in dict by static analyzer and AI"""
     cleaned_content = process_message(post['content'])   
     pipe = sec_analyzer.get_model('profanity')
@@ -54,7 +54,7 @@ def clean_post(post: dict) -> dict:
         raise exceptions.InvalidInputException(detail="Profanity detected more than 3")
     return post
 
-def clean_ct(category: str) -> str:
+async def clean_ct(category: str) -> str:
     """ cleans category by static analyzer on regex """
     pattern_ru = r"(?iu)\b(([уyu]|[нзnz3][аa]|(хитро|не)?[вvwb][зz3]?[ыьъi]|[сsc][ьъ']|(и|[рpr][аa4])[зсzs]ъ?|([оo0][тбtb6]|[пp][оo0][дd9])[ьъ']?|(.\B)+?[оаеиeo])?-?([еёe][бb6](?!о[рй])|и[пб][ае][тц]).*?|([нn][иеаaie]|([дпdp]|[вv][еe3][рpr][тt])[оo0]|[рpr][аa][зсzc3]|[з3z]?[аa]|с(ме)?|[оo0]([тt]|дно)?|апч)?-?[хxh][уuy]([яйиеёюuie]|ли(?!ган)).*?|([вvw][зы3z]|(три|два|четыре)жды|(н|[сc][уuy][кk])[аa])?-?[бb6][лl]([яy](?!(х|ш[кн]|мб)[ауеыио]).*?|[еэe][дтdt][ь']?)|([рp][аa][сзc3z]|[знzn][аa]|[соsc]|[вv][ыi]?|[пp]([еe][рpr][еe]|[рrp][оиioеe]|[оo0][дd])|и[зс]ъ?|[аоao][тt])?[пpn][иеёieu][зz3][дd9].*?|([зz3][аa])?[пp][иеieu][дd][аоеaoe]?[рrp](ну.*?|[оаoa][мm]|([аa][сcs])?([иiu]([лl][иiu])?[нщктлtlsn]ь?)?|([оo](ч[еиei])?|[аa][сcs])?[кk]([оo]й)?|[юu][гg])[ауеыauyei]?|[мm][аa][нnh][дd]([ауеыayueiи]([лl]([иi][сзc3щ])?[ауеыauyei])?|[оo][йi]|[аоao][вvwb][оo](ш|sh)[ь']?([e]?[кk][ауеayue])?|юк(ов|[ауи])?)|[мm][уuy][дd6]([яyаиоaiuo0].*?|[еe]?[нhn]([ьюия'uiya]|ей))|мля([тд]ь)?|лять|([нз]а|по)х|м[ао]л[ао]фь([яию]|[её]й))\b"
     matches_ru = re.findall(pattern_ru, category)  # ret [('asd',''),]
