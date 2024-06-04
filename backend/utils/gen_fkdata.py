@@ -18,6 +18,19 @@ def generate_unique_id():
 
 fake = Faker()
 
+def generate_markdown_text():
+  title = fake.sentence()
+  markdown_text = f"# {title}\n\n"
+  subtitle = fake.sentence()
+  markdown_text += f"## {subtitle}\n\n"
+  body = fake.text()
+  markdown_text += body + "\n\n"
+
+  for point in [fake.sentence() for _ in range(3)]:
+    markdown_text += f"- {point}\n"
+
+  return markdown_text
+
 async def main():
     """ function for generating fake data for tests """
     repository = MongoDBRepository("blog", "posts")
@@ -25,7 +38,7 @@ async def main():
         new_post = {
             "post_id": generate_unique_id(),
             "title": fake.sentence(),
-            "content": fake.text(),  # TODO: markdown fake data
+            "content": generate_markdown_text(),
             "category": fake.word()
         }
         try:

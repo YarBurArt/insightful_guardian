@@ -3,9 +3,13 @@
 from transformers import pipeline
 
 # TODO: optimize model loading
-pipe = pipeline("text-classification", model="parsawar/Profanity2.1")
+# pipe = pipeline("text-classification", model="parsawar/Profanity2.1")
 # res = pipe(["This restaurant is awesome", "This restaurant is awful"])
 # print (res)
+
+PROFANITY_PIPE = pipeline("text-classification", model="parsawar/Profanity2.1")
+SENTIMENT_PIPE = pipeline("text-classification", model="sbcBI/sentiment_analysis")
+
 
 def check_count_by_model(text: str, pipe, label: str):
     """ check text for profanity """
@@ -30,14 +34,12 @@ def check_count_by_model(text: str, pipe, label: str):
 def get_model(name: str):
     """ get model pipeline by name """
     if name == 'profanity':
-        return pipeline("text-classification", model="parsawar/Profanity2.1")
+        return PROFANITY_PIPE
     else:
-        return pipeline('sentiment-analysis')
+        return SENTIMENT_PIPE
 
 if __name__ == "__main__":
-    pipe = pipeline("text-classification", model="parsawar/Profanity2.1")
-    check_count_by_model("This restaurant is awesom arse-bandits and so is this one. It is awesome", pipe, 'abusive text')
-    pipe = pipeline('sentiment-analysis')  # TODO: change model
-    check_count_by_model("This restaurant is awful arse-bandits", pipe, 'NEGATIVE')
+    check_count_by_model("This restaurant is awesom arse-bandits and so is this one. It is awesome", PROFANITY_PIPE, 'abusive text')
+    check_count_by_model("This restaurant is awful arse-bandits", SENTIMENT_PIPE, 'NEGATIVE')
 
 
