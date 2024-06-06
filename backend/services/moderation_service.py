@@ -7,7 +7,7 @@ from better_profanity import profanity
 
 from utils import sec_analyzer  # ai here
 from utils import exceptions
-# TODO: unit tests for this module
+
 
 data = pd.read_csv('./backend/services/profanity_en.csv')  # path on run main is from project root 
 match_columns=['text', 'canonical_form_2', 'canonical_form_3']
