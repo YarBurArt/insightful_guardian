@@ -1,5 +1,4 @@
 """ module with analyzer by signatures and then use ai """
-from difflib import SequenceMatcher
 import re
 
 import pandas as pd
@@ -17,13 +16,12 @@ cached_bad_words_s = list(map(str, cached_bad_words)) # str to use in SequenceMa
 async def process_message(message: str, threshold: float=0.25, min_count: int=300) -> str:  # dev
     """ load bad words from dataset and compare with message 
         on 25% and 3 count in message_ch """
-    message_ch = message.lower()
     matches_count = 0
-    
+
     for bad_word in cached_bad_words_s:
-        similarity = SequenceMatcher(None, message_ch, bad_word).ratio()
-        if similarity >= threshold:
-            matches_count += 1
+        for word in message.split():
+            if bad_word == word:  # TODO: use SequenceMatcher or fuzzywuzzy 
+                matches_count += 1
 
     if matches_count >= min_count:
         raise exceptions.InvalidInputException(detail="Bad word detected more than min_count 1")
@@ -33,7 +31,7 @@ async def clean_posts(posts: list) -> list:
     """ cleans posts on out list by static analyzer """
     cleaned_posts = []
     for post in posts:
-        cleaned_content = process_message(post['content']) 
+        cleaned_content = await process_message(post['content']) 
         post['content'] = cleaned_content
         cleaned_posts.append(post)
     return cleaned_posts
