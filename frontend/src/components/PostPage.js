@@ -27,7 +27,7 @@ const PostPage = () => {
       <h1>{postData.title}</h1>
       <ReactMarkdown>{postData.content}</ReactMarkdown>
     </div>
-  );
+  ); // TODO: redirect to edit page if ig_token is valid to post
 };
 
 export default PostPage;

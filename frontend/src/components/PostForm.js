@@ -28,7 +28,7 @@ const PostForm =  () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const post_id = await generateUniquePostId(); 
-
+    // TODO: generate ig_token access, save in DB and cookies
     try {
       const response = await config.axios_b.post('/posts/', {
         post_id, title, content, category, 

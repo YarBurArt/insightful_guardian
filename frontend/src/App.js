@@ -22,7 +22,7 @@ function App() {
       <Route path="/sq" 
         element={<SearchPage />}/> 
       <Route path="/post/:post_id" 
-        element={<PostPage />} /> {/* TODO: SEO name */}
+        element={<PostPage />} /> {/* TODO: edit by ig_token, SEO name */}
       {/* TODO: add categories urls */}
     </Routes>
     <Footer />
