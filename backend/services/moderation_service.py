@@ -16,7 +16,7 @@ if os_name == 'nt':
     cached_bad_words_s = list(map(str, cached_bad_words)) # str to use in SequenceMatcher
 if os_name == 'posix':
     # define function signature based on the modified C function
-    process_message = ctypes.CDLL("./statprofilter.so").process_message
+    process_message = ctypes.CDLL("./backend/services/lib_profanity/statprofilter.so").process_message
     process_message.argtypes = [
         ctypes.c_char_p,  # message (char*)
         ctypes.c_float,  # threshold (float)
