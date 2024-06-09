@@ -21,7 +21,6 @@ const PostPage = () => {
     <> <img src={loadingGif} alt="Loading..." />
        <p>Loading...</p> </> 
   );
-  // TODO: markdown with custom styles
   return (
     <div className="PostPage">
       <h1>{postData.title}</h1>

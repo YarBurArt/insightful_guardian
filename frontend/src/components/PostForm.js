@@ -3,6 +3,7 @@ import config from '../config';
 import axios from 'axios';
 import { Navigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
+import ReactMarkdown from 'react-markdown';
 
 async function getIP() {
   try { // ipify crunch
@@ -43,6 +44,7 @@ const PostForm =  () => {
   };
   // react fragments here only for readability
   return (
+  <div className='container-n IndexPage'>
   <div className='PostForm'>
     <h1>Create Post</h1>
     <h3>Remember that your post will be public only after moderation by AI and signatures.</h3>
@@ -67,6 +69,11 @@ const PostForm =  () => {
       </>
       <button type="submit">Public </button>
     </form></div>
+    <div className='PostForm-preview'>
+      <h1>Preview content (markdown support)</h1>
+      <ReactMarkdown>{content}</ReactMarkdown>
+    </div>
+    </div>
   );
 };
 

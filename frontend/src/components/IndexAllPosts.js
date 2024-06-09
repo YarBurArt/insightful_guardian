@@ -31,20 +31,21 @@ const IndexAllPosts = () => {
       };
     // TODO: optimize rendering posts lists on view
     return (
-        <div className="IndexPage">
+        <div className="container-n IndexPage">
         <CategoryWidget />
         <div className="IndexAllPosts">
             <h1>Posts.</h1>
             {isLoading ? (
                 <img src={loadingGif} alt="Loading..." />
             ) : (
-            <ul>
+            <ul className="posts">
                 {posts.map((post) => (
-                    <li key={post._id}> 
+                    <li key={post._id} className="post"> 
                         <Link key={post.post_id} to={`/post/${post.post_id}`} className='link_post'>
                             {post.title}
                         </Link> <br/>
-                    | {post.content} <br/># {post.category}
+                    | {post.content.slice(0, 500)} 
+                    {post.content.length > 500 && ' ...'}  <br/># {post.category}
                     </li>
                 ))}
             </ul>  )}

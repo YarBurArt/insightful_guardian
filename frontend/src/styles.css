@@ -1,3 +1,4 @@
+@charset "UTF-8";
 .App {
   text-align: center;
 }
@@ -9,6 +10,13 @@
 
 html {
   background-color: #cfd1d6;
+}
+
+.cantainer-n {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;
 }
 
 .App-header {
@@ -159,8 +167,8 @@ footer .footer-content a:hover {
   background-color: #f5f5f5;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1019607843);
-  margin: 0 auto;
-  max-width: 650px;
+  margin-left: 3rem;
+  margin-right: 3rem;
   padding: 2rem;
 }
 .IndexAllPosts h1 {
@@ -203,12 +211,27 @@ footer .footer-content a:hover {
   list-style-type: none;
   padding: 0;
 }
+.IndexAllPosts .posts {
+  display: flex; /* Разбить список на flexbox */
+  flex-wrap: wrap; /* Разрешить перенос элементов на новую строку */
+  justify-content: space-around; /* Распределить элементы равномерно */
+}
+.IndexAllPosts .posts .post {
+  flex: 1 0 300px;
+  margin: 10px;
+}
+@media (max-width: 768px) {
+  .IndexAllPosts .posts .posts .post {
+    flex: 1 0 50%;
+  }
+}
 
 .PostForm {
   background-color: #f8f8f8;
   border-radius: 6px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1019607843);
-  margin: 2rem auto;
+  margin-left: 1rem;
+  margin-right: 1rem;
   max-width: 500px;
   padding: 1.5rem;
 }
@@ -255,6 +278,22 @@ footer .footer-content a:hover {
   font-size: 0.95rem;
   font-weight: 500;
   margin-bottom: 0.4rem;
+}
+
+.PostForm-preview {
+  background-color: #f8f8f8;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1019607843);
+  margin-right: 2rem;
+  padding: 1.5rem;
+  flex: 1;
+}
+.PostForm-preview h1 {
+  color: #333;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 1.2rem;
+  text-align: center;
 }
 
 .PostPage {

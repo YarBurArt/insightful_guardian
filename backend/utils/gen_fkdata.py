@@ -1,6 +1,6 @@
 """ module for generating fake data for tests 
 run only through terminal py shell from backend root"""
-from repositories.mongodb import MongoDBRepository
+from backend.repositories.mongodb import MongoDBRepository
 import asyncio
 from faker import Faker
 import uuid
@@ -19,17 +19,18 @@ def generate_unique_id():
 fake = Faker()
 
 def generate_markdown_text():
-  title = fake.sentence()
-  markdown_text = f"# {title}\n\n"
-  subtitle = fake.sentence()
-  markdown_text += f"## {subtitle}\n\n"
-  body = fake.text()
-  markdown_text += body + "\n\n"
+    title = fake.sentence()
+    markdown_text = f"# {title}\n\n"
+    for _ in range(5):
+        subtitle = fake.sentence()
+        markdown_text += f"## {subtitle}\n\n"
+        body = fake.text()
+        markdown_text += body + "\n\n"
 
-  for point in [fake.sentence() for _ in range(3)]:
-    markdown_text += f"- {point}\n"
-
-  return markdown_text
+        for point in [fake.sentence() for _ in range(3)]:
+            markdown_text += f"- {point}\n"
+            
+    return markdown_text
 
 async def main():
     """ function for generating fake data for tests """

@@ -2,7 +2,9 @@
     background-color: #f8f8f8;
     border-radius: 6px;
     box-shadow: 0 2px 6px #0000001a;
-    margin: 2rem auto;
+    //margin: 2rem auto;
+    margin-left: 1rem;
+    margin-right: 1rem;
     max-width: 500px;
     padding: 1.5rem;
     button {
@@ -48,5 +50,22 @@
         font-size: .95rem;
         font-weight: 500;
         margin-bottom: 0.4rem;
+    }
+}
+.PostForm-preview {
+    background-color: #f8f8f8;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px #0000001a;
+    //margin: 2rem auto;
+    margin-right: 2rem;
+    //max-width: 800px;
+    padding: 1.5rem;
+    flex:1;;
+    h1 {
+        color: #333;
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-bottom: 1.2rem;
+        text-align: center;
     }
 }

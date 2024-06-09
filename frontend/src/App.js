@@ -4,7 +4,6 @@ import IndexAllPosts from './components/IndexAllPosts';
 import Footer from './components/Footer'; 
 import PostPage from './components/PostPage';
 import SearchPage from './components/SearchPage';
-import CategoryWidget from './components/CategoryWidget';
 import { BrowserRouter as Router, 
   Route, Routes, 
   Link} from 'react-router-dom';
