@@ -24,7 +24,7 @@ example_post = {
 }
 example_posts = {"1":example_post,
                  "2":example_post,}
-
+# TODO: get categories
 
 @blog_router.post("/posts")  
 async def create_post(post: Post):

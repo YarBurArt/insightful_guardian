@@ -30,6 +30,8 @@ if os_name == 'posix':
 async def process_message(message: str, threshold: float=0.25, min_count: int=300) -> str:  # dev
     """ load bad words from dataset and compare with message 
         on 25% and 3 count in message_ch """
+    if cached_bad_words_s is None:
+        raise exceptions.InvalidInputException(detail="Developers are working on this")
     matches_count = 0
 
     for bad_word in cached_bad_words_s:

@@ -1,9 +1,12 @@
+.IndexPage {
+    display: flex;
+}
 .IndexAllPosts {
     background-color: #f5f5f5;
     border-radius: 8px;
     box-shadow: 0 2px 8px #0000001a;
     margin: 0 auto;
-    max-width: 800px;
+    max-width: 650px;
     padding: 2rem;
 
     h1 {
@@ -17,6 +20,7 @@
     li {
         background-color: white;
         border-radius: 6px;
+        border: 1px solid #bebebe;
         box-shadow: 0 2px 6px #0000000d;
         margin-bottom: 1rem;
         padding: 1.5rem;
@@ -42,7 +46,7 @@
         }
 
         &:hover {
-            box-shadow: 0 4px 12px #0000001a;
+            box-shadow: 0 5px 15px #0000001a;
             transform: translateY(-5px);
         }
     }

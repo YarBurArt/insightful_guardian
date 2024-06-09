@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import config from '../config';
 import Pagination from './Pagination';
 import loadingGif from '../ayanami_loading.gif';
+import CategoryWidget from "./CategoryWidget";
 
 const IndexAllPosts = () => {
     const [posts, setPosts] = useState([]);
@@ -30,6 +31,8 @@ const IndexAllPosts = () => {
       };
     // TODO: optimize rendering posts lists on view
     return (
+        <div className="IndexPage">
+        <CategoryWidget />
         <div className="IndexAllPosts">
             <h1>Posts.</h1>
             {isLoading ? (
@@ -50,7 +53,7 @@ const IndexAllPosts = () => {
                 totalPages={totalPages}
                 onPageChange={handlePageChange}
             />
-        </div>
+        </div></div>
     );
 };
 export default IndexAllPosts;
