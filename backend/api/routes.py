@@ -24,7 +24,7 @@ example_post = {
 }
 example_posts = {"1":example_post,
                  "2":example_post,}
-# TODO: get categories
+
 
 @blog_router.post("/posts")  
 async def create_post(post: Post):
@@ -60,6 +60,11 @@ async def get_posts_by_category(category: str):
     res = await post_service.get_posts_by_category_with_val(category)
     return JSONResponse(example_posts, status_code=200)
 
+@blog_router.get("/category")
+async def get_categories():
+    """ gets unique categories from the DB """
+    res = await post_service.get_categories_unique()
+    return JSONResponse(res, status_code=200)
 
 @blog_router.get("/search")
 async def search_posts(query: str):

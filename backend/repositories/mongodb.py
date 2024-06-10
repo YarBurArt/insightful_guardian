@@ -73,6 +73,15 @@ class MongoDBRepository:
             raise PostNotFoundException("Posts not found in DB, try another category")
         return posts
     
+    async def get_categories(self) -> List[dict]:
+        """ gets unique categories from the DB """
+        categories_r = self.collection.distinct("category")
+        categories = [] # TODO: use list comprehension, debug
+        async for document in categories_r:
+            categories.append(document)
+        
+        return categories
+    
 async def test_main():  # TODO: rewrite tests to unit by unit 
     """ Test main function to interact with MongoDB repository 
         for CRUD posts and gets posts by text or category."""
@@ -83,25 +92,26 @@ async def test_main():  # TODO: rewrite tests to unit by unit
         "content": "lorem Ipsum dolor sit amet dolor sit amet et just aliquet",
         "category": "lorem"
     }
-    try:
-        created_post = await repository.create_post(new_post)
-        print(f"Create new post: {created_post}")
-    except Exception as e:
-        print(f"Error at {e}")
+    # try:
+    #     created_post = await repository.create_post(new_post)
+    #     print(f"Create new post: {created_post}")
+    # except Exception as e:
+    #     print(f"Error at {e}")
 
-    all_posts, = await repository.get_posts_by_pagination()
-    print(f"All posts: {all_posts}")
-    post = await repository.get_post_by_id(1)
-    print(f"Post by ID 1: {post}")
-    posts_by_text = await repository.get_posts_by_text("title", "dolor")
-    print(f"Posts with 'dolor': {posts_by_text}")
-    posts_by_category = await repository.get_posts_by_category("lorem")
-    print(f"Posts in category 'lorem': {posts_by_category}")
-    updated_post = await repository.update_post(1, {"content": "loren inform si le"})
-    print(f"Uptade post: {updated_post}")
+    # all_posts, = await repository.get_posts_by_pagination()
+    # print(f"All posts: {all_posts}")
+    # post = await repository.get_post_by_id(1)
+    # print(f"Post by ID 1: {post}")
+    # posts_by_text = await repository.get_posts_by_text("title", "dolor")
+    # print(f"Posts with 'dolor': {posts_by_text}")
+    # posts_by_category = await repository.get_posts_by_category("lorem")
+    # print(f"Posts in category 'lorem': {posts_by_category}")
+    # updated_post = await repository.update_post(1, {"content": "loren inform si le"})
+    # print(f"Uptade post: {updated_post}")
     
-    await repository.delete_post(1)
-    
+    # await repository.delete_post(1)
+    ct = await repository.get_categories()
+    print(f"Categories: {ct}")
     
 if __name__ == "__main__":
     asyncio.run(test_main())  # dont use it in production
