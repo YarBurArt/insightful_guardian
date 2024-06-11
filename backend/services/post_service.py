@@ -7,7 +7,7 @@ from utils.exceptions import InvalidInputException, FileNotFoundException
  
 # connect to local DB
 repository = mongodb.MongoDBRepository("blog", "posts")
-
+import json 
 # template to formate posts
 class Post(BaseModel):
     title: str
@@ -63,7 +63,11 @@ async def get_categories_unique() -> Optional[dict]:
     # print("\033[31m", categories, "\033[0m") 
     # categories_c = [
     #     await moderation_service.clean_ct(category) for category in categories]
-    categories = ["temp", "test", "lorem", "ipsum", "code"]
+    categories_r = ["temp", "test", "lorem", "ipsum", "code"]
+    data = []
+    for index, name in enumerate(categories_r):
+        data.append({"id": index + 1, "name": name})
+    categories = json.dumps(data)
     return categories
 
 async def get_posts_by_text_with_val(query: str) -> Optional[dict]:
