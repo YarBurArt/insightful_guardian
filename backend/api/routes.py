@@ -54,6 +54,8 @@ async def get_post(post_id: str):
     res = await post_service.get_post_by_id_without_auth(post_id)
     return JSONResponse(res, status_code=200)
 
+# TODO: add like, dislike
+
 @blog_router.get("/category/{category}")
 async def get_posts_by_category(category: str):
     """ check category, gets posts by category, clean them """

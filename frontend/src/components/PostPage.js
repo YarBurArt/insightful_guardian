@@ -17,6 +17,7 @@ const PostPage = () => {
     fetchData();
   }, [post_id]);
   // <> </> is React Fragment, for fast rendering page
+  // TODO: loading animation on full page
   if (!postData) return ( 
     <> <img src={loadingGif} alt="Loading..." />
        <p>Loading...</p> </> 

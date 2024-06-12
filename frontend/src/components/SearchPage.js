@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 import config from '../config';
-
+// TODO: rewrite as widget
 const SearchPage = () => {
   const [query, setQuery] = useState('');
   const [posts, setPosts] = useState([]);

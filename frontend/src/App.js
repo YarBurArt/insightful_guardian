@@ -17,7 +17,7 @@ function App() {
       <Link className='link' to="/sq">Search Post</Link>
     <Routes>
       <Route path="/"
-        element={<IndexAllPosts />}/> 
+        element={<IndexAllPosts />}/> {/* TODO: themes widget */}
       <Route path="/create_post" 
         element={<PostForm />}/> {/* TODO: selenium tests */}
       <Route path="/sq" 

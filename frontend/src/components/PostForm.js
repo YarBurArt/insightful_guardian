@@ -56,6 +56,7 @@ const PostForm =  () => {
           required />
       </>
       <>
+      {/* TODO: add html widget support with url filter */}
         <label htmlFor="content">Content:</label>
         <textarea id="content" value={content}
           onChange={(e) => setContent(e.target.value)}
