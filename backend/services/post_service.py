@@ -41,7 +41,8 @@ async def new_post_with_any_structure(post: dict) -> Optional[dict]:
 async def get_post_by_id_without_auth(post_id: str) -> Optional[dict]:
     """ gets post by id from the DB specified by alg """
     post = await repository.get_post_by_id(post_id)
-    post['_id'] = str(post['_id'])
+    # TODO: add get post counter in DB, just as recommendations
+    post['_id'] = str(post['_id']) 
     return post
 
 

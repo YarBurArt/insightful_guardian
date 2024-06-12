@@ -4,6 +4,7 @@ import IndexAllPosts from './components/IndexAllPosts';
 import Footer from './components/Footer'; 
 import PostPage from './components/PostPage';
 import SearchPage from './components/SearchPage';
+import CategoryPage from './components/CategoryPage';
 import { BrowserRouter as Router, 
   Route, Routes, 
   Link} from 'react-router-dom';
@@ -23,7 +24,8 @@ function App() {
         element={<SearchPage />}/> 
       <Route path="/post/:post_id" 
         element={<PostPage />} /> {/* TODO: edit by ig_token, SEO name */}
-      {/* TODO: add categories urls */}
+      <Route path="/category/:category"
+        element={<CategoryPage />}/>
     </Routes>
     <Footer />
   </Router>

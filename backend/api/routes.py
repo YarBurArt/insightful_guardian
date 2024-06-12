@@ -58,12 +58,12 @@ async def get_post(post_id: str):
 async def get_posts_by_category(category: str):
     """ check category, gets posts by category, clean them """
     res = await post_service.get_posts_by_category_with_val(category)
-    return JSONResponse(example_posts, status_code=200)
+    return JSONResponse(res, status_code=200)
 
 @blog_router.get("/category")
 async def get_categories():
     """ gets unique categories from the DB """
-    res = await post_service.get_categories_unique()
+    res = await post_service.get_categories_unique() # TODO: fix serialization list
     return JSONResponse({"cts":res,}, status_code=200)
 
 @blog_router.get("/search")
