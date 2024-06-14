@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Navigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import ReactMarkdown from 'react-markdown';
+import rehypeRaw from "rehype-raw";
 
 async function getIP() {
   try { // ipify crunch
@@ -56,7 +57,7 @@ const PostForm =  () => {
           required />
       </>
       <>
-      {/* TODO: add html widget support with url filter */}
+      {/* TODO: add content with url filter */}
         <label htmlFor="content">Content:</label>
         <textarea id="content" value={content}
           onChange={(e) => setContent(e.target.value)}
@@ -72,7 +73,7 @@ const PostForm =  () => {
     </form></div>
     <div className='PostForm-preview'>
       <h1>Preview content (markdown support)</h1>
-      <ReactMarkdown>{content}</ReactMarkdown>
+      <ReactMarkdown  rehypePlugins={[rehypeRaw]}>{content}</ReactMarkdown>
     </div>
     </div>
   );

@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import config from '../config';
 import loadingGif from '../ayanami_loading.gif';
+import rehypeRaw from "rehype-raw";
 
 const PostPage = () => {
   const { post_id } = useParams(); // get the post ID from the URL
@@ -25,7 +26,7 @@ const PostPage = () => {
   return (
     <div className="PostPage">
       <h1>{postData.title}</h1>
-      <ReactMarkdown>{postData.content}</ReactMarkdown>
+      <ReactMarkdown rehypePlugins={[rehypeRaw]}>{postData.content}</ReactMarkdown>
     </div>
   ); // TODO: redirect to edit page if ig_token is valid to post
 };

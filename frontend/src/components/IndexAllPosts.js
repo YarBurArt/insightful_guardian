@@ -14,10 +14,10 @@ const IndexAllPosts = () => {
     useEffect(() => {
         const fetchPosts = async () => {
             try { 
-                const response = await config.axios_b.get(`/posts/${currentPage}/10`);
+                const response = await config.axios_b.get(`/posts/${currentPage}/20`);
                 setPosts(response.data.posts);
                 setIsLoading(false);
-                setTotalPages(Math.ceil(response.data.total / 10)); // 10 per page
+                setTotalPages(Math.ceil(response.data.total / 20)); // n per page
                 document.scrollingElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 console.log(response.data); // TODO: remove after debug
             } catch (error) {
