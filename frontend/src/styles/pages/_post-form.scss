@@ -6,6 +6,7 @@
     margin-left: 1rem;
     margin-right: 1rem;
     max-width: 500px;
+    //min-width: 200px;
     padding: 1.5rem;
     button {
         background-color: #4a90e2;
@@ -51,6 +52,7 @@
         font-weight: 500;
         margin-bottom: 0.4rem;
     }
+
 }
 .PostForm-preview {
     background-color: #f8f8f8;
@@ -59,6 +61,7 @@
     //margin: 2rem auto;
     margin-right: 2rem;
     //max-width: 800px;
+    //min-width: 200px;
     padding: 1.5rem;
     flex:1;;
     h1 {
@@ -67,5 +70,22 @@
         font-weight: 600;
         margin-bottom: 1.2rem;
         text-align: center;
+    }
+
+}
+
+@media (max-width: 499px) {
+    .PostForm {
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+    .PostForm-preview {
+        flex: 1 0 100%; 
+        overflow: scroll;
+        display: block;
+        overflow-wrap: 300px;
+    }
+    .PostForm {
+        flex: 1 0 100%;
     }
 }

@@ -89,6 +89,32 @@ footer .footer-content a:hover {
 .categoryWidget a:hover {
   background-color: #f0f0f0;
 }
+@media (max-width: 499px) {
+  .categoryWidget {
+    width: 20px;
+    height: auto;
+    margin-left: 5px;
+    margin-right: 0;
+  }
+  .categoryWidget h2 {
+    content: "ct";
+    margin-left: -3px;
+    padding: 0;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+  .categoryWidget ul {
+    flex-direction: column;
+  }
+  .categoryWidget ul li {
+    height: auto;
+    width: 20px;
+    padding-bottom: 0px;
+    padding-left: 10px;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+}
 
 .App-link {
   color: #61dafb;
@@ -225,6 +251,12 @@ footer .footer-content a:hover {
     flex: 1 0 50%;
   }
 }
+@media (max-width: 499px) {
+  .IndexAllPosts {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+}
 
 .PostForm {
   background-color: #f8f8f8;
@@ -296,6 +328,21 @@ footer .footer-content a:hover {
   text-align: center;
 }
 
+@media (max-width: 499px) {
+  .PostForm {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+  .PostForm-preview {
+    flex: 1 0 100%;
+    overflow: scroll;
+    display: block;
+    overflow-wrap: 300px;
+  }
+  .PostForm {
+    flex: 1 0 100%;
+  }
+}
 .PostPage {
   display: flex;
   flex-direction: column;
