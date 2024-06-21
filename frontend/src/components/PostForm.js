@@ -5,6 +5,7 @@ import { Navigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from "rehype-raw";
+import Tabs from './Tabs';
 
 async function getIP() {
   try { // ipify crunch
@@ -45,7 +46,7 @@ const PostForm =  () => {
   };
   // react fragments here only for readability
   return (
-  <div className='container-n IndexPage'>
+  <Tabs>
   <div className='PostForm'>
     <h1>Create Post</h1>
     <h3>Remember that your post will be public only after moderation by AI and signatures.</h3>
@@ -75,7 +76,7 @@ const PostForm =  () => {
       <h1>Preview content (markdown support)</h1>
       <ReactMarkdown  rehypePlugins={[rehypeRaw]}>{content}</ReactMarkdown>
     </div>
-    </div>
+    </Tabs>
   );
 };
 
