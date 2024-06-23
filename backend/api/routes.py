@@ -65,8 +65,9 @@ async def get_posts_by_category(category: str):
 @blog_router.get("/category")
 async def get_categories():
     """ gets unique categories from the DB """
-    res = await post_service.get_categories_unique() # TODO: fix serialization list
-    return JSONResponse({"cts":res,}, status_code=200)
+    res = await post_service.get_categories_unique() 
+    response_data = {"cts": res}
+    return JSONResponse(response_data, status_code=200)
 
 @blog_router.get("/search")
 async def search_posts(query: str):

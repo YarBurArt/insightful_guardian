@@ -9,7 +9,7 @@ from g4f.Provider import (  # gpt proxy as api
         )
 import g4f.debug
 import g4f
-import asyncio  # TODO: remove it
+import asyncio 
 # pipe = pipeline("text-classification", model="parsawar/Profanity2.1")
 # res = pipe(["This restaurant is awesome", "This restaurant is awful"])
 # print (res)

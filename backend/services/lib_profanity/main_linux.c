@@ -46,6 +46,9 @@ int process_message(char* message, float threshold, int min_count) {
     // define an array of static bad words within the function
     //char* bad_words[] = {"damn", "heck"};  
     int num_bad_words = sizeof(bad_words) / sizeof(bad_words[0]);  // get array length
+    for (int i = 0; i < num_bad_words; i++) 
+        for (int k = 0; bad_words[i][k] != '\0'; k++) 
+            bad_words[i][k] = tolower(bad_words[i][k]);
     // compare message with each bad words
     for (int i = 0; i < num_bad_words; i++) {
         int bad_word_len = strlen(bad_words[i]); // get length of bad word str
@@ -53,10 +56,11 @@ int process_message(char* message, float threshold, int min_count) {
         int matches = 0; // start matches with 0, other in python
         // compare to n = bad_word_len - 1, because srncasecmp will compare from 0 to n char strs
         for (int j = 0; j <= message_len - bad_word_len; j++) {
-            // TODO: simplify this comparison, sometimes it will not work
-            if (strncasecmp(message + j, bad_words[i], bad_word_len) == 0) {
+            // cmp byte by byte
+            if (memcmp(message + j, bad_words[i], bad_word_len) == 0) {
                 matches++;
-                j += bad_word_len - 1; // next iteration of similarity on next char
+                j += bad_word_len - 1;
+                break; // if entire bad word matches
             }
         }
         // calculate similarity percentage
