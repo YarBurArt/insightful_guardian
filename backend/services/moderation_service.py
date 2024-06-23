@@ -3,6 +3,7 @@ import re
 from os import name as os_name
 import pandas as pd
 from better_profanity import profanity
+import Levenshtein
 
 from utils import sec_analyzer  # ai here
 from utils import exceptions
@@ -36,7 +37,7 @@ async def process_message(message: str, threshold: float=0.25, min_count: int=30
 
     for bad_word in cached_bad_words_s:
         for word in message.split():
-            if bad_word == word:  # TODO: use SequenceMatcher or fuzzywuzzy 
+            if Levenshtein.ratio(bad_word, word) >= threshold: 
                 matches_count += 1
 
     if matches_count >= min_count:
