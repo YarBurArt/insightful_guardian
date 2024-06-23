@@ -8,7 +8,7 @@ import CategoryPage from './components/CategoryPage';
 import { BrowserRouter as Router, 
   Route, Routes, 
   Link} from 'react-router-dom';
-// TODO: documentation in code
+// TODO: documentation in code where it's not clear why it's done that way
 function App() {
   return (
     <Router>
@@ -23,7 +23,7 @@ function App() {
       <Route path="/sq" 
         element={<SearchPage />}/> 
       <Route path="/post/:post_id" 
-        element={<PostPage />} /> {/* TODO: edit by ig_token, SEO name */}
+        element={<PostPage />} /> {/* TODO: SEO name before ID */}
       <Route path="/category/:category"
         element={<CategoryPage />}/>
     </Routes>

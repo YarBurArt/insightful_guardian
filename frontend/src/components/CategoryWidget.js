@@ -36,7 +36,7 @@ const CategoryWidget = () => {
         {categories.map((category) => (
           <li key={category.id}>
             {/* it's works because within the {} - React expects a JS expression, not a plain string */}
-            <a href={/category/ + category.name}>{category.name}</a> {/* TODO: add link */}
+            <a href={/category/ + category.name}>{category.name}</a> 
           </li>
         ))}
       </ul> )}

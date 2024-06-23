@@ -10,7 +10,7 @@ const PostPage = () => {
   const [postData, setPostData] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => { // TODO: add real url 
+    const fetchData = async () => { 
       const response = await config.axios_b.get(`/posts/${post_id}`); // fetch post data by ID
       const data = response.data;
       setPostData(data);

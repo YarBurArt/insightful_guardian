@@ -48,7 +48,7 @@ class MongoDBRepository:
         """ deletes json post by post_id from the DB """
         delete_result = await self.collection.delete_one({"post_id": post_id})
         return delete_result.deleted_count == 1
-    # TODO: update by token like in telegra.ph
+    # TODO: compare user and device unique via js as a token, update the whole post if the token is valid
     async def update_post(self, post_id: int, post_data: dict) -> Optional[dict]:
         """ updates specific json part of post by post_id and new json from the DB """
         document = await self.collection.find_one_and_update(
@@ -77,7 +77,7 @@ class MongoDBRepository:
         """ gets unique categories from the DB """
         categories_r = self.collection.distinct("category")
         print(categories_r)
-        categories = [] # TODO: debug
+        categories = [] # TODO: fix getting unique categories asynchronously
         async for document in categories_r:
             categories.append(document)
         

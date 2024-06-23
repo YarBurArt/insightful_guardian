@@ -1,7 +1,7 @@
 """ module with only analyzer by ai """
 from transformers import pipeline
 
-# TODO: optimize model loading
+# TODO: optimize Transformer model loading in Python (cache, async, compression, data processing)
 from g4f.Provider import (  # gpt proxy as api
         RetryProvider, Liaobots, GPTalk, Aura,
         Bing, ChatBase, ChatForAi, ChatgptNext, 
