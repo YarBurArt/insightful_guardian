@@ -1,32 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import config from '../config';
-import axios from 'axios';
 import { Navigate } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from "rehype-raw";
 import Tabs from './Tabs';
+import { generateUniquePostId, extractIFrameSrc } from './UserHelper';
 
-async function getIP() {
-  try { // ipify crunch
-    const response = await axios.get('https://api.ipify.org?format=json');
-    return response.data.ip;
-  } catch (error) {
-    console.error('Error getting IP address:', error);
-    return '127.0.0.1'; // default IP 
-  }
-}
-async function generateUniquePostId() {
-  const ip = await getIP();
-  const timestamp = Date.now();
-  const randomValue = Math.random().toString(36).substring(2, 12); // Generate a random value
-  const combinedString = `${ip}-${timestamp}-${randomValue}`;
-  return uuidv4(combinedString);
-}                                                  
+// const iframeSrc = extractIFrameSrc(content); 
 const PostForm =  () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('');
+  const [isChecking, setIsChecking] = useState(false);
+  const timeoutRef = useRef(null) 
+  const allowedDomains = ['youtube.com', 'sketchfab.com', 'google.com'];
+
+  useEffect(() => {
+    const validateIframeSrc = () => {
+      const iframeSrc = extractIFrameSrc(content);
+      if (iframeSrc) {
+        const hostname = new URL(iframeSrc).hostname;
+        if (!allowedDomains.includes(hostname)) {
+          console.warn(`Iframe src not allowed: ${hostname}`);
+        }
+      }
+      setIsChecking(false);
+    };
+
+    if (isChecking) {
+      timeoutRef.current = setTimeout(validateIframeSrc, 3000);
+    }
+
+    return () => clearTimeout(timeoutRef.current); 
+  }, [content, allowedDomains, isChecking]);
+
+  const handleInputChange = (event) => {
+    setContent(event.target.value);
+    setIsChecking(true); 
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -55,13 +66,12 @@ const PostForm =  () => {
         <label htmlFor="title">Title:</label>
         <input type="text" id="title" value={title}
           onChange={(e) => setTitle(e.target.value)}
-          required />
+          required  />
       </>
       <>
-      {/* TODO: add content widgets with url filter */}
         <label htmlFor="content">Content:</label>
         <textarea id="content" value={content}
-          onChange={(e) => setContent(e.target.value)}
+          onChange={(e) => handleInputChange(e)} 
           required />
       </>
       <>
