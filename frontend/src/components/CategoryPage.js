@@ -16,7 +16,6 @@ const CategoryPage = () => {
                 const response = await config.axios_b.get(`/category/${category}`);
                 setPosts(response.data);
                 setIsLoading(false);
-                console.log(response.data); // TODO: remove after debug
             } catch (error) {
                 console.error("Error fetching posts:", error);
             }

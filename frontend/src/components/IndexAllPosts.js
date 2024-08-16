@@ -19,7 +19,6 @@ const IndexAllPosts = () => {
                 setIsLoading(false);
                 setTotalPages(Math.ceil(response.data.total / 10)); // n per page
                 document.scrollingElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                console.log(response.data); // TODO: remove after debug
             } catch (error) {
                 console.error("Error fetching posts:", error);
             }

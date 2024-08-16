@@ -1,40 +1,32 @@
 import React, { useState } from 'react';
 
-const Tabs = ({ children }) => {
+const Tabs = ({ tab1, tab2 }) => {
   const [activeTab, setActiveTab] = useState(0);
 
   const handleTabClick = (index) => {
     setActiveTab(index);
   };
-  const handlePrevClick = () => {
-    setActiveTab((prevActiveTab) => (prevActiveTab === 0 ? React.Children.count(children) - 1 : prevActiveTab - 1));
-  };
-
-  const handleNextClick = () => {
-    setActiveTab((prevActiveTab) => (prevActiveTab === React.Children.count(children) - 1 ? 0 : prevActiveTab + 1));
-  };
 
   return (
     <div>
       <div className="tabs">
-        {React.Children.map(children, (child, index) => (
-          <div
-            key={index}
-            className={`tab ${activeTab === index ? 'active' : ''}`}
-            onClick={() => handleTabClick(index)}
-          >
-            {child.props.label}
-          </div>
-        ))}
+        <div
+          className={`tab ${activeTab === 0 ? 'active' : ''}`}
+          onClick={() => handleTabClick(0)} >
+          {tab1.label}
+        </div>
+        <div
+          className={`tab ${activeTab === 1 ? 'active' : ''}`}
+          onClick={() => handleTabClick(1)} >
+          {tab2.label}
+        </div>
       </div>
       <div className="tab-content">
-        {React.Children.map(children, (child, index) =>
-          activeTab === index ? child : null
-        )}
+        {activeTab === 0 ? tab1.content : tab2.content}
       </div>
-      <div className="tab-controls"> {/* TODO: fix this loop */}
-        <button onClick={handlePrevClick}>Previous (edit)</button>
-        <button onClick={handleNextClick}>Next (preview)</button>
+      <div className="tab-controls">
+        <button onClick={() => setActiveTab(0)}>Tab 1</button>
+        <button onClick={() => setActiveTab(1)}>Tab 2</button>
       </div>
     </div>
   );
