@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import config from '../config';
+import React from 'react';
+//import config from '../config';
 import loadingGif from '../ayanami_loading.gif';
 
 const CategoryWidget = () => {

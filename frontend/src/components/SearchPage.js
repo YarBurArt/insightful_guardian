@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Link } from "react-router-dom";
 import config from '../config';
-// TODO: rewrite as widget
+import SearchInput from './SearchInput';
+import SearchResults from './SearchResults';
+
+
 const SearchPage = () => {
   const [query, setQuery] = useState('');
   const [posts, setPosts] = useState([]);
@@ -18,28 +20,8 @@ const SearchPage = () => {
 
   return (
     <>
-    <div className="IndexAllPosts search-container"> 
-      <input
-        className="search-input"
-        type="text"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Enter search query"/>
-      <button className='search-button' onClick={handleSearch}>Search</button>
-    </div><div className="IndexAllPosts">
-      {posts.length > 0 && (
-        <div>
-          <h2>Search Results</h2>
-          <ul>
-            {posts.map((post) => (
-                <li key={post._id}> 
-                    <Link key={post.post_id} to={`/post/${post.post_id}`} className='link_post'>
-                        {post.title}
-                    </Link> <br/>
-                | {post.content} <br/># {post.category}
-                </li>
-        ))}</ul></div>)}
-    </div>
+    <SearchInput query={query} setQuery={setQuery} handleSearch={handleSearch} />
+    <SearchResults posts={posts} />
     </>
   );
 };
