@@ -1,13 +1,13 @@
 """ module for posts service and operations with it """
+import json
 from typing import List, Optional
 from repositories import mongodb
 from . import moderation_service
 from pydantic import BaseModel
 from utils.exceptions import InvalidInputException, FileNotFoundException
- 
+
 # connect to local DB
 repository = mongodb.MongoDBRepository("blog", "posts")
-import json 
 # template to formate posts
 class Post(BaseModel):
     title: str
@@ -20,7 +20,7 @@ async def get_posts_with_page(
     try:
         posts_clean: List[dict] = await moderation_service.clean_posts(posts_unclean)
     except FileNotFoundError:
-       raise FileNotFoundException("db file error :)")
+        raise FileNotFoundException("db file error :)")
     # format ObjectId to str to serialization
     for post in posts_clean:
         post['_id'] = str(post['_id'])
@@ -28,11 +28,11 @@ async def get_posts_with_page(
 
 async def new_post_with_any_structure(post: dict) -> Optional[dict]:
     """ create new post with AI analyzer """
-    try: 
+    try:
         post_clean = await moderation_service.clean_post(post)
     except FileNotFoundError:
         raise FileNotFoundException("Post not created, db file error :)")
-    
+
     post_res = await repository.create_post(post_clean)
     post_res['_id'] = str(post_res['_id'])
     return post_res
@@ -42,7 +42,7 @@ async def get_post_by_id_without_auth(post_id: str) -> Optional[dict]:
     """ gets post by id from the DB specified by alg """
     post = await repository.get_post_by_id(post_id)
     # TODO: add get post counter in DB, just as recommendations
-    post['_id'] = str(post['_id']) 
+    post['_id'] = str(post['_id'])
     return post
 
 
@@ -78,7 +78,7 @@ async def get_posts_by_text_with_val(query: str) -> Optional[dict]:
     posts += await repository.get_posts_by_text("content", query_c)
     try:
         posts_c = await moderation_service.clean_posts(posts)
-    except FileNotFoundError: 
+    except FileNotFoundError:
         raise FileNotFoundException("db profinity file error :)")
     for post in posts_c:
         post['_id'] = str(post['_id'])

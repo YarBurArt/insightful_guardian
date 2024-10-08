@@ -33,7 +33,7 @@ class MongoDBRepository:
             ).skip(skip).limit(page_size):  # get docs from skip to limit
             posts.append(document)  # add to res list
         total_posts = await self.collection.count_documents({}) # for last page
-        if posts == []:
+        if not posts:
             raise PostNotFoundException("Posts not found in DB, try add posts or another page")
         return posts, total_posts
 
@@ -48,20 +48,21 @@ class MongoDBRepository:
         """ deletes json post by post_id from the DB """
         delete_result = await self.collection.delete_one({"post_id": post_id})
         return delete_result.deleted_count == 1
-    # TODO: compare user and device unique via js as a token, update the whole post if the token is valid
+    # TODO: compare user and device unique via js as a token
+    # TODO: update the whole post if the token is valid
     async def update_post(self, post_id: int, post_data: dict) -> Optional[dict]:
         """ updates specific json part of post by post_id and new json from the DB """
         document = await self.collection.find_one_and_update(
             {"post_id": post_id}, {"$set": post_data})
         if document is None:
             raise PostNotFoundException("Post not found in DB, try another post")
-        return document 
+        return document
     async def get_posts_by_text(self, place: str, query: str) -> List[dict]:
         """ gets json posts by text in specific json place from the DB """
         posts = []
         async for document in self.collection.find({place: {"$regex": f".*{query}.*"}}):
             posts.append(document)
-        if posts == []:
+        if not posts:
             raise PostNotFoundException("Posts not found in DB, try another query")
         return posts
     async def get_posts_by_category(self, category: str) -> List[dict]:
@@ -69,10 +70,10 @@ class MongoDBRepository:
         posts = []
         async for document in self.collection.find({"category": category}):
             posts.append(document)
-        if posts == []:
+        if not posts:
             raise PostNotFoundException("Posts not found in DB, try another category")
         return posts
-    
+
     async def get_categories(self) -> List[dict]:
         """ gets unique categories from the DB """
         categories_r = self.collection.distinct("category")
@@ -80,10 +81,10 @@ class MongoDBRepository:
         categories = [] # TODO: fix getting unique categories asynchronously
         async for document in categories_r:
             categories.append(document)
-        
+
         return categories
-    
-async def test_main():  # TODO: rewrite tests to unit by unit 
+
+async def test_main():  # TODO: rewrite tests to unit by unit
     """ Test main function to interact with MongoDB repository 
         for CRUD posts and gets posts by text or category."""
     repository = MongoDBRepository("blog", "posts")  # dev
@@ -109,11 +110,11 @@ async def test_main():  # TODO: rewrite tests to unit by unit
     print(f"Posts in category 'lorem': {posts_by_category}")
     updated_post = await repository.update_post(1, {"content": "loren inform si le"})
     print(f"Uptade post: {updated_post}")
-    
+
     await repository.delete_post(1)
     ct = await repository.get_categories()
     print(f"Categories: {ct}")
-    
+
 if __name__ == "__main__":
     asyncio.run(test_main())  # dont use it in production
     

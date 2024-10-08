@@ -1,6 +1,7 @@
 """ module with analyzer by signatures and then use ai """
 import re
 from os import name as os_name
+import ctypes
 import pandas as pd
 from better_profanity import profanity
 import Levenshtein
@@ -11,13 +12,15 @@ from utils import exceptions
 # TODO: use c variant of process_message on windows, it's just static analyzer
 # python basically it's C, then just use ctypes for best performance
 if os_name == 'nt':
-    data = pd.read_csv('./backend/services/profanity_en.csv')  # path on run main is from project root 
+    # path on run main is from project root
+    data = pd.read_csv('./backend/services/profanity_en.csv')  
     match_columns=['text', 'canonical_form_2', 'canonical_form_3']
     cached_bad_words = data[match_columns].values.flatten().tolist()  # Flatten the list of lists
     cached_bad_words_s = list(map(str, cached_bad_words)) # str to use in SequenceMatcher
 if os_name == 'posix':
     # define function signature based on the modified C function
-    process_message = ctypes.CDLL("./backend/services/lib_profanity/statprofilter.so").process_message
+    process_message = ctypes.CDLL(
+        "./backend/services/lib_profanity/statprofilter.so").process_message
     process_message.argtypes = [
         ctypes.c_char_p,  # message (char*)
         ctypes.c_float,  # threshold (float)

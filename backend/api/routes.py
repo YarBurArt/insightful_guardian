@@ -26,7 +26,7 @@ example_posts = {"1":example_post,
                  "2":example_post,}
 
 
-@blog_router.post("/posts")  
+@blog_router.post("/posts")
 async def create_post(post: Post):
     """ create new post with AI analyzer """
     new_post = post.dict() # to simple format
@@ -65,7 +65,7 @@ async def get_posts_by_category(category: str):
 @blog_router.get("/category")
 async def get_categories():
     """ gets unique categories from the DB """
-    res = await post_service.get_categories_unique() 
+    res = await post_service.get_categories_unique()
     response_data = {"cts": res}
     return JSONResponse(response_data, status_code=200)
 
