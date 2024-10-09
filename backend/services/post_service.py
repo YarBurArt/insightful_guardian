@@ -10,6 +10,8 @@ from utils.exceptions import InvalidInputException, FileNotFoundException
 repository = mongodb.MongoDBRepository("blog", "posts")
 # template to formate posts
 class Post(BaseModel):
+    category: str
+    post_id: str
     title: str
     content: str
 
@@ -26,7 +28,7 @@ async def get_posts_with_page(
         post['_id'] = str(post['_id'])
     return posts_clean, total
 
-async def new_post_with_any_structure(post: dict) -> Optional[dict]:
+async def new_post_with_any_structure(post: Post) -> Optional[dict]:
     """ create new post with AI analyzer """
     try:
         post_clean = await moderation_service.clean_post(post)
