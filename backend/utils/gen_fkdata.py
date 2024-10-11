@@ -1,14 +1,16 @@
 """ module for generating fake data for tests 
 run only through terminal py shell from backend root"""
 import time
-import asyncio
 import uuid
+import asyncio
+from secrets import randbelow as rndi  # secure randint from 0 to N
+
 from faker import Faker
 from backend.repositories.mongodb import MongoDBRepository
-from secrets import randbelow as rndi  # secure randint from 0 to N
 
 
 def generate_unique_id():
+    """ fake id generator based on time and randbelow """
     ip_address = f"{rndi(256)}.{rndi(256)}.{rndi(256)}.{rndi(256)}"
     timestamp = int(time.time() * 1000)
     random_number = rndi(1000000)
@@ -20,6 +22,7 @@ def generate_unique_id():
 fake = Faker()
 
 def generate_markdown_text():
+    """ generate fake markdown text """
     title = fake.sentence()
     markdown_text = f"# {title}\n\n"
     for _ in range(5):

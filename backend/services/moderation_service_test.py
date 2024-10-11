@@ -1,7 +1,9 @@
-import pytest 
-from faker import Faker; fake = Faker()
+""" module for testing moderation service """
 import os
 import random
+import pytest 
+from faker import Faker; fake = Faker()
+
 
 from backend.services.moderation_service import (
     process_message, clean_post, clean_ct)

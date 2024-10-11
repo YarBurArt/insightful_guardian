@@ -1,3 +1,4 @@
+""" module for testing post service """
 import pytest 
 from faker import Faker; fake = Faker()
 
