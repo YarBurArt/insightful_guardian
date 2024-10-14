@@ -7,9 +7,9 @@ from fastapi import FastAPI, Request # for run is docker as microservice, it can
 # TODO: optimize Transformer model loading in Python (cache, async, compression, data processing)
 
 from g4f.Provider import (  # gpt proxy as api
-        RetryProvider, Liaobots, GPTalk, Aura,
-        Bing, ChatBase, ChatForAi, ChatgptNext,
-        DeepInfra, FlowGpt, Gpt6, GptChatly
+        DDG, RetryProvider, Liaobots, GPTalk, Aura,
+        Bing, GigaChat, HuggingFace, Replicate,
+        DeepInfra, FlowGpt, GeminiPro
         )
 import g4f.debug
 import g4f

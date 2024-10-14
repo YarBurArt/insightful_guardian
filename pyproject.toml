@@ -25,6 +25,7 @@ rapidfuzz = "^3.9.3"
 levenshtein = "^0.25.1"
 asyncpg = "^0.29.0"
 python-dotenv = "^1.0.1"
+curl-cffi = "^0.7.3"
 
 
 [build-system]

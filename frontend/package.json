@@ -25,7 +25,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "compile:sass": "sass src/styles/main.scss src/styles.css -w"
+    "compile:sass": "sass src/styles/main.scss src/styles.css -w",
+    "start:dev": "concurrently \"react-scripts start\" \"node server/index.js\""
   },
   "eslintConfig": {
     "extends": [
@@ -46,6 +47,7 @@
     ]
   },
   "devDependencies": {
+    "concurrently": "^9.0.1",
     "sass": "^1.77.2"
   }
 }
