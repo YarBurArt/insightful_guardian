@@ -23,7 +23,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --transformIgnorePatterns 'node_modules/(?!axios)/'",
     "eject": "react-scripts eject",
     "compile:sass": "sass src/styles/main.scss src/styles.css -w",
     "start:dev": "concurrently \"react-scripts start\" \"node server/index.js\""
