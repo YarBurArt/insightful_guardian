@@ -4,49 +4,55 @@ from os import name as os_name
 import ctypes
 import pandas as pd
 from better_profanity import profanity
-import Levenshtein
+from Levenshtein import ratio
 
 from utils import sec_analyzer  # ai here
 from utils import exceptions
 
 # TODO: use c variant of process_message on windows, it's just static analyzer
 # python basically it's C, then just use ctypes for best performance
-if os_name == 'nt':
-    # path on run main is from project root
-    data = pd.read_csv('./backend/services/profanity_en.csv')  
-    match_columns=['text', 'canonical_form_2', 'canonical_form_3']
-    cached_bad_words = data[match_columns].values.flatten().tolist()  # Flatten the list of lists
-    cached_bad_words_s = list(map(str, cached_bad_words)) # str to use in SequenceMatcher
 if os_name == 'posix':
-    # define function signature based on the modified C function
-    process_message = ctypes.CDLL(
+    """ load bad words from dataset and compare with message 
+        on 25% and 3 count in message_ch """
+    data = pd.read_csv('./backend/services/profanity_en.csv')
+    match_columns = ['text', 'canonical_form_2', 'canonical_form_3']
+    cached_bad_words = data[match_columns].values.flatten().tolist()
+    cached_bad_words_s = list(map(str, cached_bad_words))
+
+    # define function signature based on the modified C function, fix here
+    process_message_c = ctypes.CDLL(
         "./backend/services/lib_profanity/statprofilter.so").process_message
-    process_message.argtypes = [
+    process_message_c.argtypes = [
         ctypes.c_char_p,  # message (char*)
         ctypes.c_float,  # threshold (float)
         ctypes.c_int,  # min_count (int)
     ]
-    process_message.restype = ctypes.c_int  # return type (int)
-    # result = process_message(ctypes.c_char_p(message.encode('utf-8')) , threshold , min_count)
-    raise exceptions.InvalidInputException(detail="Developers are working on this")
+    process_message_c.restype = ctypes.c_int  # return type (int)
 
-
-async def process_message(message: str, threshold: float=0.95, min_count: int=300) -> str:  # dev
+    async def process_message(message: str, threshold: float=0.95, min_count: int=300) -> str:
+        result = process_message_c(
+            ctypes.c_char_p(message.encode('utf-8')), ctypes.c_float(threshold), ctypes.c_int(min_count))
+        if result >= min_count:
+            raise exceptions.InvalidInputException(detail="Bad word detected more than min_count 1")
+        return message
+    
+elif os_name == 'nt': # stable based on docker requirements
     """ load bad words from dataset and compare with message 
         on 25% and 3 count in message_ch """
-    if cached_bad_words_s is None:
-        raise exceptions.InvalidInputException(detail="Developers are working on this")
-    matches_count = 0
+    async def process_message(message: str, threshold: float=0.95, min_count: int=300) -> str:
+        if cached_bad_words_s is None:
+            raise exceptions.InvalidInputException(detail="Developers are working on this")
+        matches_count = 0
 
-    for bad_word in cached_bad_words_s:
-        for word in message.split():
-            if Levenshtein.ratio(bad_word, word) >= threshold: 
-                print(word, Levenshtein.ratio(bad_word, word) )
-                matches_count += 1
+        for bad_word in cached_bad_words_s:
+            for word in message.split():
+                if ratio(bad_word, word) >= threshold:
+                    print(word, ratio(bad_word, word))
+                    matches_count += 1
 
-    if matches_count >= min_count:
-        raise exceptions.InvalidInputException(detail="Bad word detected more than min_count 1")
-    return message
+        if matches_count >= min_count:
+            raise exceptions.InvalidInputException(detail="Bad word detected more than min_count 1")
+        return message
 
 async def clean_posts(posts: list) -> list:
     """ cleans posts on out list by static analyzer """
