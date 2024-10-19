@@ -185,6 +185,29 @@ footer .footer-content a:hover {
   color: #fff;
 }
 
+.loading-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+.loading-container img {
+  min-width: 100px;
+  max-width: 300px;
+  height: auto;
+  display: block;
+}
+.loading-container p {
+  margin-top: 1rem;
+}
+
 .IndexPage {
   display: flex;
 }
@@ -389,7 +412,7 @@ footer .footer-content a:hover {
   transition: background-color 0.15s ease-in-out;
 }
 .search-container .search-button:hover {
-  background-color: #117bec;
+  background-color: rgb(17.1941747573, 122.8155339806, 235.8058252427);
 }
 
 /*# sourceMappingURL=styles.css.map */

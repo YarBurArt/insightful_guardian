@@ -9,16 +9,12 @@ from Levenshtein import ratio
 from utils import sec_analyzer  # ai here
 from utils import exceptions
 
+
 # TODO: use c variant of process_message on windows, it's just static analyzer
 # python basically it's C, then just use ctypes for best performance
 if os_name == 'posix':
     """ load bad words from dataset and compare with message 
         on 25% and 3 count in message_ch """
-    data = pd.read_csv('./backend/services/profanity_en.csv')
-    match_columns = ['text', 'canonical_form_2', 'canonical_form_3']
-    cached_bad_words = data[match_columns].values.flatten().tolist()
-    cached_bad_words_s = list(map(str, cached_bad_words))
-
     # define function signature based on the modified C function, fix here
     process_message_c = ctypes.CDLL(
         "./backend/services/lib_profanity/statprofilter.so").process_message
@@ -39,6 +35,11 @@ if os_name == 'posix':
 elif os_name == 'nt': # stable based on docker requirements
     """ load bad words from dataset and compare with message 
         on 25% and 3 count in message_ch """
+    data = pd.read_csv('./backend/services/profanity_en.csv')
+    match_columns = ['text', 'canonical_form_2', 'canonical_form_3']
+    cached_bad_words = data[match_columns].values.flatten().tolist()
+    cached_bad_words_s = list(map(str, cached_bad_words))
+        
     async def process_message(message: str, threshold: float=0.95, min_count: int=300) -> str:
         if cached_bad_words_s is None:
             raise exceptions.InvalidInputException(detail="Developers are working on this")
