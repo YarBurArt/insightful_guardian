@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Alert } from 'react-native';
+import toast, { Toaster } from 'react-hot-toast';
 import config from '../config';
 import SearchInput from './SearchInput';
 import SearchResults from './SearchResults';
@@ -13,8 +15,9 @@ const SearchPage = () => {
       const response = await config.axios_b.get(`/search?query=${query}`);
       setPosts(response.data);
     } catch (error) {
-      alert("Posts not found, try another query");
       console.error('Error fetching search results:', error);  // dev
+      toast.error("Posts not found, try another query");
+      Alert.alert(error)
     }
   };
 
@@ -22,6 +25,7 @@ const SearchPage = () => {
     <>
     <SearchInput query={query} setQuery={setQuery} handleSearch={handleSearch} />
     <SearchResults posts={posts} />
+    <Toaster />
     </>
   );
 };
