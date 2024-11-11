@@ -4,12 +4,16 @@ import IndexAllPosts from '../components/IndexAllPosts';
 import { jest } from "@jest/globals";
 import { TextDecoder, TextEncoder } from 'util';
 Object.assign(global, { TextDecoder, TextEncoder });
+global.TextEncoder = TextEncoder
 
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 
 const server = setupServer(
-  rest.get('/api/posts', (req, res, ctx) => {
+  rest.get('http://localhost:8000/api/blog/posts', (res, ctx, req) => {
+    return res(ctx.json([{ id: 1, title: 'Post 1' }, { id: 2, title: 'Post 2' }]));
+  }),
+  rest.get('http://localhost:8000/api/blog/posts/:start/:end', (req, res, ctx) => {
     return res(ctx.json([{ id: 1, title: 'Post 1' }, { id: 2, title: 'Post 2' }]));
   })
 );
@@ -43,7 +47,7 @@ describe('IndexAllPosts', () => {
 
     // Simulate pagination by modifying the mocked response
     server.use(
-      rest.get('/api/posts', (req, res, ctx) => {
+      rest.get('http://localhost:8000/api/blog/posts/:start/:end', (req, res, ctx) => {
         return res(ctx.json([{ id: 2, title: 'Post 2' }]));
       })
     );
