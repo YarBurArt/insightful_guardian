@@ -3,6 +3,10 @@
 This is a repository created for learning goals, I'm actually trying to create an analog of telegra.ph, but with a different content moderation and search. I see the problem and try to fix it, but there is no docker image or anything else that can be deployed on a production server. Where I know how to do more efficiently I write, otherwise I ask generative AI. 
 There's fullstack development on `FastAPI`, `React`, `MongoDB`.
 
+[docs/architecture.md](docs/architecture.md)
+
+[docs/contribution.md](docs/contribution.md)
+
 ## Requirements
 ### Backend 
 - what = "version" -- why
