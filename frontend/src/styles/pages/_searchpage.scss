@@ -6,6 +6,8 @@ $border-radius: 0.25rem;
   display: flex;
   align-items: center;
   margin-bottom: 1rem;
+  margin-left: 10px;
+  margin-right: 20px;
 
   .search-input {
     flex: 1;
@@ -34,7 +36,7 @@ $border-radius: 0.25rem;
     transition: background-color 0.15s ease-in-out;
 
     &:hover {
-      background-color: darken($primary-color, 10%);
+      background-color: darken($primary-color, 10%); //color.adjust($primary-color, $lightness: -10%);
     }
   }
 }

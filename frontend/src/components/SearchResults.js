@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const SearchResults = ({ posts }) => {
     return (
         <div className="IndexAllPosts">
-            {posts.length > 0 && ( <>
+            {posts.length > 0 ? ( <>
                 <h2>Search Results</h2>
                 <ul>{posts.map((post) => (
                     <li key={post._id}> 
@@ -13,7 +13,9 @@ const SearchResults = ({ posts }) => {
                         </Link> <br/> | {post.content} <br/># {post.category}
                     </li>))}
                 </ul>
-            </> )}
+            </> ) : ( <p> 
+                Here will be search results (～￣▽￣)～ 
+            </p> )}
         </div>
     );
 };

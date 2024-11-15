@@ -74,6 +74,36 @@
 
 }
 
+.tab-controls {
+    display: flex;
+    //justify-content: center;
+    margin-left: 20px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+  
+    button {
+        background-color: #f1f1f1;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 10px 20px;
+        transition: background-color 0.3s ease;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
+        &:hover {
+            background-color: #e6e6e6;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+    
+        &.active {
+            background-color: #d9d9d9;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+    }
+  }
+  
+
 @media (max-width: 499px) {
     .PostForm {
         margin-left: 1rem;
