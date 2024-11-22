@@ -1,123 +1,141 @@
-""" module for PostgreSQL repository and test it;
-minimalism and the goal of the project not allow sqlalchemy, I want to know pain :)
-it seems that there are SQL injections, so try hack me
-"""
 import os
 import asyncio
 from dotenv import load_dotenv
-import asyncpg
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
+from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.ext.declarative import declarative_base
 
-from utils.exceptions import PostNotFoundException, InvalidInputException
+# TODO: fix the session in this code sketch
 
-# load .env, one time at startup
+# load environment variables
 load_dotenv()
-dbname = os.getenv('DB1_NAME')
-user = os.getenv('DB1_USER')
-host = os.getenv('DB1_HOST')
-port = os.getenv('DB1_PORT')
-password = os.getenv('DB1_PASS')
 
-class PostgresRepository: # add postgres repository to access DB
-    def __init__(self):
-        self.connection = None
+# database connection details
+dbname = os.getenv("DB1_NAME")
+user = os.getenv("DB1_USER")
+host = os.getenv("DB1_HOST")
+port = os.getenv("DB1_PORT")
+password = os.getenv("DB1_PASS")
 
-    async def connect(self): # to support legacy code
-        self.connection = await asyncpg.connect(
-            database=dbname, user=user, host=host, port=port, password=password)
-
-    async def __aenter__(self):
-        self.connection = await asyncpg.connect(
-            database=dbname, user=user, host=host, port=port, password=password)
-        return self
-
-    async def __aexit__(self, exc_type, exc, tb):
-        await self.connection.close()
-
-    async def create_post(self, post):
-        category_name, post_id, title, content = post['category'],
-        post['post_id'], post['title'], post['content']
-        category = await self.connection.fetchrow(
-            'SELECT id FROM categories WHERE name = $1', category_name)
-        if category is None:
-            print(f"Category '{category_name}' does not exist.") # debug
-            return
-
-        await self.connection.execute(
-            'INSERT INTO posts (post_id, title, content, category_id) VALUES ($1, $2, $3, $4)',
-            post_id, title, content, category['id'])
-
-    async def get_categories(self):
-        return await self.connection.fetch('SELECT * FROM categories')
-
-    async def get_posts(self):
-        return await self.connection.fetch('SELECT * FROM posts')
-
-    async def get_posts_by_category(self, category_name):
-        return await self.connection.fetch(
-            'SELECT * FROM posts WHERE category_id = (SELECT id FROM categories WHERE name = $1)',
-            category_name)
-
-    async def get_post_by_id(self, post_id):
-        return await self.connection.fetchrow('SELECT * FROM posts WHERE post_id = $1', post_id)
-
-    async def get_posts_by_text(self, place, query):
-        return await self.connection.fetch(
-            f'SELECT * FROM posts WHERE {place} LIKE $1', f'%{query}%')
+# SQLAlchemy configuration
+SQLALCHEMY_DATABASE_URL = f"postgresql+asyncpg://{user}:{password}@{host}:{port}/{dbname}"
+engine = create_async_engine(SQLALCHEMY_DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine, class_=AsyncSession)
 
 
-    async def update_post(self, post_id, post_data):
-        await self.connection.execute(
-            'UPDATE posts SET title = $1, content = $2 WHERE post_id = $3', 
-            post_data['title'], post_data['content'], post_id)
+async def get_async_session():
+    async with engine.begin() as connection:
+        async with connection.begin_nested() as session:
+            yield session
 
-    async def delete_post(self, post_id):
-        await self.connection.execute('DELETE FROM posts WHERE post_id = $1', post_id)
+Base = declarative_base()
+class Category(Base):
+    __tablename__ = "categories"
 
-    async def get_posts_by_pagination(self, page, page_size):
-        return await self.connection.fetch(
-            'SELECT * FROM posts LIMIT $1 OFFSET $2', page_size, (page - 1) * page_size)
+    id = Column(Integer, primary_key=True)
+    name = Column(String, unique=True, nullable=False)
 
-
-    async def add_category(self, name):
-        # add category if not exists
-        existing_category = await self.connection.fetchrow(
-            'SELECT id FROM categories WHERE name = $1', name)
-        if existing_category is None:
-            await self.connection.execute('INSERT INTO categories (name) VALUES ($1)', name)
-            print(f"Category '{name}' added.") # TODO: logging here
-        else:
-            print(f"Category '{name}' already exists.")
+    posts = relationship("Post", backref="category")
 
 
-async def delete_all_test_posts(connection):
-    # Удаляем все посты, которые были добавлены в процессе тестирования
-    await connection.execute('DELETE FROM posts WHERE title LIKE $1', 'Test Post%')
+class Post(Base):
+    __tablename__ = "posts"
+
+    id = Column(Integer, primary_key=True)
+    post_id = Column(String, unique=True, nullable=False)  # Assuming post_id is a string
+    title = Column(String, nullable=False)
+    content = Column(String, nullable=False)
+    category_id = Column(Integer, ForeignKey("categories.id"))
 
 
+async def create_post(session: AsyncSession, post_data):
+    category = await session.query(Category).filter(Category.name == post_data["category"]).first()
+    if not category:
+        raise ValueError(f"Category '{post_data['category']}' does not exist.")
+
+    new_post = Post(
+        post_id=post_data["post_id"], title=post_data["title"], content=post_data["content"], category=category
+    )
+    session.add(new_post)
+    await session.commit()
+
+
+async def get_categories(session: AsyncSession):
+    return await session.query(Category).all()
+
+
+async def get_posts(session: AsyncSession):
+    return await session.query(Post).all()
+
+
+async def get_posts_by_category(session: AsyncSession, category_name):
+    category = await session.query(Category).filter(Category.name == category_name).first()
+    if not category:
+        return []  # Handle non-existent category gracefully
+    return await session.query(Post).filter(Post.category == category).all()
+
+
+async def get_post_by_id(session: AsyncSession, post_id):
+    return await session.query(Post).filter(Post.id == post_id).first()
+
+
+async def get_posts_by_text(session: AsyncSession, place, query):
+    return await session.query(Post).filter(getattr(Post, place).like(f"%{query}%")).all()
+
+
+async def update_post(session: AsyncSession, post_id, post_data):
+    post = await session.query(Post).filter(Post.id == post_id).first()
+    if not post:
+        raise ValueError(f"Post with ID {post_id} not found.")
+    post.title = post_data.get("title", post.title)  # Update only provided fields
+    post.content = post_data.get("content", post.content)
+    await session.commit()
+
+
+async def delete_post(session: AsyncSession, post_id):
+    await session.query(Post).filter(Post.id == post_id).delete()
+    await session.commit()
+
+
+async def get_posts_by_pagination(session: AsyncSession, page, page_size):
+    offset = (page - 1) * page_size
+    return await session.query(Post).offset(offset).limit(page_size).all()
+
+
+async def add_category(session: AsyncSession, name):
+    existing_category = await session.query(Category).filter(Category.name == name).first()
+    if existing_category:
+        return None  
+
+    new_category = Category(name=name)
+    session.add(new_category)
+    await session.commit()
+    await session.refresh(new_category)  
+    return new_category
+    
 async def main():
-    # async is just illusion of parallelism, db work is sync in docker, but it more efficient
-    # test PostgresRepository
-    repository = PostgresRepository() # repository, some legacy style
-    await repository.connect()
-    await repository.add_category('test') # post_id : uuid
-    await repository.create_post(
-        {'category': 'test', 'post_id': '1',
-         'title': 'Test Post 1', 'content': 'Test Post 1 content'})
-    await repository.create_post(
-        {'category': 'test', 'post_id': '2',
-         'title': 'Test Post 2', 'content': 'Test Post 2 content'})
-    await repository.create_post(
-        {'category': 'test', 'post_id': '3',
-         'title': 'Test Post 3', 'content': 'Test Post 3 content'})
-    print(await repository.get_posts_by_category('test'))
-    print(await repository.get_posts_by_text('title', 'Test Post'))
-    print(await repository.get_posts_by_pagination(1, 2))
-    print(await repository.get_post_by_id(1))
-    print(await repository.get_categories())
-    print(await repository.get_posts())
-    await delete_all_test_posts(repository.connection)
+    """for test right from here"""
+    async with engine.begin() as connection:
+        async with async_session_maker() as session:
+            await add_category(session, "test") # to remove posts after test
+            # some test posts
+            await create_post(session, {"category": "test", "post_id": "1", "title": "Test Post 1", "content": "Test Post 1 content"})
+            await create_post(session, {"category": "test", "post_id": "2", "title": "Test Post 2", "content": "Test Post 2 content"})
+            await create_post(session, {"category": "test", "post_id": "3", "title": "Test Post 3", "content": "Test Post 3 content"})
 
+            # various queries and operations
+            print(await get_posts_by_category(session, "test"))
+            print(await get_posts_by_text(session, "title", "Test Post"))
+            print(await get_posts_by_pagination(session, 1, 2))
+            print(await get_post_by_id(session, 1))
+            print(await get_categories(session))
+            print(await get_posts(session))
 
+            # cleanup test data
+            await session.execute("DELETE FROM posts WHERE title LIKE 'Test Post%'")
+            await session.commit()
 
 if __name__ == "__main__":
     asyncio.run(main())
+    
