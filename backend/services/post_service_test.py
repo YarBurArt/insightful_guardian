@@ -14,7 +14,7 @@ def fuzz_prmt_get_posts_with_page():
             yield page, page_size
             
             
-def fuzz_prmt_get_post_by_idh():
+def fuzz_prmt_get_post_by_id():
     """ generate fuzz text prmt for get_post_by_id_without_auth function """ 
     for post_id in  [fake.uuid4() for _ in range(32)]:
         yield post_id
