@@ -42,7 +42,7 @@ class MongoDBRepository:
         document = await self.collection.find_one({"post_id": post_id})
         if document is None:
             raise PostNotFoundException("Post not found in DB, try add posts")
-        return document 
+        return document
 
     async def delete_post(self, post_id: int) -> bool:
         """ deletes json post by post_id from the DB """
@@ -117,4 +117,3 @@ async def test_main():  # TODO: rewrite tests to unit by unit
 
 if __name__ == "__main__":
     asyncio.run(test_main())  # dont use it in production
-    

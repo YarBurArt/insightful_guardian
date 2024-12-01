@@ -19,5 +19,5 @@ class PostNotFoundException(BaseHTTPException):
     def __init__(self, detail: str):
         super().__init__(status_code=404, detail=detail)
 
-# TODO: add detailed error messages, diagnostic information, 
+# TODO: add detailed error messages, diagnostic information,
 # specific error codes, logging, and thorough testing

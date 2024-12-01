@@ -1,12 +1,13 @@
 """ module for testing moderation service """
 import os
 import random
-import pytest 
-from faker import Faker; fake = Faker()
-
+import pytest
 
 from backend.services.moderation_service import (
     process_message, clean_post, clean_ct)
+
+from faker import Faker; fake = Faker()
+
 
 HACK_THRESHOLD: int = 0.3
 
@@ -19,21 +20,21 @@ def fuzz_prmt_process_message():
                 fuzzed_message = random_bytes + message.encode('utf-8')
                 yield fuzzed_message, threshold, min_count
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+
 def fuzz_prmt_clean_post():
     """ generate fuzz text prmt for clean_post function """ 
     for title in  [fake.sentence() for _ in range(32)]:
         for content in [fake.text() for _ in range(32)]:
-            if random.random() < HACK_THRESHOLD: 
+            if random.random() < HACK_THRESHOLD:
                 random_bytes = os.urandom(30)
                 title = random_bytes + title.encode('utf-8')
             yield {"title": title, "content": content}
-            
+
 
 def fuzz_prmt_clean_ct():
     """ generate fuzz text prmt for clean_ct function """ 
     for category in  [fake.word() for _ in range(32)]:
-        if random.random() < HACK_THRESHOLD: 
+        if random.random() < HACK_THRESHOLD:
             random_bytes = os.urandom(30)
             category = random_bytes + category.encode('utf-8')
         yield category
@@ -47,7 +48,7 @@ def test_process_message(message, threshold, min_count):
 @pytest.mark.parametrize("title,content", fuzz_prmt_clean_post())
 def test_clean_post(title, content):
     """ test clean_post function """
-    assert clean_post({"title": title, "content": content})                
+    assert clean_post({"title": title, "content": content})
 
 
 @pytest.mark.parametrize("category", fuzz_prmt_clean_ct())

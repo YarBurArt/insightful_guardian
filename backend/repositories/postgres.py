@@ -25,12 +25,14 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine, clas
 
 
 async def get_async_session():
+    """ create async session postgresql """
     async with engine.begin() as connection:
         async with connection.begin_nested() as session:
             yield session
 
 Base = declarative_base()
 class Category(Base):
+    """ categories table """
     __tablename__ = "categories"
 
     id = Column(Integer, primary_key=True)
@@ -40,6 +42,7 @@ class Category(Base):
 
 
 class Post(Base):
+    """ posts table """
     __tablename__ = "posts"
 
     id = Column(Integer, primary_key=True)
@@ -49,7 +52,8 @@ class Post(Base):
     category_id = Column(Integer, ForeignKey("categories.id"))
 
 
-async def create_post(session: AsyncSession, post_data):
+async def create_post(session: AsyncSession, post_data: dict):
+    """ create new post by AsyncSession with json post_data"""
     category = await session.query(Category).filter(Category.name == post_data["category"]).first()
     if not category:
         raise ValueError(f"Category '{post_data['category']}' does not exist.")
@@ -62,29 +66,35 @@ async def create_post(session: AsyncSession, post_data):
 
 
 async def get_categories(session: AsyncSession):
+    """ return all categories """
     return await session.query(Category).all()
 
 
 async def get_posts(session: AsyncSession):
+    """ return all posts """
     return await session.query(Post).all()
 
 
-async def get_posts_by_category(session: AsyncSession, category_name):
+async def get_posts_by_category(session: AsyncSession, category_name: str):
+    """ return all posts by category if exists """
     category = await session.query(Category).filter(Category.name == category_name).first()
     if not category:
         return []  # Handle non-existent category gracefully
     return await session.query(Post).filter(Post.category == category).all()
 
 
-async def get_post_by_id(session: AsyncSession, post_id):
+async def get_post_by_id(session: AsyncSession, post_id: str):
+    """ return post by id in uuid format """
     return await session.query(Post).filter(Post.id == post_id).first()
 
 
-async def get_posts_by_text(session: AsyncSession, place, query):
+async def get_posts_by_text(session: AsyncSession, place: str, query: str):
+    """ return all posts by text in title or content if exists """
     return await session.query(Post).filter(getattr(Post, place).like(f"%{query}%")).all()
 
 
-async def update_post(session: AsyncSession, post_id, post_data):
+async def update_post(session: AsyncSession, post_id: str, post_data: dict):
+    """ update post content in json by id in uuid format """
     post = await session.query(Post).filter(Post.id == post_id).first()
     if not post:
         raise ValueError(f"Post with ID {post_id} not found.")
@@ -94,16 +104,19 @@ async def update_post(session: AsyncSession, post_id, post_data):
 
 
 async def delete_post(session: AsyncSession, post_id):
+    """ delete post by id """
     await session.query(Post).filter(Post.id == post_id).delete()
     await session.commit()
 
 
 async def get_posts_by_pagination(session: AsyncSession, page, page_size):
+    """ return all posts by pagination with current page and page_size """
     offset = (page - 1) * page_size
     return await session.query(Post).offset(offset).limit(page_size).all()
 
 
 async def add_category(session: AsyncSession, name):
+    """ add category if not exists, then refresh it """
     existing_category = await session.query(Category).filter(Category.name == name).first()
     if existing_category:
         return None  
@@ -113,7 +126,7 @@ async def add_category(session: AsyncSession, name):
     await session.commit()
     await session.refresh(new_category)  
     return new_category
-    
+
 async def main():
     """for test right from here"""
     async with engine.begin() as connection:
@@ -138,4 +151,3 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-    

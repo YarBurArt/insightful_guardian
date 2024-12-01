@@ -63,7 +63,7 @@ async def get_posts_by_category_with_val(category: str) -> Optional[dict]:
 async def get_categories_unique() -> Optional[dict]:
     """ gets all categories from the DB """
     # categories = await repository.get_categories()
-    # print("\033[31m", categories, "\033[0m") 
+    # print("\033[31m", categories, "\033[0m")
     # categories_c = [
     #     await moderation_service.clean_ct(category) for category in categories]
     categories_r = ["temp", "test", "lorem", "ipsum", "code"]

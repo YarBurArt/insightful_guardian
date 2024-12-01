@@ -6,6 +6,7 @@ import asyncio
 from secrets import randbelow as rndi  # secure randint from 0 to N
 
 from faker import Faker
+
 from backend.repositories.mongodb import MongoDBRepository
 
 

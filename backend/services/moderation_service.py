@@ -26,12 +26,14 @@ if os_name == 'posix':
     process_message_c.restype = ctypes.c_int  # return type (int)
 
     async def process_message(message: str, threshold: float=0.95, min_count: int=300) -> str:
+        """ process message wrapper """
         result = process_message_c(
-            ctypes.c_char_p(message.encode('utf-8')), ctypes.c_float(threshold), ctypes.c_int(min_count))
+            ctypes.c_char_p(message.encode('utf-8')),
+                ctypes.c_float(threshold), ctypes.c_int(min_count))
         if result >= min_count:
             raise exceptions.InvalidInputException(detail="Bad word detected more than min_count 1")
         return message
-    
+
 elif os_name == 'nt': # stable based on docker requirements
     """ load bad words from dataset and compare with message 
         on 25% and 3 count in message_ch """
@@ -41,6 +43,7 @@ elif os_name == 'nt': # stable based on docker requirements
     cached_bad_words_s = list(map(str, cached_bad_words))
         
     async def process_message(message: str, threshold: float=0.95, min_count: int=300) -> str:
+        """ process message via python levenshtein ratio """
         if cached_bad_words_s is None:
             raise exceptions.InvalidInputException(detail="Developers are working on this")
         matches_count = 0

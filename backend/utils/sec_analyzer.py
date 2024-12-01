@@ -14,6 +14,7 @@ from g4f.Provider import (  # gpt proxy as api
 import g4f.debug
 import g4f
 
+
 app = FastAPI()
 PROFANITY_PIPE = pipeline("text-classification", model="parsawar/Profanity2.1")
 SENTIMENT_PIPE = pipeline("text-classification", model="sbcBI/sentiment_analysis")
@@ -30,8 +31,8 @@ async def acreate(msg):
         model="",
         # messages=[{"role": "user", "content": "Hello"}],
         messages=msg,
-        provider=RetryProvider([GPTalk , Liaobots, Aura, DeepInfra, FlowGpt, Bing,
-            ChatBase, ChatForAi, ChatgptNext, Gpt6, GptChatly], shuffle=False),
+        provider=RetryProvider([DDG, RetryProvider, Liaobots, GPTalk, Aura,
+        Bing, GigaChat, HuggingFace, Replicate, DeepInfra, FlowGpt, GeminiPro], shuffle=False),
     )
     return response
 
@@ -70,6 +71,7 @@ def check_count_by_model(text: str, pipe, label: str):
 
 @app.post("/check_profanity")
 async def check_profanity(request: Request):
+    """ check text for profanity via api """
     data = await request.json()
     text = data["text"]
     result = check_count_by_model(text, PROFANITY_PIPE, 'abusive text')
@@ -77,6 +79,7 @@ async def check_profanity(request: Request):
 
 @app.post("/check_sentiment")
 async def check_sentiment(request: Request):
+    """ check text for sentiment via api """
     data = await request.json()
     text = data["text"]
     result = check_count_by_model(text, SENTIMENT_PIPE, 'NEGATIVE')
@@ -84,6 +87,7 @@ async def check_sentiment(request: Request):
 
 @app.post("/check_count_by_g4f_api")
 async def check_count_by_g4f_api_endpoint(request: Request):
+    """ check count bad words via api """
     data = await request.json()
     text = data["text"]
     result = await check_count_by_api(text)
