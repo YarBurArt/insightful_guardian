@@ -19,12 +19,15 @@ const CategoryWidget = () => {
   //   return null;
   // }
   let isLoading = false;
+
   const categories = [
-    {id: 1, name: 'temp'}, {id: 2, name: 'test2temp'}
-  , {id: 3, name: 'test3temp'}, {id: 4, name: 'lorem'}
-  , {id: 5, name: 'test5'}, {id: 6, name: 'test6temp'}
-  , {id: 7, name: 'test7temp'}, {id: 8, name: 'test8'}
+    { id: 1, name: 'Web Dev / backend' },
+    { id: 2, name: 'Web3.0 / Blockchain' }, { id: 3, name: 'I know nothing' },
+    { id: 4, name: 'Pentest web' }, { id: 5, name: 'DevSecOps' },
+    { id: 6, name: 'ML tech.' }, { id: 7, name: 'Linux adm.' },
+    { id: 8, name: 'Mobile pentest' }
   ];
+  
   return (
     <div className="categoryWidget">
       <h2>Categories</h2>

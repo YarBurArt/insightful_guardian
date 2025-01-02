@@ -50,7 +50,10 @@ const IndexAllPosts = () => {
         <div className="IndexAllPosts">
             <h1>Posts.</h1>
             {isLoading ? (
+                <>
                 <img src={loadingGif} alt="Loading..." />
+                <h3>Loading . . . </h3>
+                </>
             ) : (
                 <PostList posts={posts} />
             )}
@@ -59,8 +62,9 @@ const IndexAllPosts = () => {
                 totalPages={totalPages}
                 onPageChange={handlePageChange}
             />
-        </div></div>
+        </div>
         <SearchInput query={query} setQuery={setQuery} handleSearch={handleSearch} />
+        </div>
         </>
     );
 };

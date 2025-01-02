@@ -1,5 +1,12 @@
 .IndexPage {
     display: flex;
+    .search-container {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        margin: 0;
+        padding: 0;
+    }
 }
 .IndexAllPosts {
     background-color: #f5f5f5;
@@ -10,7 +17,7 @@
     margin-right: 3rem;
     //max-width: 650px;
     padding: 2rem;
-
+    flex: 1 0;
     h1 {
         color: #333;
         font-size: 2.5rem;
@@ -59,19 +66,19 @@
     }
     
     .posts {
-    display: flex; /* Разбить список на flexbox */
-    flex-wrap: wrap; /* Разрешить перенос элементов на новую строку */
-    justify-content: space-around; /* Распределить элементы равномерно */
-        
-    .post {
-        flex: 1 0 300px; 
-        margin: 10px;
-    }
-    @media (max-width: 768px) {
-        .posts .post {
-          flex: 1 0 50%; 
+        display: flex; /* Разбить список на flexbox */
+        flex-wrap: wrap; /* Разрешить перенос элементов на новую строку */
+        justify-content: space-around; /* Распределить элементы равномерно */
+            
+        .post {
+            flex: 1 0 300px; 
+            margin: 10px;
         }
-      }
+        @media (max-width: 768px) {
+            .posts .post {
+            flex: 1 0 50%; 
+            }
+        }
     
     }
     @media (max-width: 499px) {
