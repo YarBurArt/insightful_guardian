@@ -1,5 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
+import config from '../config';
+import { Alert } from 'react-native';
+import toast, { Toaster } from 'react-hot-toast';
 
 export async function getIP() {
     try { // ipify crunch
@@ -25,3 +28,14 @@ export function extractIFrameSrc(content) {
     }
     return null;
 }
+export const fetchSearchResults = async (query) => {
+  try {
+    const response = await config.axios_b.get(`/search?query=${query}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching search results:', error);
+    toast.error("Posts not found, try another query");
+    Alert.alert(error);
+    throw error;
+  }
+};

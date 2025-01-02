@@ -4,6 +4,8 @@ import Pagination from './Pagination';
 import PostList from './PostList';
 import loadingGif from '../ayanami_loading.gif';
 import CategoryWidget from "./CategoryWidget";
+import SearchInput from './SearchInput';
+import { fetchSearchResults } from "./UserHelper";
 
 const IndexAllPosts = () => {
     const [posts, setPosts] = useState([]);
@@ -11,6 +13,8 @@ const IndexAllPosts = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [isLoading, setIsLoading] = useState(true);
 
+    const [query, setQuery] = useState('');
+    
     useEffect(() => {
         const fetchPosts = async () => {
             try { 
@@ -25,11 +29,23 @@ const IndexAllPosts = () => {
         };
         fetchPosts();
     }, [currentPage]); // [] listen for changes in currentPage
+    
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };
+    const handleSearch = async (query) => {
+        try {
+            const results = await fetchSearchResults(query);
+            setPosts(results); // TODO: rewrite on redirect to sq page
+            setIsLoading(false);
+            setTotalPages(1);
+        } catch (error) {
+            console.error('Error fetching search results:', error);
+        }
+    };
+
     return (
-        <div className="container-n IndexPage">
+        <><div className="container-n IndexPage">
         <CategoryWidget />
         <div className="IndexAllPosts">
             <h1>Posts.</h1>
@@ -44,6 +60,8 @@ const IndexAllPosts = () => {
                 onPageChange={handlePageChange}
             />
         </div></div>
+        <SearchInput query={query} setQuery={setQuery} handleSearch={handleSearch} />
+        </>
     );
 };
 export default IndexAllPosts;
