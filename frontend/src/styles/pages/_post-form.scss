@@ -8,6 +8,7 @@
     max-width: 500px;
     //min-width: 200px;
     padding: 1.5rem;
+    animation: bounceIn 0.5s ease-in-out forwards;
     button {
         background-color: #4a90e2;
         border: none;
@@ -58,12 +59,13 @@
     background-color: #f8f8f8;
     border-radius: 6px;
     box-shadow: 0 2px 6px #0000001a;
-    //margin: 2rem auto;
+    margin-left: 2rem;
     margin-right: 2rem;
     //max-width: 800px;
     //min-width: 200px;
     padding: 1.5rem;
-    flex:1;;
+    flex:1;
+    animation: bounceIn 0.5s ease-in-out forwards;
     h1 {
         color: #333;
         font-size: 1.8rem;
@@ -72,6 +74,20 @@
         text-align: center;
     }
 
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.7);
+    }
+    60% {
+        opacity: 1;
+        transform: translateY(5px) scale(1.05);
+    }
+    100% {
+        transform: translateY(0) scale(1);
+    }
 }
 
 .tab-controls {
@@ -89,6 +105,7 @@
         padding: 10px 20px;
         transition: background-color 0.3s ease;
         border-radius: 5px;
+        margin-right: 10px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     
         &:hover {

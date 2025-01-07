@@ -297,6 +297,7 @@ footer .footer-content a:hover {
   margin-right: 1rem;
   max-width: 500px;
   padding: 1.5rem;
+  animation: bounceIn 0.5s ease-in-out forwards;
 }
 .PostForm button {
   background-color: #4a90e2;
@@ -347,9 +348,11 @@ footer .footer-content a:hover {
   background-color: #f8f8f8;
   border-radius: 6px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1019607843);
+  margin-left: 2rem;
   margin-right: 2rem;
   padding: 1.5rem;
   flex: 1;
+  animation: bounceIn 0.5s ease-in-out forwards;
 }
 .PostForm-preview h1 {
   color: #333;
@@ -359,6 +362,19 @@ footer .footer-content a:hover {
   text-align: center;
 }
 
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.7);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(5px) scale(1.05);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
 .tab-controls {
   display: flex;
   margin-left: 20px;
@@ -373,6 +389,7 @@ footer .footer-content a:hover {
   padding: 10px 20px;
   transition: background-color 0.3s ease;
   border-radius: 5px;
+  margin-right: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 .tab-controls button:hover {
