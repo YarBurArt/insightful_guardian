@@ -92,7 +92,9 @@ async def test_main():  # TODO: rewrite tests to unit by unit
         "post_id":1, # post id dev
         "title": "lorem Ipsum dolor sit amet, consectetur adipiscing elit",
         "content": "lorem Ipsum dolor sit amet dolor sit amet et just aliquet",
-        "category": "lorem"
+        "category": "lorem",
+        "views": 6,
+        "likes": 3
     }
     try:
         created_post = await repository.create_post(new_post)

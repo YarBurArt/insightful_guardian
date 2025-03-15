@@ -43,9 +43,12 @@ async def new_post_with_any_structure(post: Post) -> Optional[dict]:
 async def get_post_by_id_without_auth(post_id: str) -> Optional[dict]:
     """ gets post by id from the DB specified by alg """
     post = await repository.get_post_by_id(post_id)
-    # TODO: add get post counter in DB, just as recommendations
+    # TODO: add get post counter to views , just as recommendations
     post['_id'] = str(post['_id'])
     return post
+
+# TODO: add get post views, likes , increment and decrement them
+#       for example by update_post method like crutch
 
 
 async def get_posts_by_category_with_val(category: str) -> Optional[dict]:
@@ -85,3 +88,4 @@ async def get_posts_by_text_with_val(query: str) -> Optional[dict]:
     for post in posts_c:
         post['_id'] = str(post['_id'])
     return posts_c
+

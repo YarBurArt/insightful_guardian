@@ -50,6 +50,9 @@ class Post(Base):
     title = Column(String, nullable=False)
     content = Column(String, nullable=False)
     category_id = Column(Integer, ForeignKey("categories.id"))
+    # in future should be separate table
+    views = Column(Integer, nullable=False, default=0)
+    likes = Column(Integer, nullable=False, default=0)
 
 
 async def create_post(session: AsyncSession, post_data: dict):
@@ -126,6 +129,27 @@ async def add_category(session: AsyncSession, name):
     await session.commit()
     await session.refresh(new_category)  
     return new_category
+
+async def increment_post_views(session: AsyncSession, post_id):
+    """ increment post views by one """
+    post = await session.get(Post, post_id)
+    if post:
+        post.views += 1
+        await session.commit()
+        
+async def increment_post_likes(session: AsyncSession, post_id):
+    """ increment post likes by one """
+    post = await session.get(Post, post_id)
+    if post:
+        post.likes += 1
+        await session.commit()
+        
+async def decrement_post_likes(session: AsyncSession, post_id):
+    """ decrement post likes by one """
+    post = await session.get(Post, post_id)
+    if post:
+        post.likes -= 1
+        await session.commit()
 
 async def main():
     """for test right from here"""

@@ -45,7 +45,9 @@ async def main():
             "post_id": generate_unique_id(),
             "title": fake.sentence(),
             "content": generate_markdown_text(),
-            "category": fake.word()
+            "category": fake.word(),
+            "views": rndi(100),
+            "likes": rndi(100)
         }
         try:
             created_post = await repository.create_post(new_post)
