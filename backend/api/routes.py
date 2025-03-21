@@ -54,6 +54,27 @@ async def get_post(post_id: str):
     res = await post_service.get_post_by_id_without_auth(post_id)
     return JSONResponse(res, status_code=200)
 
+# TODO: add fields with minimal user data to avoid spam
+@blog_router.post("/posts/{post_id}")
+async def inc_post_likes(post_id: str):
+    """ increment post likes by one """
+    res = await post_service.increment_post_likes(post_id)
+    return JSONResponse(res, status_code=200)
+
+
+@blog_router.post("/posts/{post_id}")
+async def dec_post_likes(post_id: str):
+    """ decrement post likes by one """
+    res = await post_service.decrement_post_likes(post_id)
+    return JSONResponse(res, status_code=200)
+
+
+@blog_router.post("/posts/{post_id}")
+async def inc_post_views(post_id: str):
+    """ increment post views by one """
+    res = await post_service.increment_post_views(post_id)
+    return JSONResponse(res, status_code=200)
+
 
 @blog_router.get("/category/{category}")
 async def get_posts_by_category(category: str):

@@ -92,6 +92,7 @@ async def get_posts_by_text_with_val(query: str) -> Optional[dict]:
 
 async def add_post_like(post_id: str) -> Optional[dict]:
     """ increment post likes by one """
+    # TODO: add moderation check for post likes to avoid spam, at least by user agent
     updated_post = await repository.increment_post_likes(post_id)
     if updated_post is None: # exception already handled  
         return
