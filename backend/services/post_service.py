@@ -21,6 +21,7 @@ async def get_posts_with_page(
     posts_unclean, total = await repository.get_posts_by_pagination(page, page_size)
     try:
         posts_clean: List[dict] = await moderation_service.clean_posts(posts_unclean)
+    # TODO: add logging
     except FileNotFoundError:
         raise FileNotFoundException("db file error :)")
     # format ObjectId to str to serialization
@@ -89,3 +90,24 @@ async def get_posts_by_text_with_val(query: str) -> Optional[dict]:
         post['_id'] = str(post['_id'])
     return posts_c
 
+async def add_post_like(post_id: str) -> Optional[dict]:
+    """ increment post likes by one """
+    updated_post = await repository.increment_post_likes(post_id)
+    if updated_post is None: # exception already handled  
+        return
+    return updated_post
+    
+async def add_post_views(post_id: str) -> Optional[dict]:
+    """ increment post views by one """
+    updated_post = await repository.increment_post_views(post_id)
+    if updated_post is None:
+        return
+    return updated_post
+
+async def rem_post_like(post_id: str) -> Optional[dict]:
+    """ decrement post likes by one """
+    await repository.decrement_post_likes(post_id)
+    updated_post = await repository.get_post_by_id(post_id)
+    if updated_post is None:
+        return
+    return updated_post

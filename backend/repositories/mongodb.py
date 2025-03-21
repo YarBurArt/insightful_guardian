@@ -83,6 +83,30 @@ class MongoDBRepository:
             categories.append(document)
 
         return categories
+    
+    async def increment_post_likes(self, post_id: str) -> Optional[dict]:
+        """ increment post likes by one """
+        document = await self.collection.find_one_and_update(
+            {"post_id": post_id}, {"$inc": {"likes": 1}})
+        if document is None:
+            raise PostNotFoundException("Post not found in DB, try another post")
+        return document
+    
+    async def decrement_post_likes(self, post_id: str) -> Optional[dict]:
+        """ decrement post likes by one """
+        document = await self.collection.find_one_and_update(
+            {"post_id": post_id}, {"$inc": {"likes": -1}})
+        if document is None:
+            raise PostNotFoundException("Post not found in DB, try another post")
+        return document
+    
+    async def increment_post_views(self, post_id: str) -> Optional[dict]:
+        """ increment post views by one """
+        document = await self.collection.find_one_and_update(
+            {"post_id": post_id}, {"$inc": {"views": 1}})
+        if document is None:
+            raise PostNotFoundException("Post not found in DB, try another post")
+        return document
 
 async def test_main():  # TODO: rewrite tests to unit by unit
     """ Test main function to interact with MongoDB repository 
@@ -111,6 +135,10 @@ async def test_main():  # TODO: rewrite tests to unit by unit
     posts_by_category = await repository.get_posts_by_category("lorem")
     print(f"Posts in category 'lorem': {posts_by_category}")
     updated_post = await repository.update_post(1, {"content": "loren inform si le"})
+    await repository.increment_post_likes(1) # id=1 dev
+    await repository.increment_post_likes(1)
+    await repository.increment_post_views(1)
+    await repository.decrement_post_likes(1)
     print(f"Uptade post: {updated_post}")
 
     await repository.delete_post(1)

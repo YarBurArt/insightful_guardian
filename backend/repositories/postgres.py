@@ -136,6 +136,7 @@ async def increment_post_views(session: AsyncSession, post_id):
     if post:
         post.views += 1
         await session.commit()
+        return post # crunch for mongo
         
 async def increment_post_likes(session: AsyncSession, post_id):
     """ increment post likes by one """
@@ -143,6 +144,7 @@ async def increment_post_likes(session: AsyncSession, post_id):
     if post:
         post.likes += 1
         await session.commit()
+        return post
         
 async def decrement_post_likes(session: AsyncSession, post_id):
     """ decrement post likes by one """
@@ -150,6 +152,8 @@ async def decrement_post_likes(session: AsyncSession, post_id):
     if post:
         post.likes -= 1
         await session.commit()
+        return post
+    
 
 async def main():
     """for test right from here"""
