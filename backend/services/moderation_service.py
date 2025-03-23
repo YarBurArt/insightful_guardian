@@ -6,7 +6,7 @@ import pandas as pd
 from better_profanity import profanity
 from Levenshtein import ratio
 
-from utils import sec_analyzer  # ai here
+import urllib.request, json
 from utils import exceptions
 
 
@@ -58,6 +58,20 @@ elif os_name == 'nt': # stable based on docker requirements
             raise exceptions.InvalidInputException(detail="Bad word detected more than min_count 1")
         return message
 
+
+async def get_pr_ai_count(message: str) -> int:
+    """ profanity check via LLM for disrespectful words """
+    req = urllib.request.Request( 
+        'http://localhost:8005/check_profanity',  # dev, it can be run on docker 
+        json.dumps({'text': cleaned_content}).encode('utf-8'), 
+        headers={'Content-Type': 'application/json'}, method='POST'
+    )
+    response = urllib.request.urlopen(req)
+    resp_json = json.loads(response.read().decode('utf-8'))
+    pr_ai_count = int(resp_json['result'])
+    return pr_ai_count
+
+
 async def clean_posts(posts: list) -> list:
     """ cleans posts on out list by static analyzer """
     cleaned_posts = []
@@ -67,14 +81,15 @@ async def clean_posts(posts: list) -> list:
         cleaned_posts.append(post)
     return cleaned_posts
 
+
 async def clean_post(post: dict) -> dict:
     """ cleans post on in dict by static analyzer and AI"""
     cleaned_content = process_message(post['content'])   
-    pipe = sec_analyzer.get_model('profanity')
-    cleaned_ai_content = sec_analyzer.check_count_by_model(
-        cleaned_content, pipe, 'abusive text')
-    if cleaned_ai_content is not None:
-        post['content'] = cleaned_content
+    pr_ai_count = get_pr_ai_count(cleaned_content)
+    if pr_ai_count > 8:
+        raise exceptions.InvalidInputException(detail="Profanity detected more than 8 (llm)")
+    
+    post['content'] = cleaned_content
     pr_count = 0
     for word in post['title'].split():
         if profanity.contains_profanity(word):
