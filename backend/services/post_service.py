@@ -3,13 +3,14 @@ import json
 from typing import List, Optional
 from repositories import mongodb
 from . import moderation_service
-from pydantic import BaseModel
+from pydantic.dataclasses import dataclass
 from utils.exceptions import InvalidInputException, FileNotFoundException
 
 # connect to local DB
 repository = mongodb.MongoDBRepository("blog", "posts")
 # template to formate posts
-class Post(BaseModel):
+@dataclass
+class Post:
     category: str
     post_id: str
     title: str
@@ -94,10 +95,10 @@ async def add_post_like(post_id: str) -> Optional[dict]:
     """ increment post likes by one """
     # TODO: add moderation check for post likes to avoid spam, at least by user agent
     updated_post = await repository.increment_post_likes(post_id)
-    if updated_post is None: # exception already handled  
+    if updated_post is None: # exception already handled
         return
     return updated_post
-    
+
 async def add_post_views(post_id: str) -> Optional[dict]:
     """ increment post views by one """
     updated_post = await repository.increment_post_views(post_id)

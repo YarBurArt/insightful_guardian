@@ -2,12 +2,13 @@
 import re
 from os import name as os_name
 import ctypes
-import pandas as pd
-from better_profanity import profanity
-from Levenshtein import ratio
 
 import urllib.request, json
 from utils import exceptions
+
+import pandas as pd
+from better_profanity import profanity
+from Levenshtein import ratio
 
 
 # TODO: use c variant of process_message on windows, it's just static analyzer
@@ -41,7 +42,7 @@ elif os_name == 'nt': # stable based on docker requirements
     match_columns = ['text', 'canonical_form_2', 'canonical_form_3']
     cached_bad_words = data[match_columns].values.flatten().tolist()
     cached_bad_words_s = list(map(str, cached_bad_words))
-        
+
     async def process_message(message: str, threshold: float=0.95, min_count: int=300) -> str:
         """ process message via python levenshtein ratio """
         if cached_bad_words_s is None:
@@ -61,9 +62,9 @@ elif os_name == 'nt': # stable based on docker requirements
 
 async def get_pr_ai_count(message: str) -> int:
     """ profanity check via LLM for disrespectful words """
-    req = urllib.request.Request( 
-        'http://localhost:8005/check_profanity',  # dev, it can be run on docker 
-        json.dumps({'text': cleaned_content}).encode('utf-8'), 
+    req = urllib.request.Request(
+        'http://localhost:8005/check_profanity',  # dev, it can be run on docker
+        json.dumps({'text': message}).encode('utf-8'),
         headers={'Content-Type': 'application/json'}, method='POST'
     )
     response = urllib.request.urlopen(req)
@@ -76,7 +77,7 @@ async def clean_posts(posts: list) -> list:
     """ cleans posts on out list by static analyzer """
     cleaned_posts = []
     for post in posts:
-        cleaned_content = await process_message(post['content']) 
+        cleaned_content = await process_message(post['content'])
         post['content'] = cleaned_content
         cleaned_posts.append(post)
     return cleaned_posts
@@ -84,11 +85,11 @@ async def clean_posts(posts: list) -> list:
 
 async def clean_post(post: dict) -> dict:
     """ cleans post on in dict by static analyzer and AI"""
-    cleaned_content = process_message(post['content'])   
+    cleaned_content = process_message(post['content'])
     pr_ai_count = get_pr_ai_count(cleaned_content)
     if pr_ai_count > 8:
         raise exceptions.InvalidInputException(detail="Profanity detected more than 8 (llm)")
-    
+
     post['content'] = cleaned_content
     pr_count = 0
     for word in post['title'].split():

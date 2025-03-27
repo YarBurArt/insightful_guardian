@@ -1,8 +1,11 @@
+""" module for postgresql repository and quick test it """
 import os
 import asyncio
+from dataclasses import dataclass, field
+
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
-from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.orm import sessionmaker, relationship, registry, mapped
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -30,29 +33,37 @@ async def get_async_session():
         async with connection.begin_nested() as session:
             yield session
 
-Base = declarative_base()
-class Category(Base):
+#Base = declarative_base() # dev , just use mongo for now
+mapper_registry = registry()
+
+@mapper_registry.mapped
+@dataclass
+class Category:
     """ categories table """
     __tablename__ = "categories"
 
-    id = Column(Integer, primary_key=True)
-    name = Column(String, unique=True, nullable=False)
+    id: int = Column(Integer, primary_key=True)
+    name: str = Column(String, unique=True, nullable=False)
 
-    posts = relationship("Post", backref="category")
+    posts: mapped[list["Post"]] = relationship("Post", backref="category")
 
 
-class Post(Base):
+@mapper_registry.mapped
+@dataclass
+class Post:
     """ posts table """
     __tablename__ = "posts"
 
-    id = Column(Integer, primary_key=True)
-    post_id = Column(String, unique=True, nullable=False)  # Assuming post_id is a string
-    title = Column(String, nullable=False)
-    content = Column(String, nullable=False)
-    category_id = Column(Integer, ForeignKey("categories.id"))
+    id: int = Column(Integer, primary_key=True)
+    post_id: str = Column(String, unique=True, nullable=False)  # Assuming post_id is a string
+    title: str = Column(String, nullable=False)
+    content: str = Column(String, nullable=False)
+    category_id: int = Column(Integer, ForeignKey("categories.id"))
     # in future should be separate table
-    views = Column(Integer, nullable=False, default=0)
-    likes = Column(Integer, nullable=False, default=0)
+    views: int = Column(Integer, nullable=False, default=0)
+    likes: int = Column(Integer, nullable=False, default=0)
+
+    category: mapped["Category"] = relationship("Category", backref="posts")
 
 
 async def create_post(session: AsyncSession, post_data: dict):
@@ -62,7 +73,8 @@ async def create_post(session: AsyncSession, post_data: dict):
         raise ValueError(f"Category '{post_data['category']}' does not exist.")
 
     new_post = Post(
-        post_id=post_data["post_id"], title=post_data["title"], content=post_data["content"], category=category
+        post_id=post_data["post_id"], title=post_data["title"],
+        content=post_data["content"], category=category
     )
     session.add(new_post)
     await session.commit()
@@ -122,12 +134,12 @@ async def add_category(session: AsyncSession, name):
     """ add category if not exists, then refresh it """
     existing_category = await session.query(Category).filter(Category.name == name).first()
     if existing_category:
-        return None  
+        return None
 
     new_category = Category(name=name)
     session.add(new_category)
     await session.commit()
-    await session.refresh(new_category)  
+    await session.refresh(new_category)
     return new_category
 
 async def increment_post_views(session: AsyncSession, post_id):
@@ -137,7 +149,7 @@ async def increment_post_views(session: AsyncSession, post_id):
         post.views += 1
         await session.commit()
         return post # crunch for mongo
-        
+
 async def increment_post_likes(session: AsyncSession, post_id):
     """ increment post likes by one """
     post = await session.get(Post, post_id)
@@ -145,7 +157,7 @@ async def increment_post_likes(session: AsyncSession, post_id):
         post.likes += 1
         await session.commit()
         return post
-        
+
 async def decrement_post_likes(session: AsyncSession, post_id):
     """ decrement post likes by one """
     post = await session.get(Post, post_id)
@@ -153,7 +165,7 @@ async def decrement_post_likes(session: AsyncSession, post_id):
         post.likes -= 1
         await session.commit()
         return post
-    
+
 
 async def main():
     """for test right from here"""
@@ -161,9 +173,15 @@ async def main():
         async with async_session_maker() as session:
             await add_category(session, "test") # to remove posts after test
             # some test posts
-            await create_post(session, {"category": "test", "post_id": "1", "title": "Test Post 1", "content": "Test Post 1 content"})
-            await create_post(session, {"category": "test", "post_id": "2", "title": "Test Post 2", "content": "Test Post 2 content"})
-            await create_post(session, {"category": "test", "post_id": "3", "title": "Test Post 3", "content": "Test Post 3 content"})
+            await create_post(session,
+                {"category": "test", "post_id": "1", "title": "Test Post 1",
+                 "content": "Test Post 1 content"})
+            await create_post(session,
+                {"category": "test", "post_id": "2", "title": "Test Post 2",
+                 "content": "Test Post 2 content"})
+            await create_post(session,
+                {"category": "test", "post_id": "3", "title": "Test Post 3",
+                 "content": "Test Post 3 content"})
 
             # various queries and operations
             print(await get_posts_by_category(session, "test"))
