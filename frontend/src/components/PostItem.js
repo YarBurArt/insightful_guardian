@@ -37,9 +37,10 @@ const PostItem = ({ post }) => {
             </Link> <br/>
             | {post.content.slice(0, 500)} 
             {post.content.length > 500 && ' ...'}  <br/># {post.category}
-            <div>
-                <button onClick={handleLike}>Like: {likes}</button>
+            <div className='post_stats'>
+                <button onClick={handleLike}>❤️ * {likes}</button>
                 <span>Views (on page): {views}</span>
+                <span>Page size: N Kb</span>
             </div>
         </li>
     );

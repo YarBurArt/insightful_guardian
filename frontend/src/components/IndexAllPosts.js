@@ -63,7 +63,8 @@ const IndexAllPosts = () => {
                 onPageChange={handlePageChange}
             />
         </div>
-        <SearchInput query={query} setQuery={setQuery} handleSearch={handleSearch} />
+        {/* TODO: rewrite, fix get request */}
+        <SearchInput query={query} setQuery={setQuery} onSearch={handleSearch} />
         </div>
         </>
     );
