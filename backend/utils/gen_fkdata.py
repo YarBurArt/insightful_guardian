@@ -1,13 +1,22 @@
-""" module for generating fake data for tests 
-run only through terminal py shell from backend root"""
+""" module for generating fake data for tests """
 import time
 import uuid
 import asyncio
 from secrets import choice, randbelow as rndi  # secure randint from 0 to N
 from faker import Faker
+import importlib.util
+import sys
 
-from backend.repositories.mongodb import MongoDBRepository
+#from repositories.mongodb import MongoDBRepository
+def import_from_path(module_name, file_path):
+    spec = importlib.util.spec_from_file_location(module_name, file_path)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
+    spec.loader.exec_module(module)
+    return module
 
+MongoDBRepository = import_from_path("MongoDBRepository", "../repositories/mongodb.py")
+# PostgreSQLRepository = import_from_path("postgres", "../repositories/postgres.py")
 
 def generate_unique_id():
     """ fake id generator based on time and randbelow """

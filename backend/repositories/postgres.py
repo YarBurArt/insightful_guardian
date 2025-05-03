@@ -8,8 +8,9 @@ from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
 from sqlalchemy.orm import sessionmaker, relationship, registry, mapped
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.ext.declarative import declarative_base
+from utils.exceptions import InvalidInputException, PostNotFoundException
 
-# TODO: fix the session in this code sketch
+# TODO: fix the session in this code sketch, more validation
 
 # load environment variables
 load_dotenv()
@@ -20,12 +21,21 @@ user = os.getenv("DB1_USER")
 host = os.getenv("DB1_HOST")
 port = os.getenv("DB1_PORT")
 password = os.getenv("DB1_PASS")
+db_path = os.getenv("DB1_PATH")
+db_engine = os.getenv("DB_ENGINE", "postgresql")
 
 # SQLAlchemy configuration
-SQLALCHEMY_DATABASE_URL = f"postgresql+asyncpg://{user}:{password}@{host}:{port}/{dbname}"
+if db_engine == "postgresql":
+    SQLALCHEMY_DATABASE_URL = f"postgresql+asyncpg://{user}:{password}@{host}:{port}/{dbname}"
+elif db_engine == "sqlite":
+    SQLALCHEMY_DATABASE_URL = f"sqlite+aiosqlite:///{db_path}"
+else:
+    raise ValueError(f"Unsupported database engine: {db_engine}")
+
 engine = create_async_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine, class_=AsyncSession)
 
+ALLOWED_SEARCH_PLACES = ['title', 'content']
 
 async def get_async_session():
     """ create async session postgresql """
@@ -105,7 +115,14 @@ async def get_post_by_id(session: AsyncSession, post_id: str):
 
 async def get_posts_by_text(session: AsyncSession, place: str, query: str):
     """ return all posts by text in title or content if exists """
-    return await session.query(Post).filter(getattr(Post, place).like(f"%{query}%")).all()
+    if place not in ALLOWED_SEARCH_PLACES:
+        raise InvalidInputException(
+            f"Invalid search place: {place}. Allowed places: {', '.join(ALLOWED_SEARCH_PLACES)}"
+        )
+    stmt = select(Post).filter(
+        getattr(Post, place).ilike(f"%{query}%")).options(selectinload(Post.category))
+    result = await session.execute(stmt)
+    return result.scalars().all()
 
 
 async def update_post(session: AsyncSession, post_id: str, post_data: dict):
@@ -196,4 +213,5 @@ async def main():
             await session.commit()
 
 if __name__ == "__main__":
+    # crutch for test:  sys.path.append("..")
     asyncio.run(main())

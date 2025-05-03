@@ -46,6 +46,17 @@ install python dependencies
 ```bash
 poetry install  
 ```
+mongodb is configured for local connection, if sqlite or postgres then setup env variables in backend for DB connection like
+```env
+DB1_NAME=web_db
+DB1_USER=web_service
+DB1_PORT=1234
+DB1_PASS=password
+DB1_HOST=ip
+DB1_PATH=db.sqlite    # optional 
+DB_ENGINE=postgresql  # or sqlite
+``` 
+
 run backend through uvicorn in poetry shell 
 ```bash
 poetry shell 
