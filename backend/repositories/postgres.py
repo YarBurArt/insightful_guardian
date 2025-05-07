@@ -5,12 +5,12 @@ from dataclasses import dataclass, field
 
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
-from sqlalchemy.orm import sessionmaker, relationship, registry, mapped
+from sqlalchemy.orm import sessionmaker, relationship, registry
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.ext.declarative import declarative_base
 from utils.exceptions import InvalidInputException, PostNotFoundException
 
-# TODO: fix the session in this code sketch, more validation
+# TODO: fix the session in this CODE SKETCH, more validation
 
 # load environment variables
 load_dotenv()
@@ -55,7 +55,7 @@ class Category:
     id: int = Column(Integer, primary_key=True)
     name: str = Column(String, unique=True, nullable=False)
 
-    posts: mapped[list["Post"]] = relationship("Post", backref="category")
+    posts: list["Post"] = relationship("Post", backref="category")
 
 
 @mapper_registry.mapped
@@ -73,7 +73,7 @@ class Post:
     views: int = Column(Integer, nullable=False, default=0)
     likes: int = Column(Integer, nullable=False, default=0)
 
-    category: mapped["Category"] = relationship("Category", backref="posts")
+    category = relationship("Category", backref="posts")
 
 
 async def create_post(session: AsyncSession, post_data: dict):

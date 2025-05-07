@@ -1,13 +1,14 @@
 """ module for posts service and operations with it """
 import json
 from typing import List, Optional
+from pydantic.dataclasses import dataclass
 from repositories import mongodb
 from . import moderation_service
-from pydantic.dataclasses import dataclass
 from utils.exceptions import InvalidInputException, FileNotFoundException
 
 # connect to local DB
 repository = mongodb.MongoDBRepository("blog", "posts")
+
 # template to formate posts
 @dataclass
 class Post:
@@ -23,8 +24,8 @@ async def get_posts_with_page(
     try:
         posts_clean: List[dict] = await moderation_service.clean_posts(posts_unclean)
     # TODO: add logging
-    except FileNotFoundError:
-        raise FileNotFoundException("db file error :)")
+    except FileNotFoundError as e:
+        raise FileNotFoundException("db file error :)") from e
     # format ObjectId to str to serialization
     for post in posts_clean:
         post['_id'] = str(post['_id'])
@@ -34,8 +35,8 @@ async def new_post_with_any_structure(post: Post) -> Optional[dict]:
     """ create new post with AI analyzer """
     try:
         post_clean = await moderation_service.clean_post(post)
-    except FileNotFoundError:
-        raise FileNotFoundException("Post not created, db file error :)")
+    except FileNotFoundError as e:
+        raise FileNotFoundException("Post not created, db file error :)") from e
 
     post_res = await repository.create_post(post_clean)
     post_res['_id'] = str(post_res['_id'])
@@ -59,8 +60,8 @@ async def get_posts_by_category_with_val(category: str) -> Optional[dict]:
     posts = await repository.get_posts_by_category(category_c)
     try:
         posts_c = await moderation_service.clean_posts(posts)
-    except FileNotFoundError:
-        raise FileNotFoundException("db profinity file error :)")
+    except FileNotFoundError as e:
+        raise FileNotFoundException("db profinity file error :)") from e
     for post in posts_c:
         post['_id'] = str(post['_id'])
     return posts_c
@@ -85,8 +86,8 @@ async def get_posts_by_text_with_val(query: str) -> Optional[dict]:
     posts += await repository.get_posts_by_text("content", query_c)
     try:
         posts_c = await moderation_service.clean_posts(posts)
-    except FileNotFoundError:
-        raise FileNotFoundException("db profinity file error :)")
+    except FileNotFoundError as e:
+        raise FileNotFoundException("db profinity file error :)") from e
     for post in posts_c:
         post['_id'] = str(post['_id'])
     return posts_c

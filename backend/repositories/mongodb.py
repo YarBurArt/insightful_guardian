@@ -7,6 +7,7 @@ from pymongo.errors import DuplicateKeyError
 
 from utils.exceptions import InvalidInputException, PostNotFoundException
 
+
 class MongoDBRepository:
     """ Repository for MongoDB exactly for blog """
     def __init__(self, database_name: str, collection_name: str,
@@ -21,8 +22,8 @@ class MongoDBRepository:
         try:
             await self.collection.insert_one(post)
             return post
-        except DuplicateKeyError:
-            raise InvalidInputException("Post with duplicate key")
+        except DuplicateKeyError as e:
+            raise InvalidInputException("Post with duplicate key") from e
 
     async def get_posts_by_pagination(self, page: int = 1, page_size: int = 10
         ) -> Tuple[List[dict], int]:

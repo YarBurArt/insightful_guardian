@@ -28,6 +28,7 @@ python-dotenv = "^1.0.1"
 curl-cffi = "^0.7.3"
 pygments = "2.18.0"
 aiosqlite = "^0.21.0"
+sqlalchemy = "^2.0.40"
 
 
 [build-system]

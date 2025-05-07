@@ -14,8 +14,7 @@ from Levenshtein import ratio
 # TODO: use c variant of process_message on windows, it's just static analyzer
 # python basically it's C, then just use ctypes for best performance
 if os_name == 'posix':
-    """ load bad words from dataset and compare with message 
-        on 25% and 3 count in message_ch """
+    # load bad words from dataset and compare with message on 25% and 3 count in message_ch
     # define function signature based on the modified C function, fix here
     process_message_c = ctypes.CDLL(
         "./backend/services/lib_profanity/statprofilter.so").process_message
@@ -36,8 +35,7 @@ if os_name == 'posix':
         return message
 
 elif os_name == 'nt': # stable based on docker requirements
-    """ load bad words from dataset and compare with message 
-        on 25% and 3 count in message_ch """
+    # load bad words from dataset and compare with message on 25% and 3 count in message_ch 
     data = pd.read_csv('./backend/services/profanity_en.csv')
     match_columns = ['text', 'canonical_form_2', 'canonical_form_3']
     cached_bad_words = data[match_columns].values.flatten().tolist()
@@ -104,5 +102,5 @@ async def clean_ct(category: str) -> str:
     pattern_ru = r"(?iu)\b(([уyu]|[нзnz3][аa]|(хитро|не)?[вvwb][зz3]?[ыьъi]|[сsc][ьъ']|(и|[рpr][аa4])[зсzs]ъ?|([оo0][тбtb6]|[пp][оo0][дd9])[ьъ']?|(.\B)+?[оаеиeo])?-?([еёe][бb6](?!о[рй])|и[пб][ае][тц]).*?|([нn][иеаaie]|([дпdp]|[вv][еe3][рpr][тt])[оo0]|[рpr][аa][зсzc3]|[з3z]?[аa]|с(ме)?|[оo0]([тt]|дно)?|апч)?-?[хxh][уuy]([яйиеёюuie]|ли(?!ган)).*?|([вvw][зы3z]|(три|два|четыре)жды|(н|[сc][уuy][кk])[аa])?-?[бb6][лl]([яy](?!(х|ш[кн]|мб)[ауеыио]).*?|[еэe][дтdt][ь']?)|([рp][аa][сзc3z]|[знzn][аa]|[соsc]|[вv][ыi]?|[пp]([еe][рpr][еe]|[рrp][оиioеe]|[оo0][дd])|и[зс]ъ?|[аоao][тt])?[пpn][иеёieu][зz3][дd9].*?|([зz3][аa])?[пp][иеieu][дd][аоеaoe]?[рrp](ну.*?|[оаoa][мm]|([аa][сcs])?([иiu]([лl][иiu])?[нщктлtlsn]ь?)?|([оo](ч[еиei])?|[аa][сcs])?[кk]([оo]й)?|[юu][гg])[ауеыauyei]?|[мm][аa][нnh][дd]([ауеыayueiи]([лl]([иi][сзc3щ])?[ауеыauyei])?|[оo][йi]|[аоao][вvwb][оo](ш|sh)[ь']?([e]?[кk][ауеayue])?|юк(ов|[ауи])?)|[мm][уuy][дd6]([яyаиоaiuo0].*?|[еe]?[нhn]([ьюия'uiya]|ей))|мля([тд]ь)?|лять|([нз]а|по)х|м[ао]л[ао]фь([яию]|[её]й))\b"
     matches_ru = re.findall(pattern_ru, category)  # ret [('asd',''),]
     if len(matches_ru) >= 3 or profanity.contains_profanity(category):  # works on words and phrases
-        raise InvalidInputException('Category is invalid')
+        raise exceptions.InvalidInputException('Category is invalid')
     return category

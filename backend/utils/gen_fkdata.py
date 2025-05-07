@@ -1,22 +1,28 @@
 """ module for generating fake data for tests """
 import time
 import uuid
+import sys
 import asyncio
+import importlib.util
 from secrets import choice, randbelow as rndi  # secure randint from 0 to N
 from faker import Faker
-import importlib.util
-import sys
+
+
+DB_ENGINE: str = "mongodb" # or "postgresql", but CHANGE ME  
 
 #from repositories.mongodb import MongoDBRepository
 def import_from_path(module_name, file_path):
+    """ import crutch to use the script separately """
     spec = importlib.util.spec_from_file_location(module_name, file_path)
     module = importlib.util.module_from_spec(spec)
     sys.modules[module_name] = module
     spec.loader.exec_module(module)
     return module
 
-MongoDBRepository = import_from_path("MongoDBRepository", "../repositories/mongodb.py")
-# PostgreSQLRepository = import_from_path("postgres", "../repositories/postgres.py")
+if DB_ENGINE == "mongodb":
+    DBRepository = import_from_path("MongoDBRepository", "../repositories/mongodb.py")
+elif DB_ENGINE == "postgresql":
+    DBRepository = import_from_path("postgres", "../repositories/postgres.py")
 
 def generate_unique_id():
     """ fake id generator based on time and randbelow """
@@ -47,7 +53,7 @@ def generate_markdown_text():
 
 async def main():
     """ function for generating fake data for tests """
-    repository = MongoDBRepository("blog", "posts")
+    repository = DBRepository("blog", "posts")
     base_category_l: list = [
         'Web Dev / backend', 'Web3.0 / Blockchain', 'I know nothing', 
         'Pentest web', 'DevSecOps', 'ML tech.', 
@@ -62,9 +68,9 @@ async def main():
             "likes": rndi(100)
         }
         try:
-            created_post = await repository.create_post(new_post)
-            print(f"Create new post: {created_post}")
+            await repository.create_post(new_post)
         except Exception as e:
             print(f"Error at {e}")
 
-asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())
