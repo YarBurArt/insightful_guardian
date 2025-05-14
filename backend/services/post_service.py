@@ -7,7 +7,8 @@ from . import moderation_service
 from utils.exceptions import InvalidInputException, FileNotFoundException
 
 # connect to local DB
-repository = mongodb.MongoDBRepository("blog", "posts")
+#repository = mongodb.MongoDBRepository("blog", "posts")
+from repositories import postgres as repository
 
 # template to formate posts
 @dataclass

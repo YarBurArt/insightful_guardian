@@ -8,34 +8,28 @@ from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
 from sqlalchemy.orm import sessionmaker, relationship, registry
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.ext.declarative import declarative_base
-from utils.exceptions import InvalidInputException, PostNotFoundException
 
+from utils.exceptions import InvalidInputException, PostNotFoundException
+from db.database import async_session_maker
+from db.models import Post, Category
 # TODO: fix the session in this CODE SKETCH, more validation
 
 # load environment variables
 load_dotenv()
 
-# database connection details
-dbname = os.getenv("DB1_NAME")
-user = os.getenv("DB1_USER")
-host = os.getenv("DB1_HOST")
-port = os.getenv("DB1_PORT")
-password = os.getenv("DB1_PASS")
+# database connection details if sqlite
 db_path = os.getenv("DB1_PATH")
 db_engine = os.getenv("DB_ENGINE", "postgresql")
 
 # SQLAlchemy configuration
 if db_engine == "postgresql":
-    SQLALCHEMY_DATABASE_URL = f"postgresql+asyncpg://{user}:{password}@{host}:{port}/{dbname}"
+    SessionLocal = async_session_maker
 elif db_engine == "sqlite":
     SQLALCHEMY_DATABASE_URL = f"sqlite+aiosqlite:///{db_path}"
+    engine = create_async_engine(SQLALCHEMY_DATABASE_URL)
+    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine, class_=AsyncSession)
 else:
     raise ValueError(f"Unsupported database engine: {db_engine}")
-
-engine = create_async_engine(SQLALCHEMY_DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine, class_=AsyncSession)
-
-ALLOWED_SEARCH_PLACES = ['title', 'content']
 
 async def get_async_session():
     """ create async session postgresql """
@@ -43,38 +37,8 @@ async def get_async_session():
         async with connection.begin_nested() as session:
             yield session
 
+ALLOWED_SEARCH_PLACES = ['title', 'content']
 #Base = declarative_base() # dev , just use mongo for now
-mapper_registry = registry()
-
-@mapper_registry.mapped
-@dataclass
-class Category:
-    """ categories table """
-    __tablename__ = "categories"
-
-    id: int = Column(Integer, primary_key=True)
-    name: str = Column(String, unique=True, nullable=False)
-
-    posts: list["Post"] = relationship("Post", backref="category")
-
-
-@mapper_registry.mapped
-@dataclass
-class Post:
-    """ posts table """
-    __tablename__ = "posts"
-
-    id: int = Column(Integer, primary_key=True)
-    post_id: str = Column(String, unique=True, nullable=False)  # Assuming post_id is a string
-    title: str = Column(String, nullable=False)
-    content: str = Column(String, nullable=False)
-    category_id: int = Column(Integer, ForeignKey("categories.id"))
-    # in future should be separate table
-    views: int = Column(Integer, nullable=False, default=0)
-    likes: int = Column(Integer, nullable=False, default=0)
-
-    category = relationship("Category", backref="posts")
-
 
 async def create_post(session: AsyncSession, post_data: dict):
     """ create new post by AsyncSession with json post_data"""

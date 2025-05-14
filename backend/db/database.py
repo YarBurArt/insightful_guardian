@@ -22,7 +22,6 @@ db_engine = os.getenv("DB_ENGINE", "postgresql")
 
 SQLALCHEMY_DATABASE_URL = f"postgresql+asyncpg://{user}:{password}@{host}:{port}/{dbname}"
 
-
 engine = create_async_engine(SQLALCHEMY_DATABASE_URL)
 async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
 # create anotations for models
