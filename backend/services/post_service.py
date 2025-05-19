@@ -7,8 +7,7 @@ from . import moderation_service
 from utils.exceptions import InvalidInputException, FileNotFoundException
 
 # connect to local DB
-#repository = mongodb.MongoDBRepository("blog", "posts")
-from repositories import postgres as repository
+repository = mongodb.MongoDBRepository("blog", "posts")
 
 # template to formate posts
 @dataclass
@@ -69,11 +68,12 @@ async def get_posts_by_category_with_val(category: str) -> Optional[dict]:
 
 async def get_categories_unique() -> Optional[dict]:
     """ gets all categories from the DB """
-    # categories = await repository.get_categories()
+    # categories_r = await repository.get_categories()
     # print("\033[31m", categories, "\033[0m")
-    # categories_c = [
-    # FIXME:    await moderation_service.clean_ct(category) for category in categories]
-    categories_r = ["temp", "test", "lorem", "ipsum", "code"]
+    categories_r: list = [
+        'Web Dev / backend', 'Web3.0 / Blockchain', 'I know nothing', 
+        'Pentest web', 'DevSecOps', 'ML tech.', 
+        'Linux adm.', 'Mobile pentest']
     data = []
     for index, name in enumerate(categories_r):
         data.append({"id": index + 1, "name": name})

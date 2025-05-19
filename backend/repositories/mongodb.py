@@ -79,12 +79,12 @@ class MongoDBRepository:
         """ gets unique categories from the DB """
         categories_r = self.collection.distinct("category")
         print(categories_r)
-        categories = [] # TODO: fix getting unique categories asynchronously
+        categories = [] # TODO: fix by add categories collection
         async for document in categories_r:
             categories.append(document)
 
         return categories
-    
+
     async def increment_post_likes(self, post_id: str) -> Optional[dict]:
         """ increment post likes by one """
         document = await self.collection.find_one_and_update(
@@ -92,7 +92,7 @@ class MongoDBRepository:
         if document is None:
             raise PostNotFoundException("Post not found in DB, try another post")
         return document
-    
+
     async def decrement_post_likes(self, post_id: str) -> Optional[dict]:
         """ decrement post likes by one """
         document = await self.collection.find_one_and_update(

@@ -20,9 +20,9 @@ def import_from_path(module_name, file_path):
     return module
 
 if DB_ENGINE == "mongodb":
-    DBRepository = import_from_path("MongoDBRepository", "../repositories/mongodb.py")
+    DBRepository = import_from_path("MongoDBRepository", "backend/repositories/mongodb.py")
 elif DB_ENGINE == "postgresql":
-    DBRepository = import_from_path("postgres", "../repositories/postgres.py")
+    DBRepository = import_from_path("postgres", "backend/repositories/postgres.py")
 
 def generate_unique_id():
     """ fake id generator based on time and randbelow """
@@ -53,7 +53,7 @@ def generate_markdown_text():
 
 async def main():
     """ function for generating fake data for tests """
-    repository = DBRepository("blog", "posts")
+    repository = DBRepository.MongoDBRepository("blog", "posts")
     base_category_l: list = [
         'Web Dev / backend', 'Web3.0 / Blockchain', 'I know nothing', 
         'Pentest web', 'DevSecOps', 'ML tech.', 

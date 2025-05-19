@@ -55,25 +55,33 @@ async def get_post(post_id: str):
     return JSONResponse(res, status_code=200)
 
 # TODO: add fields with minimal user data to avoid spam
-@blog_router.post("/posts/{post_id}")
+@blog_router.post("/posts/{post_id}/like")
 async def inc_post_likes(post_id: str):
     """ increment post likes by one """
     res = await post_service.increment_post_likes(post_id)
     return JSONResponse(res, status_code=200)
 
 
-@blog_router.post("/posts/{post_id}")
+@blog_router.post("/posts/{post_id}/dislike")
 async def dec_post_likes(post_id: str):
     """ decrement post likes by one """
     res = await post_service.decrement_post_likes(post_id)
     return JSONResponse(res, status_code=200)
 
 
-@blog_router.post("/posts/{post_id}")
+@blog_router.post("/posts/{post_id}/view")
 async def inc_post_views(post_id: str):
     """ increment post views by one """
     res = await post_service.increment_post_views(post_id)
     return JSONResponse(res, status_code=200)
+
+
+@blog_router.get("/category")
+async def get_categories():
+    """ gets unique categories from the DB """
+    res = await post_service.get_categories_unique()
+    response_data = {"cts": res}
+    return JSONResponse(response_data, status_code=200)
 
 
 @blog_router.get("/category/{category}")
@@ -82,12 +90,6 @@ async def get_posts_by_category(category: str):
     res = await post_service.get_posts_by_category_with_val(category)
     return JSONResponse(res, status_code=200)
 
-@blog_router.get("/category")
-async def get_categories():
-    """ gets unique categories from the DB """
-    res = await post_service.get_categories_unique()
-    response_data = {"cts": res}
-    return JSONResponse(response_data, status_code=200)
 
 @blog_router.get("/search")
 async def search_posts(query: str):
