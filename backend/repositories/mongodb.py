@@ -1,6 +1,7 @@
 """ module for MongoDB repository and test it """
 import asyncio
 from typing import List, Optional, Tuple
+from bson.json_util import dumps
 
 import motor.motor_asyncio
 from pymongo.errors import DuplicateKeyError
@@ -16,6 +17,7 @@ class MongoDBRepository:
         self.client = motor.motor_asyncio.AsyncIOMotorClient(conn_url)
         self.db = self.client[database_name]
         self.collection = self.db[collection_name]
+        self.sub_collection = self.db["categories"]
 
     async def create_post(self, post: dict) -> dict:
         """ saves from json format to unstructured one """
@@ -58,6 +60,7 @@ class MongoDBRepository:
         if document is None:
             raise PostNotFoundException("Post not found in DB, try another post")
         return document
+
     async def get_posts_by_text(self, place: str, query: str) -> List[dict]:
         """ gets json posts by text in specific json place from the DB """
         posts = []
@@ -66,6 +69,7 @@ class MongoDBRepository:
         if not posts:
             raise PostNotFoundException("Posts not found in DB, try another query")
         return posts
+
     async def get_posts_by_category(self, category: str) -> List[dict]:
         """ gets json posts by category from the DB """
         posts = []
@@ -77,12 +81,12 @@ class MongoDBRepository:
 
     async def get_categories(self) -> List[dict]:
         """ gets unique categories from the DB """
-        categories_r = self.collection.distinct("category")
-        print(categories_r)
-        categories = [] # TODO: fix by add categories collection
-        async for document in categories_r:
-            categories.append(document)
-
+        categories_t = self.sub_collection.find({})
+        if not categories_t:
+            raise PostNotFoundException("Categories not found in DB, try add category")
+        categories = []
+        async for document in categories_t:
+            categories.append(dumps(document))
         return categories
 
     async def increment_post_likes(self, post_id: str) -> Optional[dict]:

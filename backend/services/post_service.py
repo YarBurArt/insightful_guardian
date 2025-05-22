@@ -1,5 +1,6 @@
 """ module for posts service and operations with it """
 import json
+from bson.json_util import dumps
 from typing import List, Optional
 from pydantic.dataclasses import dataclass
 from repositories import mongodb
@@ -50,9 +51,6 @@ async def get_post_by_id_without_auth(post_id: str) -> Optional[dict]:
     post['_id'] = str(post['_id'])
     return post
 
-# TODO: add get post views, likes , increment and decrement them
-#       for example by update_post method like crutch
-
 
 async def get_posts_by_category_with_val(category: str) -> Optional[dict]:
     """ check category, gets posts by category, clean them """
@@ -68,16 +66,8 @@ async def get_posts_by_category_with_val(category: str) -> Optional[dict]:
 
 async def get_categories_unique() -> Optional[dict]:
     """ gets all categories from the DB """
-    # categories_r = await repository.get_categories()
-    # print("\033[31m", categories, "\033[0m")
-    categories_r: list = [
-        'Web Dev / backend', 'Web3.0 / Blockchain', 'I know nothing', 
-        'Pentest web', 'DevSecOps', 'ML tech.', 
-        'Linux adm.', 'Mobile pentest']
-    data = []
-    for index, name in enumerate(categories_r):
-        data.append({"id": index + 1, "name": name})
-    categories = json.dumps(data)
+    categories: dict|list = await repository.get_categories()
+    # TODO here must be moderation by moderation service
     return categories
 
 async def get_posts_by_text_with_val(query: str) -> Optional[dict]:
