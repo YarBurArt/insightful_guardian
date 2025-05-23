@@ -86,7 +86,7 @@ class MongoDBRepository:
             raise PostNotFoundException("Categories not found in DB, try add category")
         categories = []
         async for document in categories_t:
-            categories.append(dumps(document))
+            categories.append({k: v for k, v in document.items() if k != '_id'})
         return categories
 
     async def increment_post_likes(self, post_id: str) -> Optional[dict]:

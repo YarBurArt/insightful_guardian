@@ -66,7 +66,7 @@ async def get_posts_by_category_with_val(category: str) -> Optional[dict]:
 
 async def get_categories_unique() -> Optional[dict]:
     """ gets all categories from the DB """
-    categories: dict|list = await repository.get_categories()
+    categories: dict = await repository.get_categories()
     # TODO here must be moderation by moderation service
     return categories
 

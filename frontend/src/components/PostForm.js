@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import config from '../config';
 import { Navigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
@@ -39,9 +39,8 @@ const PostForm =  () => {
       alert("Error creating post: " + error);
     }
   };
-  // react fragments here only for readability
   return (
-  <Tabs>
+  <Tabs tab_name={['Edit Post', 'Preview']}>
     <PostInput title={title} setTitle={setTitle} handleSubmit={handleSubmit}
     content={content} setContent={setContent} category={category} 
     setCategory={setCategory} handleInputChange={handleInputChange} />

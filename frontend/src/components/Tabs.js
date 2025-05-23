@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Tabs = ({ children }) => {
+const Tabs = ({ children, tab_name }) => {
   const [activeTab, setActiveTab] = useState(0);
 
   // Split children into an array
@@ -23,7 +23,7 @@ const Tabs = ({ children }) => {
       <div className="tab-controls">
         {tabContents.map((_, index) => (
           <button key={index} onClick={() => setActiveTab(index)}>
-            Tab {index + 1} 
+            {tab_name[index]}
           </button>
         ))}
       </div>
