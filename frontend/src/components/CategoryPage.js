@@ -13,7 +13,9 @@ const CategoryPage = () => {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const response = await config.axios_b.get(`/category/${category}`);
+                var category_c = encodeURIComponent(category);
+                const response = await config.axios_b.get(
+                    `/category/posts/?name=${category_c}`);
                 setPosts(response.data);
                 setIsLoading(false);
             } catch (error) {

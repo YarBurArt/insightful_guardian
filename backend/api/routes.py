@@ -84,10 +84,10 @@ async def get_categories():
     return JSONResponse(response_data, status_code=200)
 
 
-@blog_router.get("/category/{category}")
-async def get_posts_by_category(category: str):
-    """ check category, gets posts by category, clean them """
-    res = await post_service.get_posts_by_category_with_val(category)
+@blog_router.get("/category/posts/")
+async def get_posts_by_category(name: str):
+    """ check category, gets posts by category name, clean them """
+    res = await post_service.get_posts_by_category_with_val(name)
     return JSONResponse(res, status_code=200)
 
 
