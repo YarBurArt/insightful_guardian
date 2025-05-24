@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import config from "../config";
+import { notify } from "./UserHelper";
 import loadingGif from "../ayanami_loading.gif";
 import CategoryWidget from "./CategoryWidget";
 import { Link } from "react-router-dom";
+import { ToastContainer } from 'react-toastify';
 
 const CategoryPage = () => {
     const { category } = useParams();
@@ -20,6 +22,7 @@ const CategoryPage = () => {
                 setIsLoading(false);
             } catch (error) {
                 console.error("Error fetching posts:", error);
+                notify("Error fetching posts");
             }
         };
         fetchPosts();
@@ -44,7 +47,9 @@ const CategoryPage = () => {
                     </li>
                 ))}
             </ul>  )}
-        </div></div>
+        </div>
+        <ToastContainer/>
+        </div>
     );
 };
 export default CategoryPage;

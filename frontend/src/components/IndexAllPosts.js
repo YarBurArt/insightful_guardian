@@ -6,6 +6,8 @@ import loadingGif from '../ayanami_loading.gif';
 import CategoryWidget from "./CategoryWidget";
 import SearchInput from './SearchInput';
 import { fetchSearchResults } from "./UserHelper";
+import { ToastContainer } from 'react-toastify';
+import { notify } from "./UserHelper";
 
 const IndexAllPosts = () => {
     const [posts, setPosts] = useState([]);
@@ -25,6 +27,7 @@ const IndexAllPosts = () => {
                 document.scrollingElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
             } catch (error) {
                 console.error("Error fetching posts:", error);
+                notify("Error fetching posts");
             }
         };
         fetchPosts();
@@ -41,6 +44,7 @@ const IndexAllPosts = () => {
             setTotalPages(1);
         } catch (error) {
             console.error('Error fetching search results:', error);
+            notify("Error fetching search results");
         }
     };
 
@@ -66,6 +70,7 @@ const IndexAllPosts = () => {
         {/* TODO: rewrite, fix get request */}
         <SearchInput query={query} setQuery={setQuery} onSearch={handleSearch} />
         </div>
+        <ToastContainer />
         </>
     );
 };

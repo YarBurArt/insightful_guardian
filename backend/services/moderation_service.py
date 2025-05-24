@@ -4,6 +4,7 @@ from os import name as os_name
 import ctypes
 
 import urllib.request, json
+from urllib.error import HTTPError
 from utils import exceptions
 
 import pandas as pd
@@ -58,16 +59,20 @@ elif os_name == 'nt': # stable based on docker requirements
         return message
 
 
-async def get_pr_ai_count(message: str) -> int:
+def get_pr_ai_count(message: str) -> int:
     """ profanity check via LLM for disrespectful words """
-    req = urllib.request.Request(
-        'http://localhost:8005/check_profanity',  # dev, it can be run on docker
-        json.dumps({'text': message}).encode('utf-8'),
-        headers={'Content-Type': 'application/json'}, method='POST'
-    )
-    response = urllib.request.urlopen(req)
-    resp_json = json.loads(response.read().decode('utf-8'))
-    pr_ai_count = int(resp_json['result'])
+    try:
+        req = urllib.request.Request(
+            'http://localhost:8005/check_profanity',  # dev, it can be run on docker
+            json.dumps({'text': message}).encode('utf-8'),
+            headers={'Content-Type': 'application/json'}, method='POST'
+        )
+        response = urllib.request.urlopen(req)
+        resp_json = json.loads(response.read().decode('utf-8'))
+        pr_ai_count = int(resp_json['result'])
+    except HTTPError:
+        print("Can't connect to LLM http service")
+        pr_ai_count = 0
     return pr_ai_count
 
 

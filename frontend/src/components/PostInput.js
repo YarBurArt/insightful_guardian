@@ -22,6 +22,9 @@ const PostInput = ({ title, setTitle, content, setContent,
                     <input type="text" id="category" value={category}
                     onChange={(e) => setCategory(e.target.value)} required />
                 </>
+                <>
+                    <button type="submit">Submit</button>
+                </>
             </form>
         </div>
     );

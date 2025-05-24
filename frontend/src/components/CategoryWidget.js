@@ -1,17 +1,22 @@
 import { useState, useEffect } from 'react';
 import config from '../config';
-import loadingGif from '../ayanami_loading.gif';
+import { notify } from './UserHelper';
 
 const CategoryWidget = () => {
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const fetchCategories = async () => {
-      const response = await config.axios_b.get('/category');
-      const data = response.data;
-      console.log(data); // dev
-      setCategories(data);
-      setIsLoading(false);
+      try{
+        const response = await config.axios_b.get('/category');
+        const data = response.data;
+        console.log(data); // dev
+        setCategories(data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        notify("Error fetching categories");
+      }
     };
     fetchCategories();
   }, []);
@@ -24,7 +29,7 @@ const CategoryWidget = () => {
       <h2>Categories</h2>
       <hr></hr>
       {isLoading ? (
-        <img src={loadingGif} alt="Loading..." />
+        <p> Loading... </p>
       ) : (
       <ul>
         {categories['cts'].map((category) => (

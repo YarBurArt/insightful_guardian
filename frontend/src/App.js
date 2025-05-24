@@ -1,4 +1,5 @@
 import './styles.css';
+import "react-toastify/dist/ReactToastify.css";
 import PostForm from './components/PostForm';
 import IndexAllPosts from './components/IndexAllPosts';
 import Footer from './components/Footer'; 

@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import config from '../config';
+import { notify } from './UserHelper';
+import { ToastContainer } from 'react-toastify';
 import { Navigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from "rehype-raw";
@@ -32,14 +34,16 @@ const PostForm =  () => {
         post_id, title, content, category, 
       });
       console.log('Post creation response:', response.data); // dev
+      notify("Post created successfully");
       return <Navigate to={`/post/${post_id}`} />;
   
     } catch (error) {
       console.error('Error creating post:', error); // dev
-      alert("Error creating post: " + error);
+      notify("Error creating post: " + error);
     }
   };
   return (
+  <>
   <Tabs tab_name={['Edit Post', 'Preview']}>
     <PostInput title={title} setTitle={setTitle} handleSubmit={handleSubmit}
     content={content} setContent={setContent} category={category} 
@@ -49,6 +53,8 @@ const PostForm =  () => {
       <ReactMarkdown  rehypePlugins={[rehypeRaw]}>{content}</ReactMarkdown>
     </div>
     </Tabs>
+    <ToastContainer />
+    </>
   );
 };
 
