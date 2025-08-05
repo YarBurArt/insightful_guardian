@@ -5,7 +5,7 @@ import asyncio
 from dotenv import load_dotenv
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy import select, selectinload
+from sqlalchemy import select
 
 from utils.exceptions import InvalidInputException
 from db.database import async_session_maker
@@ -91,7 +91,7 @@ async def get_posts_by_text(session: AsyncSession, place: str, query: str):
         )
     stmt = select(Post).filter(
         getattr(Post, place).ilike(f"%{query}%")).options(
-            selectinload(Post.category))
+            select(Post.category))
     result = await session.execute(stmt)
     return result.scalars().all()
 
