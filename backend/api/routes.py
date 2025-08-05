@@ -62,21 +62,21 @@ async def get_post(post_id: str):
 @blog_router.post("/posts/{post_id}/like")
 async def inc_post_likes(post_id: str):
     """ increment post likes by one """
-    res = await post_service.increment_post_likes(post_id)
+    res = await post_service.add_post_like(post_id)
     return JSONResponse(res, status_code=200)
 
 
 @blog_router.post("/posts/{post_id}/dislike")
 async def dec_post_likes(post_id: str):
     """ decrement post likes by one """
-    res = await post_service.decrement_post_likes(post_id)
+    res = await post_service.rem_post_like(post_id)
     return JSONResponse(res, status_code=200)
 
 
 @blog_router.post("/posts/{post_id}/view")
 async def inc_post_views(post_id: str):
     """ increment post views by one """
-    res = await post_service.increment_post_views(post_id)
+    res = await post_service.add_post_views(post_id)
     return JSONResponse(res, status_code=200)
 
 

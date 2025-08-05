@@ -38,4 +38,18 @@ jobs:
         run: |
           source .venv/bin/activate
           FILES=$(git ls-files 'backend//*.py' ':!backend/alembic/' ':!backend/app/tests/' ':!backend/app/schemas/' ':!backend/migration/')
-          PYTHONPATH=.:backend pylint --disable=E1136,E1102 $FILES
+          export PYTHONPATH=.:backend 
+          OUTPUT=$(poetry run pylint --disable=E1136,E1102 $FILES) || PYLINT_RC=$?
+          echo "$OUTPUT"
+          RATING=$(echo "$OUTPUT" \
+            | grep "Your code has been rated at" \
+            | sed -E 's/.*rated at ([0-9]+(\.[0-9]+)?).*/\1/')
+          awk -v r="$RATING" 'BEGIN { exit (r < 5.0) }' \
+            && echo "Rating is ≥ 5.0: $RATING" \
+            || (echo "Rating below threshold: $RATING" && exit 1)
+          if [ $(( PYLINT_RC & 3 )) -ne 0 ]; then
+            echo "Fatal or Error issues detected (exit code $PYLINT_RC)"
+            exit 1
+          else
+            echo "Good Fatal/Error issues (exit code $PYLINT_RC)"
+          fi
