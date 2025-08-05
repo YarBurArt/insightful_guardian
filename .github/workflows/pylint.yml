@@ -26,35 +26,37 @@ jobs:
           python -m pip install --upgrade pip
           pip install poetry
 
-        # cd backend
-        # install/venv is slow but fix import-error 
+        # maybe cd backend if .toml is not in root
       - name: Install dependencies with Poetry
         run: |
           poetry config virtualenvs.in-project true
           poetry install --no-interaction --no-ansi
-
-      - name: Run pylint
-        # working-directory: backend
-        # check pylint issues unsubscriptable-object for E1136
-        # like that https://github.com/sqlalchemy/sqlalchemy/discussions/9202
+      # files in what we dont need linter
+      # PYTHONPATH to process import-error of app
+      - name: Gather files and set PYTHONPATH
         run: |
-          # files in what we dont need linter
           FILES=$(git ls-files 'backend//*.py' ':!backend/alembic/' ':!backend/app/tests/' ':!backend/app/schemas/' ':!backend/migration/')
-          # to process import-error of app
-          export PYTHONPATH=.:backend 
-          # save STDOUT , exit status to PYLINT_RC
-          OUTPUT=$(poetry run pylint --disable=E1136,E1102 $FILES) || PYLINT_RC=$?
+          echo "FILES=$FILES" >> $GITHUB_ENV
+          echo "PYTHONPATH=.:backend" >> $GITHUB_ENV
+      # check pylint issues unsubscriptable-object for E1136
+      # like that https://github.com/sqlalchemy/sqlalchemy/discussions/9202
+      - name: Run pylint
+        run: |
+          OUTPUT=$(poetry run pylint --disable=E1136,E1102 $FILES) || echo "$?" > rc.txt
           echo "$OUTPUT"
-          RATING=$(echo "$OUTPUT" \
-            | grep "Your code has been rated at" \
+          echo "$OUTPUT" > output.txt
+      # filter linter output for final result and check
+      - name: Check code rating > N
+        run: |
+          RATING=$(grep "Your code has been rated at" output.txt \
             | sed -E 's/.*rated at ([0-9]+(\.[0-9]+)?).*/\1/')
-          # filter linter output for final result and check
-          awk -v r="$RATING" 'BEGIN { exit (r < 6.0) }' \
-            && echo "Rating is ≥ 5.0: $RATING" \
-            || (echo "Rating below threshold: $RATING" && exit 1)
+          echo "Rating is $RATING"
+          awk -v r="$RATING" 'BEGIN { exit (r < 6.0) }'
+
+      - name: Check for Fatal/Error messages  
+        run: |
+          PYLINT_RC=$(cat rc.txt)
           if [ $(( PYLINT_RC & 3 )) -ne 0 ]; then
-            echo "Fatal or Error issues detected (exit code $PYLINT_RC)"
+            echo "Fatal/Error detected (code $PYLINT_RC)"
             exit 1
-          else
-            echo "Good Fatal/Error issues detected (exit code $PYLINT_RC)"
           fi
