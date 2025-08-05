@@ -25,14 +25,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install poetry
 
+        # cd backend
       - name: Install dependencies with Poetry
         run: |
-          cd backend
           poetry config virtualenvs.in-project true
           poetry install --no-interaction --no-ansi
 
       - name: Run pylint
-        working-directory: backend
+        #working-directory: backend
         run: |
           source .venv/bin/activate
           FILES=$(git ls-files 'backend/**/*.py')
