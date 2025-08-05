@@ -33,15 +33,12 @@ jobs:
           poetry install --no-interaction --no-ansi
       # files in what we dont need linter
       # PYTHONPATH to process import-error of app
-      - name: Gather files and set PYTHONPATH
-        run: |
-          FILES=$(git ls-files 'backend//*.py' ':!backend/alembic/' ':!backend/app/tests/' ':!backend/app/schemas/' ':!backend/migration/')
-          echo "FILES=$FILES" >> $GITHUB_ENV
-          echo "PYTHONPATH=.:backend" >> $GITHUB_ENV
       # check pylint issues unsubscriptable-object for E1136
       # like that https://github.com/sqlalchemy/sqlalchemy/discussions/9202
       - name: Run pylint
         run: |
+          FILES=$(git ls-files 'backend//*.py' ':!backend/alembic/' ':!backend/app/tests/' ':!backend/app/schemas/' ':!backend/migration/')
+          export PYTHONPATH=.:backend 
           OUTPUT=$(poetry run pylint --disable=E1136,E1102 $FILES) || echo "$?" > rc.txt
           echo "$OUTPUT"
           echo "$OUTPUT" > output.txt
