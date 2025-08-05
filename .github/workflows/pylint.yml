@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.8', '3.10', '3.13']
+        python-version: ['3.8', '3.11', '3.13']
 
     steps:
       - name: Checkout repository
@@ -26,6 +26,7 @@ jobs:
           pip install poetry
 
         # cd backend
+        # install/venv is slow but fix import-error 
       - name: Install dependencies with Poetry
         run: |
           poetry config virtualenvs.in-project true
@@ -36,19 +37,23 @@ jobs:
         # check pylint issues unsubscriptable-object for E1136
         # like that https://github.com/sqlalchemy/sqlalchemy/discussions/9202
         run: |
+          # files in what we dont need linter
           FILES=$(git ls-files 'backend//*.py' ':!backend/alembic/' ':!backend/app/tests/' ':!backend/app/schemas/' ':!backend/migration/')
+          # to process import-error of app
           export PYTHONPATH=.:backend 
+          # save STDOUT , exit status to PYLINT_RC
           OUTPUT=$(poetry run pylint --disable=E1136,E1102 $FILES) || PYLINT_RC=$?
           echo "$OUTPUT"
           RATING=$(echo "$OUTPUT" \
             | grep "Your code has been rated at" \
             | sed -E 's/.*rated at ([0-9]+(\.[0-9]+)?).*/\1/')
-          awk -v r="$RATING" 'BEGIN { exit (r < 5.0) }' \
+          # filter linter output for final result and check
+          awk -v r="$RATING" 'BEGIN { exit (r < 6.0) }' \
             && echo "Rating is ≥ 5.0: $RATING" \
             || (echo "Rating below threshold: $RATING" && exit 1)
           if [ $(( PYLINT_RC & 3 )) -ne 0 ]; then
             echo "Fatal or Error issues detected (exit code $PYLINT_RC)"
             exit 1
           else
-            echo "Good Fatal/Error issues (exit code $PYLINT_RC)"
+            echo "Good Fatal/Error issues detected (exit code $PYLINT_RC)"
           fi
