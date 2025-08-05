@@ -36,7 +36,6 @@ jobs:
         # check pylint issues unsubscriptable-object for E1136
         # like that https://github.com/sqlalchemy/sqlalchemy/discussions/9202
         run: |
-          source .venv/bin/activate
           FILES=$(git ls-files 'backend//*.py' ':!backend/alembic/' ':!backend/app/tests/' ':!backend/app/schemas/' ':!backend/migration/')
           export PYTHONPATH=.:backend 
           OUTPUT=$(poetry run pylint --disable=E1136,E1102 $FILES) || PYLINT_RC=$?
