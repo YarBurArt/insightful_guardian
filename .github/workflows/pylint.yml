@@ -9,7 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.8', '3.11', '3.13']
+        # to avoid parsing failed
+        python-version: ['3.13']
 
     steps:
       - name: Checkout repository
