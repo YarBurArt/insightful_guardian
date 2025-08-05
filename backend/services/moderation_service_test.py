@@ -6,24 +6,26 @@ import pytest
 from backend.services.moderation_service import (
     process_message, clean_post, clean_ct)
 
-from faker import Faker; fake = Faker()
+from faker import Faker
+fake = Faker()
 
 
 HACK_THRESHOLD: int = 0.3
 
+
 def fuzz_prmt_process_message():
     """ generate fuzz text/int prmt for process_message function """
-    for message in  [fake.sentence() for _ in range(32)]:
+    for message in [fake.sentence() for _ in range(32)]:
         for threshold in range(0.0, 1.0, step=0.05):
             for min_count in range(50, 500, step=50):
-                random_bytes = os.urandom(100) # 100 bytes
+                random_bytes = os.urandom(100)  # 100 bytes
                 fuzzed_message = random_bytes + message.encode('utf-8')
                 yield fuzzed_message, threshold, min_count
 
 
 def fuzz_prmt_clean_post():
-    """ generate fuzz text prmt for clean_post function """ 
-    for title in  [fake.sentence() for _ in range(32)]:
+    """ generate fuzz text prmt for clean_post function """
+    for title in [fake.sentence() for _ in range(32)]:
         for content in [fake.text() for _ in range(32)]:
             if random.random() < HACK_THRESHOLD:
                 random_bytes = os.urandom(30)
@@ -32,14 +34,17 @@ def fuzz_prmt_clean_post():
 
 
 def fuzz_prmt_clean_ct():
-    """ generate fuzz text prmt for clean_ct function """ 
-    for category in  [fake.word() for _ in range(32)]:
+    """ generate fuzz text prmt for clean_ct function """
+    for category in [fake.word() for _ in range(32)]:
         if random.random() < HACK_THRESHOLD:
             random_bytes = os.urandom(30)
             category = random_bytes + category.encode('utf-8')
         yield category
 
-@pytest.mark.parametrize("message,threshold,min_count", fuzz_prmt_process_message())
+
+@pytest.mark.parametrize(
+    "message,threshold,min_count", fuzz_prmt_process_message()
+)
 def test_process_message(message, threshold, min_count):
     """ test process_message function """
     assert process_message(message, threshold, min_count)

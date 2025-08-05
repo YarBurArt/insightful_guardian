@@ -1,4 +1,6 @@
 """ module for custom exceptions """
+
+
 class BaseHTTPException(Exception):
     status_code: int
     detail: str
@@ -8,27 +10,30 @@ class BaseHTTPException(Exception):
         self.error_code = error_code  # to frontend handler
         self.detail = detail
 
+
 class InvalidInputException(BaseHTTPException):
     def __init__(self, detail: str):
         super().__init__(
-            status_code=422, 
-            error_code='InvalidInput', 
+            status_code=422,
+            error_code='InvalidInput',
             detail=detail
         )
+
 
 class FileNotFoundException(BaseHTTPException):
     def __init__(self, detail: str):
         super().__init__(
-            status_code=404, 
-            error_code='FileNotFound', 
+            status_code=404,
+            error_code='FileNotFound',
             detail=detail
         )
+
 
 class PostNotFoundException(BaseHTTPException):
     def __init__(self, detail: str):
         super().__init__(
-            status_code=404, 
-            error_code='PostNotFound', 
+            status_code=404,
+            error_code='PostNotFound',
             detail=detail
         )
 

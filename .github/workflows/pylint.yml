@@ -37,5 +37,5 @@ jobs:
         # like that https://github.com/sqlalchemy/sqlalchemy/discussions/9202
         run: |
           source .venv/bin/activate
-          FILES=$(git ls-files 'backend//*.py' ':!backend/alembic/' ':!backend/app/tests/' ':!backend/app/schemas/')
+          FILES=$(git ls-files 'backend//*.py' ':!backend/alembic/' ':!backend/app/tests/' ':!backend/app/schemas/' ':!backend/migration/')
           PYTHONPATH=.:backend pylint --disable=E1136,E1102 $FILES

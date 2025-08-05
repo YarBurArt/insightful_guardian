@@ -1,5 +1,5 @@
 """ module that define the db models for SQL-like db, migrations and access """
-from sqlalchemy import ForeignKey, text, Text, Column, Integer
+from sqlalchemy import ForeignKey, Integer
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from db.database import Base, int_pk, str_uniq, str_null_false
 
@@ -30,7 +30,8 @@ class Post(Base):
     # in future should be separate table
     views: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     likes: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
-    category_id: Mapped[int] = mapped_column(Integer, ForeignKey("categories.id"))
+    category_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("categories.id"))
     category: Mapped["categories"] = relationship("Category", backref="posts")
 
     def __str__(self):
