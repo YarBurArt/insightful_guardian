@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.8', '3.9', '3.10']
+        python-version: ['3.8', '3.10', '3.13']
 
     steps:
       - name: Checkout repository
@@ -34,7 +34,8 @@ jobs:
       - name: Run pylint
         # working-directory: backend
         # check pylint issues unsubscriptable-object for E1136
+        # like that https://github.com/sqlalchemy/sqlalchemy/discussions/9202
         run: |
           source .venv/bin/activate
-          FILES=$(git ls-files 'backend//*.py' ':!backend/alembic/' ':!backend/tests/' ':!backend/schemas/')
-          PYTHONPATH=.:backend pylint --disable=E1136 $FILES
+          FILES=$(git ls-files 'backend//*.py' ':!backend/alembic/' ':!backend/app/tests/' ':!backend/app/schemas/')
+          PYTHONPATH=.:backend pylint --disable=E1136,E1102 $FILES
