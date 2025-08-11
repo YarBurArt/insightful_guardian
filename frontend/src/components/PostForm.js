@@ -50,6 +50,7 @@ const PostForm =  () => {
     setCategory={setCategory} handleInputChange={handleInputChange} />
     <div className='PostForm-preview'>
       <h1>Preview content (markdown support)</h1>
+      <hr/>
       <ReactMarkdown  rehypePlugins={[rehypeRaw]}>{content}</ReactMarkdown>
     </div>
     </Tabs>

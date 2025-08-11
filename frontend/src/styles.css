@@ -352,10 +352,9 @@ footer .footer-content a:hover {
   background-color: #f8f8f8;
   border-radius: 6px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1019607843);
-  margin-left: 1rem;
-  margin-right: 1rem;
-  max-width: 500px;
-  padding: 1.5rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
+  padding: 1rem;
   animation: bounceIn 0.5s ease-in-out forwards;
 }
 .PostForm button {
@@ -407,7 +406,7 @@ footer .footer-content a:hover {
   background-color: #f8f8f8;
   border-radius: 6px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1019607843);
-  margin-left: 2rem;
+  margin-left: 1rem;
   margin-right: 2rem;
   padding: 1.5rem;
   flex: 1;
