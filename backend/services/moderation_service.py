@@ -13,14 +13,16 @@ from better_profanity import profanity
 from Levenshtein import ratio
 
 
+PROF_PATH = './backend/services/profanity_en.csv'
+PROFLIB_PATH = './backend/services/lib_profanity/statprofilter.so'
+
 # TODO: use c variant of process_message on windows, it's just static analyzer
 # python basically it's C, then just use ctypes for best performance
 if os_name == 'posix':
     # load bad words from dataset and compare with
     # message on 25% and 3 count in message_ch
     # define function signature based on the modified C function, fix here
-    process_message_c = ctypes.CDLL(
-        "./backend/services/lib_profanity/statprofilter.so").process_message
+    process_message_c = ctypes.CDLL(PROFLIB_PATH).process_message
     process_message_c.argtypes = [
         ctypes.c_char_p,  # message (char*)
         ctypes.c_float,  # threshold (float)
@@ -45,10 +47,14 @@ if os_name == 'posix':
 elif os_name == 'nt':  # stable based on docker requirements
     # load bad words from dataset and compare with
     # message on 25% and 3 count in message_ch
-    data = pd.read_csv('./backend/services/profanity_en.csv')
     match_columns = ['text', 'canonical_form_2', 'canonical_form_3']
-    cached_bad_words = data[match_columns].values.flatten().tolist()
-    cached_bad_words_s = list(map(str, cached_bad_words))
+    cached_bad_words_s: list = None
+    try:
+        data = pd.read_csv(PROF_PATH)
+        cached_bad_words = data[match_columns].values.flatten().tolist()
+        cached_bad_words_s = list(map(str, cached_bad_words))
+    except FileNotFoundError as e:
+        print("\033[0;31m[ERR] \033[0m Load csv formated data of profanity words to: ", PROF_PATH, "\n\t", e)
 
     async def process_message(
         message: str, threshold: float = 0.95, min_count: int = 300

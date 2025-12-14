@@ -8,8 +8,7 @@ package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.10"
-fastapi = "^0.111.0"
-motor = "^3.4.0"
+fastapi = "^0.124.4"
 faker = "^25.2.0"
 fastapi-cors = "^0.0.6"
 pandas = "^2.2.2"
@@ -32,6 +31,9 @@ sqlalchemy = "^2.0.40"
 alembic = "^1.15.2"
 asyncpg = "^0.30.0"
 pytest = "^8.4.1"
+motor = "^3.7.1"
+pymongo = "^4.15.5"
+uvicorn = "^0.38.0"
 
 
 [build-system]
