@@ -35,77 +35,71 @@
 │       ├── sec_analyzer.py    # analysis through ML models
 │       └── testai.py
 ├── frontend        # client side on react and JS
-│   ├── package.json
-│   ├── package-lock.json
-│   ├── public      # to run React in some versions
-│   │   ├── favicon.ico
-│   │   ├── index.html
-│   │   ├── logo192.png
-│   │   ├── logo512.png
-│   │   ├── manifest.json
-│   │   └── robots.txt
-│   ├── README.md
-│   ├── server  # front from a separate server, is used by the crutch for learning 
-│   │   ├── db.js
-│   │   ├── index.js
-│   │   └── routes
-│   │       └── posts.js
-│   ├── src         # frontend source code
-│   │   ├── App.css
-│   │   ├── App.js
-│   │   ├── ayanami_loading.gif
-│   │   ├── components # to divide responsibilities into components
-│   │   │   ├── CategoryPage.js
-│   │   │   ├── CategoryWidget.js
-│   │   │   ├── Footer.js
-│   │   │   ├── IndexAllPosts.js  # for the basic homepage
-│   │   │   ├── Pagination.js
-│   │   │   ├── PostForm.js     # writing and editing new posts
-│   │   │   ├── PostInput.js
-│   │   │   ├── PostItem.js
-│   │   │   ├── PostList.js
-│   │   │   ├── PostPage.js     # specific post 
-│   │   │   ├── SearchInput.js
-│   │   │   ├── SearchPage.js   # separate search by name and tags
-│   │   │   ├── SearchResults.js
-│   │   │   ├── Tabs.js
-│   │   │   ├── useIframeValidation.js
-│   │   │   └── UserHelper.js
-│   │   ├── config.js
-│   │   ├── index.css
-│   │   ├── index.js
-│   │   ├── logo.svg
-│   │   ├── setupTests.js
-│   │   ├── styles # appearance of objects of various categories
-│   │   │   ├── base
-│   │   │   │   └── _reset.scss
-│   │   │   ├── components
-│   │   │   │   ├── _link.scss
-│   │   │   │   ├── _loading.scss
-│   │   │   │   └── _pagination.scss
-│   │   │   ├── layout
-│   │   │   │   ├── _category.scss
-│   │   │   │   ├── _footer.scss
-│   │   │   │   └── _header.scss
-│   │   │   ├── main.scss
-│   │   │   ├── pages
-│   │   │   │   ├── _index.scss
-│   │   │   │   ├── _post-form.scss
-│   │   │   │   ├── _postpage.scss
-│   │   │   │   └── _searchpage.scss
-│   │   │   └── utils
-│   │   │       ├── _mixins.scss
-│   │   │       └── _variables.scss
-│   │   ├── styles.css      # styles after building 
-│   │   ├── styles.css.map
-│   │   └── tests    # critical functionality tests 
-│   │       ├── IndexAllPosts.test.js
-│   │       ├── PostForm.test.js
-│   │       └── tests_se    # more general tests on selenium 
-│   │           ├── Dockerfile
-│   │           ├── main.py
-│   │           └── requirements.txt
-│   └── tests
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── index.html  # main html entry point (vite)
+│   ├── vite.config.js
+│   ├── server  # front from a separate server, is used by the crutch for learning
+│   │   ├── db.js
+│   │   ├── index.js
+│   │   └── routes
+│   │       └── posts.js
+│   ├── src         # frontend source code
+│   │   ├── App.css
+│   │   ├── App.jsx
+│   │   ├── ayanami_loading.gif
+│   │   ├── components # to divide responsibilities into components
+│   │   │   ├── CategoryPage.jsx
+│   │   │   ├── CategoryWidget.jsx
+│   │   │   ├── Footer.jsx
+│   │   │   ├── IndexAllPosts.jsx  # for the basic homepage
+│   │   │   ├── Pagination.jsx
+│   │   │   ├── PostForm.jsx     # writing and editing new posts
+│   │   │   ├── PostInput.jsx
+│   │   │   ├── PostItem.jsx
+│   │   │   ├── PostList.jsx
+│   │   │   ├── PostPage.jsx     # specific post
+│   │   │   ├── SearchInput.jsx
+│   │   │   ├── SearchPage.jsx   # separate search by name and tags
+│   │   │   ├── SearchResults.jsx
+│   │   │   ├── Tabs.jsx
+│   │   │   ├── useIframeValidation.js
+│   │   │   └── UserHelper.js
+│   │   ├── config.js
+│   │   ├── index.css
+│   │   ├── index.jsx
+│   │   ├── logo.svg
+│   │   ├── setupTests.js
+│   │   ├── styles # appearance of objects of various categories
+│   │   │   ├── base
+│   │   │   │   └── _reset.scss
+│   │   │   ├── components
+│   │   │   │   ├── _link.scss
+│   │   │   │   ├── _loading.scss
+│   │   │   │   └── _pagination.scss
+│   │   │   ├── layout
+│   │   │   │   ├── _category.scss
+│   │   │   │   ├── _footer.scss
+│   │   │   │   └── _header.scss
+│   │   │   ├── main.scss
+│   │   │   ├── pages
+│   │   │   │   ├── _index.scss
+│   │   │   │   ├── _post-form.scss
+│   │   │   │   ├── _postpage.scss
+│   │   │   │   └── _searchpage.scss
+│   │   │   └── utils
+│   │   │       ├── _mixins.scss
+│   │   │       └── _variables.scss
+│   │   ├── styles.css      # styles after building
+│   │   ├── styles.css.map
+│   │   └── tests    # critical functionality tests
+│   │       ├── IndexAllPosts.test.jsx
+│   │       ├── PostForm.test.jsx
+│   │       └── tests_se    # more general tests on selenium
+│   │           ├── Dockerfile
+│   │           ├── main.py
+│   │           └── requirements.txt
+│   └── tests
 ├── LICENSE
 ├── package-lock.json
 ├── poetry.lock

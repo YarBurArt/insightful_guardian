@@ -1,7 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import axios from 'axios';
 import config from '../config';
-import { Alert } from 'react-native';
 import { toast } from 'react-toastify';
 
 export async function getIP() {
@@ -34,7 +32,7 @@ export const fetchSearchResults = async (query) => {
     return response.data;
   } catch (error) {
     console.error('Error fetching search results:', error);
-    Alert.alert(error);
+    toast.error(`Search error: ${error.message}`);
     throw error;
   }
 };

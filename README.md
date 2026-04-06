@@ -22,12 +22,16 @@ There's fullstack development on `FastAPI`, `React`, `MongoDB`.
 - better-profanity = "^0.7.0" --- moderate by lib 
 ### Frontend
 - npm ---- to install all
-- "axios": "^1.6.8", ------------ aio http requests
-- "react": "^18.3.1", -------- base front framework
-- "react-dom": "^18.3.1", ---------- render DOM api
-- "react-router-dom": "^6.23.1", -- front endpoints
-- "react-scripts": "^5.0.1", -------- project tools
-- "snyk": "^1.1291.0" ---------- test security code
+- "axios": "^1.14.0", ------------ aio http requests
+- "react": "^19.2.4", -------- base front framework
+- "react-dom": "^19.2.4", ---------- render DOM api
+- "react-router-dom": "^7.14.0", -- front endpoints
+- "vite": "^8.0.5" --------------- build tool and dev server
+- "vitest": "^4.1.2" ------------- test framework
+- "react-markdown": "^10.1.0" ---- markdown rendering
+- "react-toastify": "^11.0.5" ---- toast notifications
+- "react-hot-toast": "^2.6.0" ---- hot toast notifications
+- "sass": "^1.99.0" -------------- sass/scss support
 
 ## Install and use
 ### Backend
@@ -72,11 +76,7 @@ install react/js dependencies
 ```bash
 npm install
 ```
-compile styles from sass to css
-```bash
-npm run compile:sass
-```
-run react front (as a separate server)
+run react front (as a separate server via Vite)
 ```bash
 npm start
 ```
