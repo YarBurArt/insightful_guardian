@@ -7,6 +7,9 @@ on:
 jobs:
   pylint:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read # for actions/checkout to fetch code
+
     strategy:
       matrix:
         # to avoid parsing failed
