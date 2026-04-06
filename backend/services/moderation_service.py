@@ -81,14 +81,16 @@ elif os_name == 'nt':  # stable based on docker requirements
 
 def get_pr_ai_count(message: str) -> int:
     """ profanity check via LLM for disrespectful words """
+    ai_service_url = 'http://localhost:8005/check_profanity'
+    if not ai_service_url.startswith(('http://', 'https://')):
+        return 0
     try:
         req = urllib.request.Request(
-            # dev, it can be run on docker
-            'http://localhost:8005/check_profanity',
+            ai_service_url,
             json.dumps({'text': message}).encode('utf-8'),
             headers={'Content-Type': 'application/json'}, method='POST'
         )
-        response = urllib.request.urlopen(req)
+        response = urllib.request.urlopen(req)  # nosec B310
         resp_json = json.loads(response.read().decode('utf-8'))
         pr_ai_count = int(resp_json['result'])
     except HTTPError:

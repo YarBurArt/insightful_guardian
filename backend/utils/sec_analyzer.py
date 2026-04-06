@@ -1,9 +1,13 @@
 """ module with only analyzer by ai"""
 import os
+from dotenv import load_dotenv
 import asyncio
 from transformers import pipeline
 # for run is docker as microservice, it can use more resources
 from fastapi import FastAPI, Request
+
+load_dotenv()
+HOST = os.getenv("HOST", "127.0.0.1")
 
 # TODO: optimize Transformer model loading in Python
 # (cache, async, compression, data processing)
@@ -142,4 +146,4 @@ def legacy_test_check_count():
 if __name__ == "__main__":
     # legacy_test_check_count()
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8005)
+    uvicorn.run(app, host=HOST, port=8005)
