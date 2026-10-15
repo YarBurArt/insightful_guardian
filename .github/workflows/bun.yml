@@ -1,0 +1,42 @@
+# This workflow installs frontend dependencies with Bun, lints with Oxc (oxlint)
+# and builds the Vite/React frontend.
+
+name: Bun CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read # for actions/checkout to fetch code
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Bun
+      uses: oven-sh/setup-bun@v2
+      with:
+        bun-version: latest
+
+    - name: Install dependencies
+      working-directory: ./frontend
+      run: bun install --frozen-lockfile
+
+    - name: Lint frontend
+      working-directory: ./frontend
+      run: bun run lint
+
+    - name: Build frontend
+      working-directory: ./frontend
+      run: bun run build
+
+    - name: Test frontend
+      working-directory: ./frontend
+      run: |
+        echo "No tests found, skipping test step."
+        # bun run test # rewrite on selenium
