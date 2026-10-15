@@ -1,4 +1,7 @@
 import '@testing-library/jest-dom';
+import axios from 'axios';
+
+axios.defaults.adapter = 'fetch';
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

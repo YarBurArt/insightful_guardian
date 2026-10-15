@@ -23,6 +23,6 @@ The frontend of Insightful Guardian is designed to provide a user-friendly and e
 - Deployment
 ### Running the App:
 
-`npm run compile:sass:` Compiles Sass files into CSS for styling.
+`bun run compile:sass:` Compiles Sass files into CSS for styling.
 
-`npm start`: Starts the React development server, allowing hot reloading and live updates.
+`bun start`: Starts the React development server, allowing hot reloading and live updates.
