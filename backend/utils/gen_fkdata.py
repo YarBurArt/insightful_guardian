@@ -1,12 +1,13 @@
 """ module for generating fake data for tests """
-import time
-import uuid
-import sys
 import asyncio
 import importlib.util
-from secrets import choice, randbelow as rndi  # secure randint from 0 to N
-from faker import Faker
+import sys
+import time
+import uuid
+from secrets import choice  # secure randint from 0 to N
+from secrets import randbelow as rndi
 
+from faker import Faker
 
 DB_ENGINE: str = "mongodb"  # or "postgresql", but CHANGE ME
 fake = Faker()

@@ -1,8 +1,8 @@
 """ connects to DB and starts the API with log in console """
-from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
-from fastapi.middleware.cors import CORSMiddleware
 from api.routes import blog_router
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from utils.exceptions import BaseHTTPException
 
 app = FastAPI()

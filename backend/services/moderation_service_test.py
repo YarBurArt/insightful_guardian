@@ -1,12 +1,12 @@
 """ module for testing moderation service """
 import os
 import random
+
 import pytest
-
-from backend.services.moderation_service import (
-    process_message, clean_post, clean_ct)
-
 from faker import Faker
+
+from backend.services.moderation_service import clean_ct, clean_post, process_message
+
 fake = Faker()
 
 

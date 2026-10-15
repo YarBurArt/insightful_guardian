@@ -1,9 +1,10 @@
 """ module for posts service and operations with it """
-from typing import List, Optional
+
 from pydantic.dataclasses import dataclass
 from repositories import mongodb
-from . import moderation_service
 from utils.exceptions import FileNotFoundException
+
+from . import moderation_service
 
 # connect to local DB
 repository = mongodb.MongoDBRepository("blog", "posts")
@@ -20,12 +21,12 @@ class Post:
 
 async def get_posts_with_page(
     page: int = 1, page_size: int = 10
-) -> List[dict] | None:
+) -> list[dict] | None:
     """ gets, cleans and lite formats all posts from the DB """
     posts_unclean, total = await repository.get_posts_by_pagination(
         page, page_size)
     try:
-        posts_clean: List[dict] = await moderation_service.clean_posts(
+        posts_clean: list[dict] = await moderation_service.clean_posts(
                 posts_unclean
             )
     # TODO: add logging
@@ -37,7 +38,7 @@ async def get_posts_with_page(
     return posts_clean, total
 
 
-async def new_post_with_any_structure(post: Post) -> Optional[dict]:
+async def new_post_with_any_structure(post: Post) -> dict | None:
     """ create new post with AI analyzer """
     try:
         post_clean = await moderation_service.clean_post(post)
@@ -51,7 +52,7 @@ async def new_post_with_any_structure(post: Post) -> Optional[dict]:
     return post_res
 
 
-async def get_post_by_id_without_auth(post_id: str) -> Optional[dict]:
+async def get_post_by_id_without_auth(post_id: str) -> dict | None:
     """ gets post by id from the DB specified by alg """
     post = await repository.get_post_by_id(post_id)
     # TODO: add get post counter to views , just as recommendations
@@ -59,7 +60,7 @@ async def get_post_by_id_without_auth(post_id: str) -> Optional[dict]:
     return post
 
 
-async def get_posts_by_category_with_val(category: str) -> Optional[dict]:
+async def get_posts_by_category_with_val(category: str) -> dict | None:
     """ check category, gets posts by category, clean them """
     category_c = await moderation_service.clean_ct(category)
     posts = await repository.get_posts_by_category(category_c)
@@ -72,14 +73,14 @@ async def get_posts_by_category_with_val(category: str) -> Optional[dict]:
     return posts_c
 
 
-async def get_categories_unique() -> Optional[dict]:
+async def get_categories_unique() -> dict | None:
     """ gets all categories from the DB """
     categories: dict = await repository.get_categories()
     # TODO here must be moderation by moderation service
     return categories
 
 
-async def get_posts_by_text_with_val(query: str) -> Optional[dict]:
+async def get_posts_by_text_with_val(query: str) -> dict | None:
     """ get posts by text in title and body """
     query_c = await moderation_service.clean_ct(query)
     posts = await repository.get_posts_by_text("title", query_c)
@@ -93,7 +94,7 @@ async def get_posts_by_text_with_val(query: str) -> Optional[dict]:
     return posts_c
 
 
-async def add_post_like(post_id: str) -> Optional[dict]:
+async def add_post_like(post_id: str) -> dict | None:
     """ increment post likes by one """
     # TODO: add moderation check for post likes to
     # avoid spam, at least by user agent
@@ -103,7 +104,7 @@ async def add_post_like(post_id: str) -> Optional[dict]:
     return updated_post
 
 
-async def add_post_views(post_id: str) -> Optional[dict]:
+async def add_post_views(post_id: str) -> dict | None:
     """ increment post views by one """
     updated_post = await repository.increment_post_views(post_id)
     if updated_post is None:
@@ -111,7 +112,7 @@ async def add_post_views(post_id: str) -> Optional[dict]:
     return updated_post
 
 
-async def rem_post_like(post_id: str) -> Optional[dict]:
+async def rem_post_like(post_id: str) -> dict | None:
     """ decrement post likes by one """
     await repository.decrement_post_likes(post_id)
     updated_post = await repository.get_post_by_id(post_id)

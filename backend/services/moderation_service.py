@@ -1,17 +1,15 @@
 """ module with analyzer by signatures and then use ai """
-import re
-from os import name as os_name
 import ctypes
-
 import json
+import re
 import urllib.request
+from os import name as os_name
 from urllib.error import HTTPError
-from utils import exceptions
 
 import pandas as pd
 from better_profanity import profanity
 from Levenshtein import ratio
-
+from utils import exceptions
 
 PROF_PATH = './backend/services/profanity_en.csv'
 PROFLIB_PATH = './backend/services/lib_profanity/statprofilter.so'
@@ -54,7 +52,13 @@ elif os_name == 'nt':  # stable based on docker requirements
         cached_bad_words = data[match_columns].values.flatten().tolist()
         cached_bad_words_s = list(map(str, cached_bad_words))
     except FileNotFoundError as e:
-        print("\033[0;31m[ERR] \033[0m Load csv formated data of profanity words to: ", PROF_PATH, "\n\t", e)
+        print(
+            "\033[0;31m[ERR] \033[0m Load csv formated data of "
+            "profanity words to: ",
+            PROF_PATH,
+            "\n\t",
+            e,
+        )
 
     async def process_message(
         message: str, threshold: float = 0.95, min_count: int = 300
@@ -90,7 +94,7 @@ def get_pr_ai_count(message: str) -> int:
             json.dumps({'text': message}).encode('utf-8'),
             headers={'Content-Type': 'application/json'}, method='POST'
         )
-        response = urllib.request.urlopen(req)  # nosec B310
+        response = urllib.request.urlopen(req)  # nosec B310  # noqa: S310
         resp_json = json.loads(response.read().decode('utf-8'))
         pr_ai_count = int(resp_json['result'])
     except HTTPError:
@@ -132,7 +136,7 @@ async def clean_post(post: dict) -> dict:
 
 async def clean_ct(category: str) -> str:
     """ cleans category by static analyzer on regex """
-    pattern_ru = r"(?iu)\b(([уyu]|[нзnz3][аa]|(хитро|не)?[вvwb][зz3]?[ыьъi]|[сsc][ьъ']|(и|[рpr][аa4])[зсzs]ъ?|([оo0][тбtb6]|[пp][оo0][дd9])[ьъ']?|(.\B)+?[оаеиeo])?-?([еёe][бb6](?!о[рй])|и[пб][ае][тц]).*?|([нn][иеаaie]|([дпdp]|[вv][еe3][рpr][тt])[оo0]|[рpr][аa][зсzc3]|[з3z]?[аa]|с(ме)?|[оo0]([тt]|дно)?|апч)?-?[хxh][уuy]([яйиеёюuie]|ли(?!ган)).*?|([вvw][зы3z]|(три|два|четыре)жды|(н|[сc][уuy][кk])[аa])?-?[бb6][лl]([яy](?!(х|ш[кн]|мб)[ауеыио]).*?|[еэe][дтdt][ь']?)|([рp][аa][сзc3z]|[знzn][аa]|[соsc]|[вv][ыi]?|[пp]([еe][рpr][еe]|[рrp][оиioеe]|[оo0][дd])|и[зс]ъ?|[аоao][тt])?[пpn][иеёieu][зz3][дd9].*?|([зz3][аa])?[пp][иеieu][дd][аоеaoe]?[рrp](ну.*?|[оаoa][мm]|([аa][сcs])?([иiu]([лl][иiu])?[нщктлtlsn]ь?)?|([оo](ч[еиei])?|[аa][сcs])?[кk]([оo]й)?|[юu][гg])[ауеыauyei]?|[мm][аa][нnh][дd]([ауеыayueiи]([лl]([иi][сзc3щ])?[ауеыauyei])?|[оo][йi]|[аоao][вvwb][оo](ш|sh)[ь']?([e]?[кk][ауеayue])?|юк(ов|[ауи])?)|[мm][уuy][дd6]([яyаиоaiuo0].*?|[еe]?[нhn]([ьюия'uiya]|ей))|мля([тд]ь)?|лять|([нз]а|по)х|м[ао]л[ао]фь([яию]|[её]й))\b"
+    pattern_ru = r"(?iu)\b(([уyu]|[нзnz3][аa]|(хитро|не)?[вvwb][зz3]?[ыьъi]|[сsc][ьъ']|(и|[рpr][аa4])[зсzs]ъ?|([оo0][тбtb6]|[пp][оo0][дd9])[ьъ']?|(.\B)+?[оаеиeo])?-?([еёe][бb6](?!о[рй])|и[пб][ае][тц]).*?|([нn][иеаaie]|([дпdp]|[вv][еe3][рpr][тt])[оo0]|[рpr][аa][зсzc3]|[з3z]?[аa]|с(ме)?|[оo0]([тt]|дно)?|апч)?-?[хxh][уuy]([яйиеёюuie]|ли(?!ган)).*?|([вvw][зы3z]|(три|два|четыре)жды|(н|[сc][уuy][кk])[аa])?-?[бb6][лl]([яy](?!(х|ш[кн]|мб)[ауеыио]).*?|[еэe][дтdt][ь']?)|([рp][аa][сзc3z]|[знzn][аa]|[соsc]|[вv][ыi]?|[пp]([еe][рpr][еe]|[рrp][оиioеe]|[оo0][дd])|и[зс]ъ?|[аоao][тt])?[пpn][иеёieu][зz3][дd9].*?|([зz3][аa])?[пp][иеieu][дd][аоеaoe]?[рrp](ну.*?|[оаoa][мm]|([аa][сcs])?([иiu]([лl][иiu])?[нщктлtlsn]ь?)?|([оo](ч[еиei])?|[аa][сcs])?[кk]([оo]й)?|[юu][гg])[ауеыauyei]?|[мm][аa][нnh][дd]([ауеыayueiи]([лl]([иi][сзc3щ])?[ауеыauyei])?|[оo][йi]|[аоao][вvwb][оo](ш|sh)[ь']?([e]?[кk][ауеayue])?|юк(ов|[ауи])?)|[мm][уuy][дd6]([яyаиоaiuo0].*?|[еe]?[нhn]([ьюия'uiya]|ей))|мля([тд]ь)?|лять|([нз]а|по)х|м[ао]л[ао]фь([яию]|[её]й))\b"  # noqa: E501
     matches_ru = re.findall(pattern_ru, category)  # ret [('asd',''),]
     # works on words and phrases
     if len(matches_ru) >= 3 or profanity.contains_profanity(category):

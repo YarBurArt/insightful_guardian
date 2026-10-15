@@ -2,7 +2,6 @@
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-
 from services import post_service
 
 
@@ -31,7 +30,7 @@ example_posts = {"1": example_post,
 @blog_router.post("/posts")
 async def create_post(post: Post):
     """ create new post with AI analyzer """
-    new_post = post.dict()  # to simple format
+    new_post = post.model_dump()  # to simple format
     res = await post_service.new_post_with_any_structure(new_post)
     return JSONResponse(res, status_code=201)
 

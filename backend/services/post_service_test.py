@@ -1,9 +1,12 @@
 """ module for testing post service """
 import pytest
 from faker import Faker
+
 from backend.services.post_service import (
-    get_posts_with_page, get_post_by_id_without_auth,
-    get_posts_by_category_with_val, get_posts_by_text_with_val
+    get_post_by_id_without_auth,
+    get_posts_by_category_with_val,
+    get_posts_by_text_with_val,
+    get_posts_with_page,
 )
 
 fake = Faker()

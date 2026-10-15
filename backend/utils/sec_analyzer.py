@@ -1,25 +1,34 @@
 """ module with only analyzer by ai"""
-import os
-from dotenv import load_dotenv
 import asyncio
-from transformers import pipeline
+import os
+
+import g4f
+import g4f.debug
+from dotenv import load_dotenv
+
 # for run is docker as microservice, it can use more resources
 from fastapi import FastAPI, Request
+from g4f.Provider import (  # gpt proxy as api
+    DDG,
+    Aura,
+    Bing,
+    DeepInfra,
+    FlowGpt,
+    GeminiPro,
+    GigaChat,
+    GPTalk,
+    HuggingFace,
+    Liaobots,
+    Replicate,
+    RetryProvider,
+)
+from transformers import pipeline
 
 load_dotenv()
 HOST = os.getenv("HOST", "127.0.0.1")
 
 # TODO: optimize Transformer model loading in Python
 # (cache, async, compression, data processing)
-
-from g4f.Provider import (  # gpt proxy as api
-        DDG, RetryProvider, Liaobots, GPTalk, Aura,
-        Bing, GigaChat, HuggingFace, Replicate,
-        DeepInfra, FlowGpt, GeminiPro
-        )
-import g4f.debug
-import g4f
-
 
 app = FastAPI()
 PROFANITY_PIPE = pipeline("text-classification", model="parsawar/Profanity2.1")
@@ -134,13 +143,14 @@ def legacy_test_check_count():
     test_ret = loop.run_until_complete(task)
     print(test_ret)
     # or http API for use in docker container
-    os.system("""
+    curl_cmd = """
         curl -X POST \
         http://localhost:8005/check_count_by_api \
         -H 'Content-Type: application/json' \
         -d '{"text": "This restaurant is awful arse-bandits, \
             and so is this one. It is awesome"}'
-    """)
+    """
+    os.system(curl_cmd)  # noqa: S605
 
 
 if __name__ == "__main__":
