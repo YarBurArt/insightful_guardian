@@ -1,7 +1,7 @@
 """ module that define the db models for SQL-like db, migrations and access """
+from db.database import Base, int_pk, str_null_false, str_uniq
 from sqlalchemy import ForeignKey, Integer
-from sqlalchemy.orm import relationship, Mapped, mapped_column
-from db.database import Base, int_pk, str_uniq, str_null_false
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 
 class Category(Base):
@@ -10,7 +10,7 @@ class Category(Base):
 
     id: Mapped[int_pk]
     name: Mapped[str_uniq]
-    posts: Mapped[list["Post"]] = relationship("Post", backref="category")
+    posts: Mapped[list["Post"]] = relationship("Post", back_populates="category")
 
     def __str__(self):
         return f"{self.__class__.__name__}(id={self.id}),name={self.name})"
@@ -32,7 +32,7 @@ class Post(Base):
     likes: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     category_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("categories.id"))
-    category: Mapped["categories"] = relationship("Category", backref="posts")
+    category: Mapped["Category"] = relationship("Category", back_populates="posts")
 
     def __str__(self):
         return (f"{self.__class__.__name__}(id={self.id}),title={self.title}"

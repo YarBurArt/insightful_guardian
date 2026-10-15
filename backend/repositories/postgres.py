@@ -1,15 +1,19 @@
 """ module for postgresql repository and quick test it """
-import os
 import asyncio
+import os
 
-from dotenv import load_dotenv
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy import select
-
-from utils.exceptions import InvalidInputException
 from db.database import async_session_maker
-from db.models import Post, Category
+from db.models import Category, Post
+from dotenv import load_dotenv
+from sqlalchemy import delete, select
+from sqlalchemy.ext.asyncio import (
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
+from sqlalchemy.orm import selectinload
+from utils.exceptions import InvalidInputException
+
 # TODO: fix the session in this CODE SKETCH, more validation
 
 # load environment variables
@@ -25,18 +29,16 @@ if db_engine == "postgresql":
 elif db_engine == "sqlite":
     SQLALCHEMY_DATABASE_URL = f"sqlite+aiosqlite:///{db_path}"
     engine = create_async_engine(SQLALCHEMY_DATABASE_URL)
-    SessionLocal = sessionmaker(
-        autocommit=False, autoflush=False, bind=engine, class_=AsyncSession
-    )
+    SessionLocal = async_sessionmaker(engine, expire_on_commit=False)
 else:
     raise ValueError(f"Unsupported database engine: {db_engine}")
 
 
 async def get_async_session():
-    """ create async session postgresql """
-    async with engine.begin() as connection:
-        async with connection.begin_nested() as session:
-            yield session
+    """ create async session """
+    async with SessionLocal() as session:
+        yield session
+
 
 ALLOWED_SEARCH_PLACES = ['title', 'content']
 # Base = declarative_base() # dev , just use mongo for now
@@ -44,9 +46,8 @@ ALLOWED_SEARCH_PLACES = ['title', 'content']
 
 async def create_post(session: AsyncSession, post_data: dict):
     """ create new post by AsyncSession with json post_data"""
-    category = await session.query(Category).filter(
-        Category.name == post_data["category"]
-    ).first()
+    stmt = select(Category).where(Category.name == post_data["category"])
+    category = (await session.execute(stmt)).scalars().first()
     if not category:
         raise ValueError(f"Category '{post_data['category']}' does not exist.")
 
@@ -60,45 +61,54 @@ async def create_post(session: AsyncSession, post_data: dict):
 
 async def get_categories(session: AsyncSession):
     """ return all categories """
-    return await session.query(Category).all()
+    return (await session.execute(select(Category))).scalars().all()
 
 
 async def get_posts(session: AsyncSession):
     """ return all posts """
-    return await session.query(Post).all()
+    return (await session.execute(select(Post))).scalars().all()
 
 
 async def get_posts_by_category(session: AsyncSession, category_name: str):
     """ return all posts by category if exists """
-    category = await session.query(Category).filter(
-        Category.name == category_name).first()
+    stmt = select(Category).where(Category.name == category_name)
+    category = (await session.execute(stmt)).scalars().first()
     if not category:
         return []  # Handle non-existent category gracefully
-    return await session.query(Post).filter(Post.category == category).all()
+    posts_stmt = (
+        select(Post)
+        .where(Post.category == category)
+        .options(selectinload(Post.category))
+    )
+    return (await session.execute(posts_stmt)).scalars().all()
 
 
 async def get_post_by_id(session: AsyncSession, post_id: str):
     """ return post by id in uuid format """
-    return await session.query(Post).filter(Post.id == post_id).first()
+    stmt = select(Post).where(Post.id == post_id)
+    return (await session.execute(stmt)).scalars().first()
 
 
 async def get_posts_by_text(session: AsyncSession, place: str, query: str):
     """ return all posts by text in title or content if exists """
     if place not in ALLOWED_SEARCH_PLACES:
+        allowed = ", ".join(ALLOWED_SEARCH_PLACES)
         raise InvalidInputException(
-            f"Invalid search place: {place}. Allowed places: {', '.join(
-                ALLOWED_SEARCH_PLACES)}"
+            f"Invalid search place: {place}. Allowed places: {allowed}"
         )
-    stmt = select(Post).filter(
-        getattr(Post, place).ilike(f"%{query}%")).options(
-            select(Post.category))
+    stmt = (
+        select(Post)
+        .where(getattr(Post, place).ilike(f"%{query}%"))
+        .options(selectinload(Post.category))
+    )
     result = await session.execute(stmt)
     return result.scalars().all()
 
 
 async def update_post(session: AsyncSession, post_id: str, post_data: dict):
     """ update post content in json by id in uuid format """
-    post = await session.query(Post).filter(Post.id == post_id).first()
+    stmt = select(Post).where(Post.id == post_id)
+    post = (await session.execute(stmt)).scalars().first()
     if not post:
         raise ValueError(f"Post with ID {post_id} not found.")
     # Update only provided fields
@@ -109,21 +119,21 @@ async def update_post(session: AsyncSession, post_id: str, post_data: dict):
 
 async def delete_post(session: AsyncSession, post_id):
     """ delete post by id """
-    await session.query(Post).filter(Post.id == post_id).delete()
+    await session.execute(delete(Post).where(Post.id == post_id))
     await session.commit()
 
 
 async def get_posts_by_pagination(session: AsyncSession, page, page_size):
     """ return all posts by pagination with current page and page_size """
     offset = (page - 1) * page_size
-    return await session.query(Post).offset(offset).limit(page_size).all()
+    stmt = select(Post).offset(offset).limit(page_size)
+    return (await session.execute(stmt)).scalars().all()
 
 
 async def add_category(session: AsyncSession, name):
     """ add category if not exists, then refresh it """
-    existing_category = await session.query(Category).filter(
-        Category.name == name
-    ).first()
+    stmt = select(Category).where(Category.name == name)
+    existing_category = (await session.execute(stmt)).scalars().first()
     if existing_category:
         return None
 
@@ -163,35 +173,33 @@ async def decrement_post_likes(session: AsyncSession, post_id):
 
 async def main():
     """for test right from here"""
-    async with engine.begin():  # as connection:
-        async with async_session_maker() as session:
-            await add_category(session, "test")  # to remove posts after test
-            # some test posts
-            await create_post(
-                session,
-                {"category": "test", "post_id": "1", "title": "Test Post 1",
-                 "content": "Test Post 1 content"})
-            await create_post(
-                session,
-                {"category": "test", "post_id": "2", "title": "Test Post 2",
-                 "content": "Test Post 2 content"})
-            await create_post(
-                session,
-                {"category": "test", "post_id": "3", "title": "Test Post 3",
-                 "content": "Test Post 3 content"})
+    async with SessionLocal() as session:  # as connection:
+        await add_category(session, "test")  # to remove posts after test
+        # some test posts
+        await create_post(
+            session,
+            {"category": "test", "post_id": "1", "title": "Test Post 1",
+             "content": "Test Post 1 content"})
+        await create_post(
+            session,
+            {"category": "test", "post_id": "2", "title": "Test Post 2",
+             "content": "Test Post 2 content"})
+        await create_post(
+            session,
+            {"category": "test", "post_id": "3", "title": "Test Post 3",
+             "content": "Test Post 3 content"})
 
-            # various queries and operations
-            print(await get_posts_by_category(session, "test"))
-            print(await get_posts_by_text(session, "title", "Test Post"))
-            print(await get_posts_by_pagination(session, 1, 2))
-            print(await get_post_by_id(session, 1))
-            print(await get_categories(session))
-            print(await get_posts(session))
+        # various queries and operations
+        print(await get_posts_by_category(session, "test"))
+        print(await get_posts_by_text(session, "title", "Test Post"))
+        print(await get_posts_by_pagination(session, 1, 2))
+        print(await get_post_by_id(session, 1))
+        print(await get_categories(session))
+        print(await get_posts(session))
 
-            # cleanup test data
-            await session.execute(
-                "DELETE FROM posts WHERE title LIKE 'Test Post%'")
-            await session.commit()
+        # cleanup test data
+        await session.execute(delete(Post).where(Post.title.like("Test Post%")))
+        await session.commit()
 
 if __name__ == "__main__":
     # crutch for test:  sys.path.append("..")

@@ -1,10 +1,8 @@
 """ module for MongoDB repository and test it """
 import asyncio
-from typing import List, Optional, Tuple
 
 import motor.motor_asyncio
 from pymongo.errors import DuplicateKeyError
-
 from utils.exceptions import InvalidInputException, PostNotFoundException
 
 
@@ -28,7 +26,7 @@ class MongoDBRepository:
 
     async def get_posts_by_pagination(
         self, page: int = 1, page_size: int = 10
-    ) -> Tuple[List[dict], int]:
+    ) -> tuple[list[dict], int]:
         """ gets possibly various json posts from the DB with pagination """
         skip = (page - 1) * page_size
         posts = []
@@ -42,7 +40,7 @@ class MongoDBRepository:
             )
         return posts, total_posts
 
-    async def get_post_by_id(self, post_id: str) -> Optional[dict]:
+    async def get_post_by_id(self, post_id: str) -> dict | None:
         """ gets json posts by post_id from the DB """
         document = await self.collection.find_one({"post_id": post_id})
         if document is None:
@@ -58,7 +56,7 @@ class MongoDBRepository:
     # TODO: update the whole post if the token is valid
     async def update_post(
         self, post_id: int, post_data: dict
-    ) -> Optional[dict]:
+    ) -> dict | None:
         """ updates specific json part of post
             by post_id and new json from the DB """
         document = await self.collection.find_one_and_update(
@@ -69,7 +67,7 @@ class MongoDBRepository:
             )
         return document
 
-    async def get_posts_by_text(self, place: str, query: str) -> List[dict]:
+    async def get_posts_by_text(self, place: str, query: str) -> list[dict]:
         """ gets json posts by text in specific json place from the DB """
         posts = []
         async for document in self.collection.find(
@@ -82,7 +80,7 @@ class MongoDBRepository:
             )
         return posts
 
-    async def get_posts_by_category(self, category: str) -> List[dict]:
+    async def get_posts_by_category(self, category: str) -> list[dict]:
         """ gets json posts by category from the DB """
         posts = []
         async for document in self.collection.find({"category": category}):
@@ -93,7 +91,7 @@ class MongoDBRepository:
             )
         return posts
 
-    async def get_categories(self) -> List[dict]:
+    async def get_categories(self) -> list[dict]:
         """ gets unique categories from the DB """
         categories_t = self.sub_collection.find({})
         if not categories_t:
@@ -107,7 +105,7 @@ class MongoDBRepository:
             )
         return categories
 
-    async def increment_post_likes(self, post_id: str) -> Optional[dict]:
+    async def increment_post_likes(self, post_id: str) -> dict | None:
         """ increment post likes by one """
         document = await self.collection.find_one_and_update(
             {"post_id": post_id}, {"$inc": {"likes": 1}})
@@ -117,7 +115,7 @@ class MongoDBRepository:
             )
         return document
 
-    async def decrement_post_likes(self, post_id: str) -> Optional[dict]:
+    async def decrement_post_likes(self, post_id: str) -> dict | None:
         """ decrement post likes by one """
         document = await self.collection.find_one_and_update(
             {"post_id": post_id}, {"$inc": {"likes": -1}})
@@ -127,7 +125,7 @@ class MongoDBRepository:
             )
         return document
 
-    async def increment_post_views(self, post_id: str) -> Optional[dict]:
+    async def increment_post_views(self, post_id: str) -> dict | None:
         """ increment post views by one """
         document = await self.collection.find_one_and_update(
             {"post_id": post_id}, {"$inc": {"views": 1}})

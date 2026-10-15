@@ -2,15 +2,11 @@
 import os
 from datetime import datetime
 from typing import Annotated
-from dotenv import load_dotenv
 
+from dotenv import load_dotenv
 from sqlalchemy import func
-from sqlalchemy.ext.asyncio import (
-    create_async_engine, async_sessionmaker, AsyncAttrs
-)
-from sqlalchemy.orm import (
-    DeclarativeBase, declared_attr, Mapped, mapped_column
-)
+from sqlalchemy.ext.asyncio import AsyncAttrs, async_sessionmaker, create_async_engine
+from sqlalchemy.orm import DeclarativeBase, Mapped, declared_attr, mapped_column
 
 # load environment variables
 load_dotenv()
