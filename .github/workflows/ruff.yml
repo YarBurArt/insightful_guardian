@@ -1,0 +1,40 @@
+name: Lint (ruff)
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  ruff:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read # for actions/checkout to fetch code
+
+    strategy:
+      matrix:
+        # to avoid parsing failed
+        python-version: ['3.13']
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Poetry
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+
+      # maybe cd backend if .toml is not in root
+      - name: Install dependencies with Poetry
+        run: |
+          poetry config virtualenvs.in-project true
+          poetry install --no-interaction --no-ansi
+
+      # rules, target version and excluded paths live in [tool.ruff] of pyproject.toml
+      - name: Run ruff
+        run: poetry run ruff check .
