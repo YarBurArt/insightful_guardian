@@ -46,7 +46,7 @@ const PostForm =  () => {
   <>
   <Tabs tab_name={['Edit Post', 'Preview']}>
     <PostInput title={title} setTitle={setTitle} handleSubmit={handleSubmit}
-    content={content} setContent={setContent} category={category} 
+    content={content} category={category} 
     setCategory={setCategory} handleInputChange={handleInputChange} />
     <div className='PostForm-preview'>
       <h1>Preview content (markdown support)</h1>

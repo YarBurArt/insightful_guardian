@@ -1,6 +1,6 @@
 import React from 'react';
 
-const PostInput = ({ title, setTitle, content, setContent, 
+const PostInput = ({ title, setTitle, content, 
     category, setCategory, handleInputChange , handleSubmit }) => {
     return (
         <div className='PostForm'>
