@@ -12,7 +12,7 @@ There's fullstack development on `FastAPI`, `React`, `MongoDB`.
 ### Backend 
 - what = "version" -- why
 - poetry ---- to install all
-- python = "^3.10" -------- minimal python version 
+- python = ">=3.13,<3.14" -------- minimal python version 
 - fastapi = "^0.111.0" ---------- async API backend 
 - fastapi-cors = "^0.0.6" ---------- http operations
 - motor = "^3.4.0" ---------------- async mongodb
@@ -21,17 +21,18 @@ There's fullstack development on `FastAPI`, `React`, `MongoDB`.
 - pandas = "^2.2.2" - load and process signatures
 - better-profanity = "^0.7.0" --- moderate by lib 
 ### Frontend
-- npm ---- to install all
-- "axios": "^1.14.0", ------------ aio http requests
-- "react": "^19.2.4", -------- base front framework
-- "react-dom": "^19.2.4", ---------- render DOM api
-- "react-router-dom": "^7.14.0", -- front endpoints
-- "vite": "^8.0.5" --------------- build tool and dev server
-- "vitest": "^4.1.2" ------------- test framework
-- "react-markdown": "^10.1.0" ---- markdown rendering
-- "react-toastify": "^11.0.5" ---- toast notifications
-- "react-hot-toast": "^2.6.0" ---- hot toast notifications
-- "sass": "^1.99.0" -------------- sass/scss support
+- bun ---- to install all
+- "axios": "1.20.0", ------------ aio http requests
+- "react": "19.3.1", -------- base front framework
+- "react-dom": "19.3.1", ---------- render DOM api
+- "react-router-dom": "7.18.4", -- front endpoints
+- "vite": "8.3.4" --------------- build tool and dev server
+- "vitest": "5.0.4" ------------- test framework
+- "oxlint": "1.88.0" ------------ Oxc linter
+- "react-markdown": "10.1.0" ---- markdown rendering
+- "react-toastify": "11.1.0" ---- toast notifications
+- "react-hot-toast": "2.6.1" ---- hot toast notifications
+- "sass": "1.105.1" -------------- sass/scss support
 
 ## Install and use
 ### Backend
@@ -74,11 +75,15 @@ cd frontend
 ```
 install react/js dependencies
 ```bash
-npm install
+bun install
 ```
 run react front (as a separate server via Vite)
 ```bash
-npm start
+bun start
+```
+lint the frontend with Oxc
+```bash
+bun run lint
 ```
 
 Closing is better to start with the frontend, then the backend, then the environments.
