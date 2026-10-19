@@ -9,30 +9,35 @@ There's fullstack development on `FastAPI`, `React`, `MongoDB`.
 [docs/contribution.md](docs/contribution.md)
 
 ## Requirements
-### Backend 
-- what = "version" -- why
-- poetry ---- to install all
-- python = ">=3.13,<3.14" -------- minimal python version 
-- fastapi = "^0.111.0" ---------- async API backend 
-- fastapi-cors = "^0.0.6" ---------- http operations
-- motor = "^3.4.0" ---------------- async mongodb
-- faker = "^25.2.0" ------------- generate test data
-- nltk = "^3.8.1" ------------ data for moderations
-- pandas = "^2.2.2" - load and process signatures
-- better-profanity = "^0.7.0" --- moderate by lib 
+### Backend
+
+| library | version | why |
+| --- | --- | --- |
+| poetry | - | to install all |
+| python | >=3.13,<3.14 | stable python version |
+| fastapi | ^0.146.0 | async API backend |
+| starlette | ^1.9.0 | ASGI framework FastAPI builds on |
+| motor | ^3.7.1 | async mongodb |
+| faker | ^25.2.0 | generate test data |
+| pandas | ^2.2.2 | load and process signatures |
+| better-profanity | ^0.7.0 | moderate by lib |
+
 ### Frontend
-- bun ---- to install all
-- "axios": "1.20.0", ------------ aio http requests
-- "react": "19.3.1", -------- base front framework
-- "react-dom": "19.3.1", ---------- render DOM api
-- "react-router-dom": "7.18.4", -- front endpoints
-- "vite": "8.3.4" --------------- build tool and dev server
-- "vitest": "5.0.4" ------------- test framework
-- "oxlint": "1.88.0" ------------ Oxc linter
-- "react-markdown": "10.1.0" ---- markdown rendering
-- "react-toastify": "11.1.0" ---- toast notifications
-- "react-hot-toast": "2.6.1" ---- hot toast notifications
-- "sass": "1.105.1" -------------- sass/scss support
+
+| library | version | why |
+| --- | --- | --- |
+| bun | - | to install all |
+| axios | 1.20.0 | aio http requests |
+| react | 19.3.1 | base front framework |
+| react-dom | 19.3.1 | render DOM api |
+| react-router-dom | 7.18.4 | front endpoints |
+| vite | 8.3.4 | build tool and dev server |
+| vitest | 5.0.4 | test framework |
+| oxlint | 1.88.0 | Oxc linter |
+| react-markdown | 10.1.0 | markdown rendering |
+| react-toastify | 11.1.0 | toast notifications |
+| react-hot-toast | 2.6.1 | hot toast notifications |
+| sass | 1.105.1 | sass/scss support |
 
 ## Install and use
 ### Backend
