@@ -115,7 +115,7 @@ async def clean_posts(posts: list) -> list:
 
 async def clean_post(post: dict) -> dict:
     """ cleans post on in dict by static analyzer and AI"""
-    cleaned_content = process_message(post['content'])
+    cleaned_content = await process_message(post['content'])
     pr_ai_count = get_pr_ai_count(cleaned_content)
     if pr_ai_count > 8:
         raise exceptions.InvalidInputException(

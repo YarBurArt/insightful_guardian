@@ -16,8 +16,8 @@ HACK_THRESHOLD: int = 0.3
 def fuzz_prmt_process_message():
     """ generate fuzz text/int prmt for process_message function """
     for message in [fake.sentence() for _ in range(32)]:
-        for threshold in range(0.0, 1.0, step=0.05):
-            for min_count in range(50, 500, step=50):
+        for threshold in [round(i * 0.05, 2) for i in range(20)]:
+            for min_count in range(50, 500, 50):
                 random_bytes = os.urandom(100)  # 100 bytes
                 fuzzed_message = random_bytes + message.encode('utf-8')
                 yield fuzzed_message, threshold, min_count
@@ -27,10 +27,11 @@ def fuzz_prmt_clean_post():
     """ generate fuzz text prmt for clean_post function """
     for title in [fake.sentence() for _ in range(32)]:
         for content in [fake.text() for _ in range(32)]:
+            fuzzed_title = title
             if random.random() < HACK_THRESHOLD:
                 random_bytes = os.urandom(30)
-                title = random_bytes + title.encode('utf-8')
-            yield {"title": title, "content": content}
+                fuzzed_title = random_bytes + title.encode('utf-8')
+            yield {"title": fuzzed_title, "content": content}
 
 
 def fuzz_prmt_clean_ct():
