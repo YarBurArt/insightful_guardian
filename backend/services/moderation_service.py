@@ -4,6 +4,7 @@ import json
 import re
 import urllib.request
 from os import name as os_name
+from pathlib import Path
 from urllib.error import HTTPError
 
 import pandas as pd
@@ -11,8 +12,10 @@ from better_profanity import profanity
 from Levenshtein import ratio
 from utils import exceptions
 
-PROF_PATH = './backend/services/profanity_en.csv'
-PROFLIB_PATH = './backend/services/lib_profanity/statprofilter.so'
+# anchor to module dir: works from any CWD (pytest, manual run, uvicorn)
+SERVICES_DIR = Path(__file__).resolve().parent
+PROF_PATH = str(SERVICES_DIR / 'profanity_en.csv')
+PROFLIB_PATH = str(SERVICES_DIR / 'lib_profanity' / 'statprofilter.so')
 
 # TODO: use c variant of process_message on windows, it's just static analyzer
 # python basically it's C, then just use ctypes for best performance

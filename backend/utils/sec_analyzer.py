@@ -1,13 +1,11 @@
 """ module with only analyzer by ai"""
 import asyncio
 import os
+from typing import Any
 
 import g4f
 import g4f.debug
 from dotenv import load_dotenv
-
-# for run is docker as microservice, it can use more resources
-from fastapi import FastAPI, Request
 from g4f.Provider import (  # gpt proxy as api
     DDG,
     Aura,
@@ -22,6 +20,7 @@ from g4f.Provider import (  # gpt proxy as api
     Replicate,
     RetryProvider,
 )
+from litestar import Litestar
 from transformers import pipeline
 
 load_dotenv()
@@ -30,7 +29,7 @@ HOST = os.getenv("HOST", "127.0.0.1")
 # TODO: optimize Transformer model loading in Python
 # (cache, async, compression, data processing)
 
-app = FastAPI()
+app = Litestar()
 PROFANITY_PIPE = pipeline("text-classification", model="parsawar/Profanity2.1")
 SENTIMENT_PIPE = pipeline(
     "text-classification", model="sbcBI/sentiment_analysis"
@@ -98,29 +97,23 @@ def check_count_by_model(text: str, pipe, label: str):
 
 
 @app.post("/check_profanity")
-async def check_profanity(request: Request):
+async def check_profanity(data: dict[str, Any]) -> dict:
     """ check text for profanity via api """
-    data = await request.json()
-    text = data["text"]
-    result = check_count_by_model(text, PROFANITY_PIPE, 'abusive text')
+    result = check_count_by_model(data["text"], PROFANITY_PIPE, 'abusive text')
     return {"result": result}
 
 
 @app.post("/check_sentiment")
-async def check_sentiment(request: Request):
+async def check_sentiment(data: dict[str, Any]) -> dict:
     """ check text for sentiment via api """
-    data = await request.json()
-    text = data["text"]
-    result = check_count_by_model(text, SENTIMENT_PIPE, 'NEGATIVE')
+    result = check_count_by_model(data["text"], SENTIMENT_PIPE, 'NEGATIVE')
     return {"result": result}
 
 
 @app.post("/check_count_by_g4f_api")
-async def check_count_by_g4f_api_endpoint(request: Request):
+async def check_count_by_g4f_api_endpoint(data: dict[str, Any]) -> dict:
     """ check count bad words via api """
-    data = await request.json()
-    text = data["text"]
-    result = await check_count_by_api(text)
+    result = await check_count_by_api(data["text"])
     return {"result": result}
 
 

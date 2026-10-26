@@ -1,6 +1,5 @@
 """ api routes on blog, and all operations with them """
-from fastapi import APIRouter
-from fastapi.responses import JSONResponse
+from litestar import Router, get, post
 from pydantic import BaseModel
 from services import post_service
 
@@ -13,89 +12,86 @@ class Post(BaseModel):
     category: str
 
 
-# for safe mount to main
-blog_router = APIRouter()
-
-# data for test only api
-example_post = {
-    "title": "It is the best post",
-    "content": "It is a content of the post",
-    "category": "Test"
-}
-example_posts = {"1": example_post,
-                 "2": example_post,
-                 }
-
-
-@blog_router.post("/posts")
-async def create_post(post: Post):
+@post("/posts")
+async def create_post(data: Post) -> dict:
     """ create new post with AI analyzer """
-    new_post = post.model_dump()  # to simple format
-    res = await post_service.new_post_with_any_structure(new_post)
-    return JSONResponse(res, status_code=201)
+    return await post_service.new_post_with_any_structure(data.model_dump())
 
 
-@blog_router.get("/posts")
-async def get_all_posts():
+@get("/posts")
+async def get_all_posts() -> dict:
     """ gets, cleans and lite formats all posts from the DB """
     res, total = await post_service.get_posts_with_page()
-    return JSONResponse({"posts": res, "total": total}, status_code=200)
+    return {"posts": res, "total": total}
 
 
 # page_size is count that need front
-@blog_router.get("/posts/{page}/{page_size}")
-async def get_posts_by_pagination(page: int = 1, page_size: int = 10):
+@get("/posts/{page:int}/{page_size:int}")
+async def get_posts_by_pagination(page: int, page_size: int) -> dict:
     """ gets, cleans and lite formats all posts from the DB with pagination """
+    # shortcut: only clamp, real protection needs auth by user token, when exists
+    page_size = min(page_size, 50)
     res, total = await post_service.get_posts_with_page(page, page_size)
-    return JSONResponse({"posts": res, "total": total}, status_code=200)
+    return {"posts": res, "total": total}
 
 
-@blog_router.get("/posts/{post_id}")
-async def get_post(post_id: str):
+@get("/posts/{post_id:str}")
+async def get_post(post_id: str) -> dict:
     """ gets post by id from the DB specified by alg """
-    res = await post_service.get_post_by_id_without_auth(post_id)
-    return JSONResponse(res, status_code=200)
+    return await post_service.get_post_by_id_without_auth(post_id)
 
 
 # TODO: add fields with minimal user data to avoid spam
-@blog_router.post("/posts/{post_id}/like")
-async def inc_post_likes(post_id: str):
+@post("/posts/{post_id:str}/like")
+async def inc_post_likes(post_id: str) -> dict:
     """ increment post likes by one """
-    res = await post_service.add_post_like(post_id)
-    return JSONResponse(res, status_code=200)
+    return await post_service.add_post_like(post_id)
 
 
-@blog_router.post("/posts/{post_id}/dislike")
-async def dec_post_likes(post_id: str):
+@post("/posts/{post_id:str}/dislike")
+async def dec_post_likes(post_id: str) -> dict:
     """ decrement post likes by one """
-    res = await post_service.rem_post_like(post_id)
-    return JSONResponse(res, status_code=200)
+    return await post_service.rem_post_like(post_id)
 
 
-@blog_router.post("/posts/{post_id}/view")
-async def inc_post_views(post_id: str):
+@post("/posts/{post_id:str}/view")
+async def inc_post_views(post_id: str) -> dict:
     """ increment post views by one """
-    res = await post_service.add_post_views(post_id)
-    return JSONResponse(res, status_code=200)
+    return await post_service.add_post_views(post_id)
 
 
-@blog_router.get("/category")
-async def get_categories():
+@get("/category")
+async def get_categories() -> dict:
     """ gets unique categories from the DB """
     res = await post_service.get_categories_unique()
-    response_data = {"cts": res}
-    return JSONResponse(response_data, status_code=200)
+    return {"cts": res}
 
 
-@blog_router.get("/category/posts/")
-async def get_posts_by_category(name: str):
+@get("/category/posts/")
+async def get_posts_by_category(name: str) -> list:
     """ check category, gets posts by category name, clean them """
-    res = await post_service.get_posts_by_category_with_val(name)
-    return JSONResponse(res, status_code=200)
+    return await post_service.get_posts_by_category_with_val(name)
 
 
-@blog_router.get("/search")
-async def search_posts(query: str):
+@get("/search")
+async def search_posts(query: str) -> list:
     """ chech query, gets posts by query, clean them """
-    res = await post_service.get_posts_by_text_with_val(query)
-    return JSONResponse(res, status_code=200)
+    return await post_service.get_posts_by_text_with_val(query)
+
+
+# for safe mount to main
+blog_router = Router(
+    path="/api/blog",
+    route_handlers=[
+        create_post,
+        get_all_posts,
+        get_posts_by_pagination,
+        get_post,
+        inc_post_likes,
+        dec_post_likes,
+        inc_post_views,
+        get_categories,
+        get_posts_by_category,
+        search_posts,
+    ],
+)

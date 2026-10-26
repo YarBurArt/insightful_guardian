@@ -7,12 +7,12 @@
 ├── docs            # mini project documentation in general 
 │   ├── architecture.md  # you are here 
 │   └── contribution.md  # how to contribute and support
-├── backend          # python fastapi server-side
+├── backend          # python litestar server-side
 │   ├── api          # REST API routes as an interface 
 │   │   ├── __init__.py
 │   │   └── routes.py
 │   ├── __init__.py
-│   ├── main.py      # fastapi app initialization
+│   ├── main.py      # litestar app initialization
 │   ├── repositories # as the repository pattern in java 
 │   │   ├── __init__.py
 │   │   ├── mongodb.py
@@ -111,7 +111,7 @@
 ---
 ## Technology Stack
 
-- **Backend**: FastAPI
+- **Backend**: Litestar
 - **Frontend**: React
 - **Database**: PostgreSQL, MongoDB
 - **Authentication**: there's no need, just an idea like the telegra . ph
@@ -120,12 +120,12 @@
 ## Communication Between Frontend and Backend
 
 - The frontend communicates with the backend via RESTful APIs.
-- API endpoints are defined in the FastAPI application and can be accessed at `/api/v1/...`.
+- API endpoints are defined in the Litestar application and can be accessed at `/api/blog/...`.
 
 ## Data Flow
 
 1. **User Interaction**: Users interact with the React frontend.
-2. **API Requests**: The frontend makes API requests to the FastAPI backend.
+2. **API Requests**: The frontend makes API requests to the Litestar backend.
 3. **Data Processing**: The backend processes the requests, interacts with the database, and returns responses.
 4. **Rendering**: The frontend receives the data and updates the UI accordingly.
 
@@ -143,4 +143,4 @@
 
 ## Conclusion
 
-This document provides a high-level overview of the architecture for the FastAPI + React application. For more detailed information, please refer to the individual components' documentation.
+This document provides a high-level overview of the architecture for the Litestar + React application. For more detailed information, please refer to the individual components' documentation.

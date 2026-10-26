@@ -1,35 +1,34 @@
 """ connects to DB and starts the API with log in console """
 from api.routes import blog_router
-from fastapi import FastAPI, Request
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from litestar import Litestar, Request, Response, get
+from litestar.config.cors import CORSConfig
 from utils.exceptions import BaseHTTPException
 
-app = FastAPI()
-
-origins = ["http://localhost:3000", "http://localhost:3000/sq", ]  # in dev
-app.add_middleware(  # to allow react requests
-    CORSMiddleware,
-    allow_origins=origins,
+# to allow react requests
+cors_config = CORSConfig(
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:3000/sq",
+    ],  # in dev
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-app.include_router(blog_router, prefix="/api/blog")
 
-
-@app.exception_handler(BaseHTTPException)
-async def http_exception_handler(request: Request, exc: BaseHTTPException):
+def http_exception_handler(
+    request: Request, exc: BaseHTTPException
+) -> Response:
     """ custom error handler to http response """
-    return JSONResponse(
+    return Response(
+        # error_code to frontend handler, detail is for log
+        content={"error_code": exc.error_code, "detail": exc.detail},
         status_code=exc.status_code,
-        content={"detail": exc.detail},
     )
 
 
-@app.get("/")
-async def root_route():
+@get("/")
+async def root_route() -> dict:
     """ template for documentation """
     return {"description": "Web-blog: a content sharing platform where "
             "users can publish articles without "
@@ -37,11 +36,18 @@ async def root_route():
             "are subject to automated AI checks before publication.",
             "message": "be truly free, censor only truly dangerous messages"}
 
+
+app = Litestar(
+    route_handlers=[blog_router, root_route],
+    cors_config=cors_config,
+    exception_handlers={BaseHTTPException: http_exception_handler},
+)
+
 # other API routes defined in routes.py
 
 if __name__ == "__main__":
     # 127.0.0.1 on local and 0.0.0.0 on remote
-    try:  # now to view exit log just run python with -v
+    try:  # litestar[standard] ships uvicorn
         import uvicorn
         uvicorn.run("main:app", host="127.0.0.1", port=8000)
     except KeyboardInterrupt:
